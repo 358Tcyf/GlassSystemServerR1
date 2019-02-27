@@ -1,4 +1,4 @@
-package project.ys.glass_system.model.entity;
+package project.ys.glass_system.model.p.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

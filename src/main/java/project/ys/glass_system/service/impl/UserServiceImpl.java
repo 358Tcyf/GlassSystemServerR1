@@ -1,10 +1,10 @@
 package project.ys.glass_system.service.impl;
 
 import org.springframework.stereotype.Service;
-import project.ys.glass_system.model.dao.RoleDao;
-import project.ys.glass_system.model.dao.UserDao;
-import project.ys.glass_system.model.entity.Role;
-import project.ys.glass_system.model.entity.User;
+import project.ys.glass_system.model.p.dao.RoleDao;
+import project.ys.glass_system.model.p.dao.UserDao;
+import project.ys.glass_system.model.p.entity.Role;
+import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.service.UserService;
 
 import javax.annotation.Resource;
@@ -93,11 +93,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> userInfo(String no) {
         User find = userDao.findByNo(no);
+        Map<String, Object> user = new HashMap<>();
+        Map<String, Object> role = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
-        result.put("no", find.getNo());
-        result.put("phone", find.getPhone());
-        result.put("name", find.getName());
-        result.put("email", find.getEmail());
+        user.put("no", find.getNo());
+        user.put("phone", find.getPhone());
+        user.put("name", find.getName());
+        user.put("email", find.getEmail());
+        role.put("roleName", find.getRole().getName());
+        result.put("user", user);
+        result.put("role", role);
         return result;
     }
 

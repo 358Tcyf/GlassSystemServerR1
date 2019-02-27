@@ -1,17 +1,12 @@
 package project.ys.glass_system;
 
-import javafx.application.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import project.ys.glass_system.model.entity.Role;
-import project.ys.glass_system.model.entity.User;
 import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
-import java.util.Scanner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GlassSystemApplication.class)
@@ -41,6 +36,6 @@ public class UserTest {
 
     @Test
     public void testGetLatestNo() {
-        userService.getLatestNo(SUPER_MANAGER);
+//        userService.getLatestNo(SUPER_MANAGER);
     }
 }

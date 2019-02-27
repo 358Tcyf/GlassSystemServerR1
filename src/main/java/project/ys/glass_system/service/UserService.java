@@ -1,7 +1,7 @@
 package project.ys.glass_system.service;
 
-import project.ys.glass_system.model.entity.Role;
-import project.ys.glass_system.model.entity.User;
+import project.ys.glass_system.model.p.entity.Role;
+import project.ys.glass_system.model.p.entity.User;
 
 import java.util.Map;
 

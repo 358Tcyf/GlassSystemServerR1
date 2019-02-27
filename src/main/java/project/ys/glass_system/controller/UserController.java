@@ -4,11 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
-import project.ys.glass_system.model.entity.User;
+import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,20 +26,25 @@ public class UserController {
         } else if (!userService.checkPassword(account, password)) {
             return RetResponse.makeErrRsp("密码错误");
         } else {
-            System.out.println("login success!");
+            System.out.println(account + "login success!");
             return RetResponse.makeOKRsp("登陆成功", userService.login(account, password));
         }
     }
 
+    @RequestMapping(value = USER + "/userInfo")
+    public RetResult<Map<String, Object>> getUserInfo(String account) {
+        System.out.println(account + "GET SUCCESS!");
+        return RetResponse.makeOKRsp(userService.userInfo(account));
+    }
+
     @RequestMapping(value = USER + "/userList")
     public RetResult<Map<String, Object>> getUserList() {
-        System.out.println("get success!");
         return RetResponse.makeOKRsp(userService.userList());
     }
 
+
     @RequestMapping(value = USER + "/addUser")
     public RetResult addUser(String name, String no, String email, String phone, int roleId) {
-        System.out.println("add success!");
         userService.addUser(new User(no, "123456", name, phone, email), roleId);
         return RetResponse.makeOKRsp();
     }
@@ -53,7 +57,6 @@ public class UserController {
 
     @RequestMapping(value = USER + "/latestNo")
     public RetResult latestNo(int roleId) {
-        System.out.println("get success!");
         String no = userService.getLatestNo(roleId);
         System.out.println(no);
         return RetResponse.makeOKRsp(no);
