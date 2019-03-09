@@ -49,6 +49,12 @@ public class UserController {
         return RetResponse.makeOKRsp();
     }
 
+    @RequestMapping(value = USER + "/resetPassword")
+    public RetResult resetPassword(String account) {
+        userService.resetPassword(account);
+        return RetResponse.makeOKRsp();
+    }
+
     @RequestMapping(value = USER + "/deleteUser")
     public RetResult deleteUser(String account) {
         userService.logoffUser(account);

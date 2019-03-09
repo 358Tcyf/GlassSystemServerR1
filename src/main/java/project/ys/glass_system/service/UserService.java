@@ -9,9 +9,11 @@ public interface UserService {
 
     void create(Role role);
 
-    void addUser(User user,int roleId);
+    void addUser(User user, int roleId);
 
     String getLatestNo(int roleId);
+
+    void resetPassword(String no);
 
     void logoffUser(String no);
 

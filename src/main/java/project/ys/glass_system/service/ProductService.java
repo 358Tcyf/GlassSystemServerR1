@@ -9,4 +9,5 @@ public interface ProductService {
     void onceProduct(Products products);
 
     void dailyProduct(List<Products> products);
+
 }

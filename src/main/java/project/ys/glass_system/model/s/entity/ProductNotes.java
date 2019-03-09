@@ -2,10 +2,12 @@ package project.ys.glass_system.model.s.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,29 +17,36 @@ public class ProductNotes extends BaseEntity {
     public ProductNotes() {
     }
 
-    public ProductNotes(Date produceDate) {
-        this.produceDate = produceDate;
+    public ProductNotes(LocalDate date) {
+        this(date, 0, 0);
     }
 
 
-    @Column
-    private Date produceDate;
+    public ProductNotes(LocalDate date, double water, double electricity) {
+        this.date = date;
+        this.water = water;
+        this.electricity = electricity;
+    }
+
+    @Column(name = "note_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
 
     @OneToMany
-    List<Products> products;
+    private List<Products> products;
 
-    @Column
-    private double waterConsumption;
+    @Column(name = "wtr_consu", length = 11)
+    private double water;
 
-    @Column
-    private double electricityConsumption;
+    @Column(name = "elec_consu", length = 11)
+    private double electricity;
 
-    public Date getProduceDate() {
-        return produceDate;
+    public LocalDate getProduceDate() {
+        return date;
     }
 
-    public void setProduceDate(Date produceDate) {
-        this.produceDate = produceDate;
+    public void setProduceDate(LocalDate noteDate) {
+        this.date = noteDate;
     }
 
     public List<Products> getProducts() {
@@ -48,19 +57,19 @@ public class ProductNotes extends BaseEntity {
         this.products = products;
     }
 
-    public double getWaterConsumption() {
-        return waterConsumption;
+    public double getWater() {
+        return water;
     }
 
-    public void setWaterConsumption(double waterConsumption) {
-        this.waterConsumption = waterConsumption;
+    public void setWater(double water) {
+        this.water = water;
     }
 
-    public double getElectricityConsumption() {
-        return electricityConsumption;
+    public double getElectricity() {
+        return electricity;
     }
 
-    public void setElectricityConsumption(double electricityConsumption) {
-        this.electricityConsumption = electricityConsumption;
+    public void setElectricity(double electricity) {
+        this.electricity = electricity;
     }
 }

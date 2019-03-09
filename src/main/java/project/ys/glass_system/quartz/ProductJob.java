@@ -4,26 +4,31 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import project.ys.glass_system.GlassSystemApplication;
 import project.ys.glass_system.model.s.entity.Products;
+import project.ys.glass_system.service.impl.GlassServiceImpl;
 import project.ys.glass_system.service.impl.ProductServiceImpl;
-import project.ys.glass_system.utils.ApplicationContextUtil;
+import project.ys.glass_system.util.ApplicationContextUtils;
 
-import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Random;
+
+import static project.ys.glass_system.model.s.entity.Glass.GLASS_MODEL;
+import static project.ys.glass_system.util.LocalDateUtils.dateToLocalDateTime;
+import static project.ys.glass_system.util.RandomUtils.randomInt;
 
 public class ProductJob implements Job {
 
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        System.out.println("定时器任务执行" + new Date(System.currentTimeMillis()));
-        JobDataMap map = jobExecutionContext.getMergedJobDataMap();
-        System.out.println("某员工于" + map.get("date") + "该时进行了生产");
-        Products products = new Products((Date) map.get("date"));
-        ProductServiceImpl productService = ApplicationContextUtil.getBean(ProductServiceImpl.class);
-        productService.onceProduct(products);
+        ProductServiceImpl productService = ApplicationContextUtils.getBean(ProductServiceImpl.class);
+        GlassServiceImpl glassService = ApplicationContextUtils.getBean(GlassServiceImpl.class);
+
+//        JobDataMap map = jobExecutionContext.getMergedJobDataMap();
+        System.out.println("某员工于" + LocalDateTime.now() + "该时进行了生产");
+        int random = randomInt(0, 4);
+        Products onceProduce = glassService.virtualProduce(GLASS_MODEL[random]);
+        productService.onceProduct(onceProduce);
     }
 }

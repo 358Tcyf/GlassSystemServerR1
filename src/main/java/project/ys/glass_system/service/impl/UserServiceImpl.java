@@ -17,6 +17,13 @@ import java.util.Map;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
+    public static final int SUPER_MANAGER = 1;
+    public static final int MANAGEMENT_SECTION = 2;
+    public static final int PRODUCT_SECTION = 3;
+    public static final int SALE_SECTION = 4;
+    public static final String DEFAULT_PASSWORD = "123456";
+
     @Resource
     private UserDao userDao;
 
@@ -49,26 +56,35 @@ public class UserServiceImpl implements UserService {
             no = 1;
         }
         switch (roleId) {
-            case 0:
+            case SUPER_MANAGER:
                 latestNo = "A" + String.format("%02d", no);
                 break;
-            case 1:
+            case MANAGEMENT_SECTION:
                 latestNo = "M" + String.format("%03d", no);
                 break;
-            case 2:
+            case PRODUCT_SECTION:
                 latestNo = "P" + String.format("%04d", no);
                 break;
-            case 3:
+            case SALE_SECTION:
                 latestNo = "S" + String.format("%04d", no);
                 break;
         }
-        System.out.println(latestNo);
         return latestNo;
     }
 
     @Override
+    public void resetPassword(String no) {
+        if (isExisted(no)) {
+            User user = userDao.findByNo(no);
+            user.setPassword(DEFAULT_PASSWORD);
+            userDao.saveAndFlush(user);
+        }
+    }
+
+    @Override
     public void logoffUser(String no) {
-        userDao.deleteByNo(no);
+        if (isExisted(no))
+            userDao.deleteByNo(no);
     }
 
     @Override
@@ -93,16 +109,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> userInfo(String no) {
         User find = userDao.findByNo(no);
-        Map<String, Object> user = new HashMap<>();
-        Map<String, Object> role = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
-        user.put("no", find.getNo());
-        user.put("phone", find.getPhone());
-        user.put("name", find.getName());
-        user.put("email", find.getEmail());
-        role.put("roleName", find.getRole().getName());
-        result.put("user", user);
-        result.put("role", role);
+        result.put("no", find.getNo());
+        result.put("phone", find.getPhone());
+        result.put("name", find.getName());
+        result.put("email", find.getEmail());
+        result.put("roleName", find.getRole().getName());
         return result;
     }
 

@@ -12,10 +12,11 @@ import javax.annotation.Resource;
 @SpringBootTest(classes = GlassSystemApplication.class)
 public class UserTest {
 
-    public static final int SUPER_MANAGER = 0;
-    public static final int MANAGEMENT_SECTION = 1;
-    public static final int PRODUCT_SECTION = 2;
-    public static final int SALE_SECTION = 3;
+    public static final int SUPER_MANAGER = 1;
+    public static final int MANAGEMENT_SECTION = 2;
+    public static final int PRODUCT_SECTION = 3;
+    public static final int SALE_SECTION = 4;
+    public static final String DEFAULT_PASSWORD = "123456";
 
     @Resource
     UserServiceImpl userService;
@@ -23,7 +24,29 @@ public class UserTest {
 
     @Test
     public void testAddUser() {
-//        userService.addUser(new User("M0002", "123456", "布鲁斯", "", ""), MANAGEMENT_SECTION);
+//       for(int i =0;i<10;i++){
+//           int roleId = new Random().nextInt(4) + 1;
+//           String no = userService.getLatestNo(roleId);
+//           System.out.println(no);
+//       }
+    }
+
+    @Test
+    public void createUser() {
+//        for (int i = 0; i < 20; i++) {
+//            int roleId = new Random().nextInt(4) + 1;
+//            String no = userService.getLatestNo(roleId);
+//            String password = DEFAULT_PASSWORD;
+//            String name = getChineseName();
+//            String phone = getTelephone();
+//            String email = getEmail(5, 10);
+//            User user;
+//            if (roleId == 1)
+//                user = new User(no, password);
+//            else
+//                user = new User(no, password, name, phone, email);
+//            userService.addUser(user, roleId);
+//        }
     }
 
     @Test

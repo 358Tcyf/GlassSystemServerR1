@@ -2,10 +2,13 @@ package project.ys.glass_system.model.s.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.util.Date;
+import javax.persistence.OneToOne;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Products extends BaseEntity {
@@ -14,91 +17,104 @@ public class Products extends BaseEntity {
     public Products() {
     }
 
-    public Products(Date produceDate) {
-        this(produceDate, null, 0);
+    public Products(LocalDateTime date) {
+        this(date, null, 0);
     }
 
-    public Products(Date produceDate, String glassModel) {
-        this(produceDate, glassModel, 0);
+    public Products(LocalDateTime date, Glass model) {
+        this(date, model, 0);
     }
 
-    public Products(Date produceDate, String glassModel, int planNumber) {
-        this(produceDate, glassModel, planNumber, 0, 0, 0);
+    public Products(LocalDateTime date, Glass model, int plan) {
+        this(date, model, plan, 0, 0, 0);
     }
 
-    public Products(Date produceDate, String glassModel, int planNumber, int hardenNumber, int coatNumber, int failNumber) {
-        this.produceDate = produceDate;
-        this.glassModel = glassModel;
-        this.planNumber = planNumber;
-        this.hardenNumber = hardenNumber;
-        this.coatNumber = coatNumber;
-        this.failNumber = failNumber;
+    public Products(LocalDateTime date, Glass model, int plan, int harden, int coat, int fail) {
+        this.date = date;
+        this.model = model;
+        this.plan = plan;
+        this.harden = harden;
+        this.coat = coat;
+        this.fail = fail;
 
     }
 
-    @Column
-    private Date produceDate;
+    @Column(name = "produce_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime date;
 
-    @Column
-    private String glassModel;
+    @OneToOne
+    private Glass model;
 
-    @Column
-    private int planNumber;
+    @Column(name = "plan_num", length = 11)
+    private int plan;
 
-    @Column
-    private int hardenNumber;
+    @Column(name = "harden_num", length = 11)
+    private int harden;
 
-    @Column
-    private int coatNumber;
+    @Column(name = "coat_num", length = 11)
+    private int coat;
 
-    @Column
-    private int failNumber;
+    @Column(name = "fail_num", length = 11)
+    private int fail;
 
-    public Date getProduceDate() {
-        return produceDate;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setProduceDate(Date produceDate) {
-        this.produceDate = produceDate;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
-    public String getGlassModel() {
-        return glassModel;
+    public Glass getModel() {
+        return model;
     }
 
-    public void setGlassModel(String glassModel) {
-        this.glassModel = glassModel;
+    public void setModel(Glass model) {
+        this.model = model;
     }
 
-    public int getPlanNumber() {
-        return planNumber;
+    public int getPlan() {
+        return plan;
     }
 
-    public void setPlanNumber(int planNumber) {
-        this.planNumber = planNumber;
+    public void setPlan(int plan) {
+        this.plan = plan;
     }
 
-    public int getHardenNumber() {
-        return hardenNumber;
+    public int getHarden() {
+        return harden;
     }
 
-    public void setHardenNumber(int hardenNumber) {
-        this.hardenNumber = hardenNumber;
+    public void setHarden(int harden) {
+        this.harden = harden;
     }
 
-    public int getCoatNumber() {
-        return coatNumber;
+    public int getCoat() {
+        return coat;
     }
 
-    public void setCoatNumber(int coatNumber) {
-        this.coatNumber = coatNumber;
+    public void setCoat(int coat) {
+        this.coat = coat;
     }
 
-    public int getFailNumber() {
-        return failNumber;
+    public int getFail() {
+        return fail;
     }
 
-    public void setFailNumber(int failNumber) {
-        this.failNumber = failNumber;
+    public void setFail(int fail) {
+        this.fail = fail;
+    }
+
+    @Override
+    public String toString() {
+        return "Products{" +
+                "date=" + date +
+                ",\n model=" + model +
+                ",\n plan=" + plan +
+                ",\n harden=" + harden +
+                ",\n coat=" + coat +
+                ",\n fail=" + fail +
+                '}';
     }
 }

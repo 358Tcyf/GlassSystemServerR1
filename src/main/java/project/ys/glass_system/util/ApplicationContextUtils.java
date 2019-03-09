@@ -1,14 +1,14 @@
-package project.ys.glass_system.utils;
+package project.ys.glass_system.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
-public class ApplicationContextUtil {
+public class ApplicationContextUtils {
     private static ApplicationContext applicationContext = null;
 
     public static void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (ApplicationContextUtil.applicationContext == null) {
-            ApplicationContextUtil.applicationContext = applicationContext;
+        if (ApplicationContextUtils.applicationContext == null) {
+            ApplicationContextUtils.applicationContext = applicationContext;
         }
     }
     //获取applicationContext

@@ -1,4 +1,4 @@
-package project.ys.glass_system.utils;
+package project.ys.glass_system.util;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -8,7 +8,7 @@ import java.util.Date;
  * @author Daylight
  * @date 2018/11/28 17:10
  */
-public class DateUtil {
+public class DateUtils {
     public final static String format1 = "yyyy-MM-dd HH:mm:ss";
     public final static String format2 = "yyyy-MM-dd";
 

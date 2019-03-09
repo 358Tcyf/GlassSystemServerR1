@@ -9,17 +9,18 @@ import project.ys.glass_system.service.ProductService;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static project.ys.glass_system.utils.DateUtil.accurateToDate;
+import static project.ys.glass_system.util.RandomUtils.*;
 
 
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
+
 
     @Resource
     private ProductDao productDao;
@@ -33,19 +34,20 @@ public class ProductServiceImpl implements ProductService {
         productDao.save(product);
         ProductNotes productNotes;
         List<Products> list;
-        Date date = accurateToDate(product.getProduceDate());
-        if (null != productNoteDao.findByProduceDate(date)) {
-            productNotes = productNoteDao.findByProduceDate(date);
+        LocalDate date = product.getDate().toLocalDate();
+        if (null != productNoteDao.findByDate(date)) {
+            productNotes = productNoteDao.findByDate(date);
             list = productNotes.getProducts();
             list.add(product);
             productNotes.setProducts(list);
-
         } else {
             productNotes = new ProductNotes(date);
             list = new ArrayList<>();
             list.add(product);
             productNotes.setProducts(list);
         }
+        productNotes.setWater(productNotes.getWater()+randomInt(0.10,0.50));
+        productNotes.setElectricity(productNotes.getElectricity()+randomInt(1.00,3.00));
         productNoteDao.saveAndFlush(productNotes);
     }
 
@@ -57,5 +59,6 @@ public class ProductServiceImpl implements ProductService {
         }
 
     }
+
 
 }
