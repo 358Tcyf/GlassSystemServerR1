@@ -12,6 +12,8 @@ import project.ys.glass_system.service.GlassService;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static project.ys.glass_system.util.RandomUtils.*;
 
@@ -68,5 +70,21 @@ public class GlassServiceImpl implements GlassService {
                 , glassDao.findGlassByModel(model).getPrice() * randomSale[delivery]);
     }
 
+    public String[] xValues() {
+        List<Glass> glasses = glassDao.findAll();
+        List<String> glassArray = new ArrayList<>();
+        for (Glass glass : glasses) {
+            glassArray.add(glass.getModel());
+        }
+        return  glassArray.toArray(new String[glassArray.size()]);
+    }
+
+    public List<Glass> findAll(){
+        return glassDao.findAll();
+    }
+
+    public Glass findByModel(String model){
+        return glassDao.findGlassByModel(model);
+    }
 
 }

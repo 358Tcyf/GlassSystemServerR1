@@ -41,12 +41,15 @@ public class ProductNotes extends BaseEntity {
     @Column(name = "elec_consu", length = 11)
     private double electricity;
 
-    public LocalDate getProduceDate() {
+    @Column(name = "coal_consu", length = 11)
+    private double coal;
+
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setProduceDate(LocalDate noteDate) {
-        this.date = noteDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public List<Products> getProducts() {
@@ -72,4 +75,13 @@ public class ProductNotes extends BaseEntity {
     public void setElectricity(double electricity) {
         this.electricity = electricity;
     }
+
+    public double getCoal() {
+        return coal;
+    }
+
+    public void setCoal(double coal) {
+        this.coal = coal;
+    }
+
 }

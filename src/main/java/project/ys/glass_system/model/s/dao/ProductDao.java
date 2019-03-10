@@ -12,4 +12,6 @@ public interface ProductDao extends JpaRepository<Products, Integer> {
     Products findTopByModel(Glass model);
 
     List<Products> findProductsByDateBetween(LocalDateTime date, LocalDateTime date2);
+
+    List<Products> findProductsByModel(Glass model);
 }

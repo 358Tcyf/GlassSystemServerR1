@@ -2,9 +2,9 @@ package project.ys.glass_system.model.p.bean;
 
 public class BaseEntry<T> {
 
-    public BaseEntry(T xValue, T yValue){
-        this.xValue=xValue;
-        this.yValue=yValue;
+    public BaseEntry(T xValue, T yValue) {
+        this.xValue = xValue;
+        this.yValue = yValue;
     }
 
     private T xValue;
@@ -27,11 +27,5 @@ public class BaseEntry<T> {
         this.yValue = yValue;
     }
 
-    @Override
-    public String toString() {
-        return "BaseEntry{" +
-                "xValue=" + xValue +
-                ", yValue=" + yValue +
-                '}';
-    }
+
 }

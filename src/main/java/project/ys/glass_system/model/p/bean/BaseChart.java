@@ -1,6 +1,5 @@
 package project.ys.glass_system.model.p.bean;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class BaseChart {
@@ -10,9 +9,13 @@ public class BaseChart {
     public static int pie_chart = 2;
     public static int ring_chart = 3;
 
+    private String menu;
+
+    private String submenu;
+
     private String title;
 
-    private String subtitle;
+    private String description;
 
     private int chart_type;
 
@@ -28,6 +31,22 @@ public class BaseChart {
 
     private List<List<BaseEntry>> yListValues;
 
+    public String getMenu() {
+        return menu;
+    }
+
+    public void setMenu(String menu) {
+        this.menu = menu;
+    }
+
+    public String getSubmenu() {
+        return submenu;
+    }
+
+    public void setSubmenu(String submenu) {
+        this.submenu = submenu;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -36,12 +55,12 @@ public class BaseChart {
         this.title = title;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getChart_type() {
@@ -100,17 +119,5 @@ public class BaseChart {
         this.yListValues = yListValues;
     }
 
-    @Override
-    public String toString() {
-        String result = "BaseChart{" +
-                "title='" + title + '\'' +
-                ",\n subtitle='" + subtitle + '\'' +
-                ",\n chart_type=" + chart_type +
-                ",\n only=" + only;
-        if (only)
-            result += ",\n" + " label='" + label + '\'' + ",\n xValues=" + Arrays.toString(xValues) + ",\n" + " yValues=" + yValues + '}';
-        else
-            result += ",\n" + " labels=" + labels + ",\n xValues=" + Arrays.toString(xValues) + ",\n" + " yListValues=" + yListValues + '}';
-        return result;
-    }
+
 }

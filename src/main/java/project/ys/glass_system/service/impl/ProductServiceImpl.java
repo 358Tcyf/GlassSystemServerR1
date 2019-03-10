@@ -10,11 +10,10 @@ import project.ys.glass_system.service.ProductService;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static project.ys.glass_system.util.RandomUtils.*;
+import static project.ys.glass_system.util.RandomUtils.randomInt;
 
 
 @Service
@@ -46,8 +45,9 @@ public class ProductServiceImpl implements ProductService {
             list.add(product);
             productNotes.setProducts(list);
         }
-        productNotes.setWater(productNotes.getWater()+randomInt(0.10,0.50));
-        productNotes.setElectricity(productNotes.getElectricity()+randomInt(1.00,3.00));
+        productNotes.setWater(productNotes.getWater() + randomInt(0.10, 0.50));
+        productNotes.setElectricity(productNotes.getElectricity() + randomInt(1.00, 3.00));
+        productNotes.setCoal(productNotes.getCoal() + randomInt(0.50, 1.00));
         productNoteDao.saveAndFlush(productNotes);
     }
 

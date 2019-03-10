@@ -1,5 +1,7 @@
 package project.ys.glass_system.util;
 
+import org.apache.tomcat.jni.Local;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -11,6 +13,9 @@ public class LocalDateUtils {
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+
+    public static final String DATE_FORMAT_CN = "yyyy年MM月dd日 ";
+
 
     public static final String TIME_FORMAT = "HH:mm:ss";
 
@@ -126,7 +131,7 @@ public class LocalDateUtils {
      * @param time string
      * @return
      */
-    public static LocalDateTime stringToLocalDateTime(LocalDate date,String time) {
+    public static LocalDateTime stringToLocalDateTime(LocalDate date, String time) {
         return LocalDateTime.parse(dateToStr(date, DATE_FORMAT) + "T" + time);
     }
 
@@ -139,6 +144,17 @@ public class LocalDateUtils {
      */
     public static long stringDateToMilli(String time) {
         return LocalDateUtils.stringToDate(time, DATE_TIME_FORMAT).toInstant().toEpochMilli();
+    }
+
+
+    /**
+     * 将time时间转换成毫秒时间戳
+     *
+     * @param time LocalDateTime
+     * @return
+     */
+    public static long localDateTimeToMilli(LocalDateTime time) {
+        return LocalDateUtils.stringToDate(dateToStr(time, DATE_TIME_FORMAT), DATE_TIME_FORMAT).toInstant().toEpochMilli();
     }
 
     /**
