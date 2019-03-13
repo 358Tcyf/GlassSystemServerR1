@@ -64,7 +64,6 @@ public class SaleServiceImpl implements SaleService {
 
 
     public void ordersOfDay(Orders orders) {
-        System.out.println(orders);
         SaleNotes saleNote;
         List<Orders> list;
         LocalDate date = orders.getDate().toLocalDate();

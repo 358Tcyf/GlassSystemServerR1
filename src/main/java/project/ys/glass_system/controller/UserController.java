@@ -1,5 +1,7 @@
 package project.ys.glass_system.controller;
 
+import com.alibaba.fastjson.JSON;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.ys.glass_system.model.dto.RetResponse;
@@ -8,6 +10,7 @@ import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,20 +23,17 @@ public class UserController {
 
     @RequestMapping(value = USER + "/login")
     public RetResult<User> login(String account, String password) {
-        System.out.println("account is " + account + "\npassword is " + password);
         if (!userService.isExisted(account)) {
             return RetResponse.makeErrRsp("账号错误");
         } else if (!userService.checkPassword(account, password)) {
             return RetResponse.makeErrRsp("密码错误");
         } else {
-            System.out.println(account + "login success!");
             return RetResponse.makeOKRsp("登陆成功", userService.login(account, password));
         }
     }
 
     @RequestMapping(value = USER + "/userInfo")
     public RetResult<Map<String, Object>> getUserInfo(String account) {
-        System.out.println(account + "GET SUCCESS!");
         return RetResponse.makeOKRsp(userService.userInfo(account));
     }
 
@@ -51,8 +51,28 @@ public class UserController {
 
     @RequestMapping(value = USER + "/resetPassword")
     public RetResult resetPassword(String account) {
-        userService.resetPassword(account);
-        return RetResponse.makeOKRsp();
+        switch (userService.resetPassword(account)) {
+            case 0:
+                return RetResponse.makeOKRsp("密码过去已重置");
+            case 1:
+                return RetResponse.makeOKRsp("密码已重置");
+            default:
+                return RetResponse.makeErrRsp("账号不存在");
+        }
+    }
+
+    @RequestMapping(value = USER + "/updateTags")
+    public RetResult updateTags(String account, @RequestBody List<String> newTags) {
+        String tags = JSON.toJSONString(newTags);
+        if (userService.updateTags(account, tags))
+            return RetResponse.makeOKRsp();
+        else
+            return RetResponse.makeErrRsp("账号不存在");
+    }
+
+    @RequestMapping(value = USER + "/getTags")
+    public RetResult getTags(String account) {
+        return RetResponse.makeOKRsp(userService.getTags(account));
     }
 
     @RequestMapping(value = USER + "/deleteUser")
@@ -64,7 +84,6 @@ public class UserController {
     @RequestMapping(value = USER + "/latestNo")
     public RetResult latestNo(int roleId) {
         String no = userService.getLatestNo(roleId);
-        System.out.println(no);
         return RetResponse.makeOKRsp(no);
     }
 

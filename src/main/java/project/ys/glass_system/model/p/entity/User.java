@@ -1,8 +1,7 @@
 package project.ys.glass_system.model.p.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User extends BaseEntity {
@@ -47,6 +46,18 @@ public class User extends BaseEntity {
     /*可公开*/
     @Column
     private String email;
+
+    /*不可公开*/
+    @Column
+    private String tags;
+
+    /*可公开*/
+    @ManyToMany
+    private List<File> files;
+
+    /*不必公开*/
+    @ManyToMany
+    private List<Tag> care;
 
     public String getNo() {
         return no;
@@ -96,15 +107,27 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "no='" + no + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", role=" + role +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
+    }
+
+    public List<Tag> getCare() {
+        return care;
+    }
+
+    public void setCare(List<Tag> care) {
+        this.care = care;
     }
 }

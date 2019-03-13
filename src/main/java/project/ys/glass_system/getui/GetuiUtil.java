@@ -35,7 +35,7 @@ public class GetuiUtil {
         message.setData(template);
         message.setAppIdList(appIds);
         message.setOffline(true);
-        message.setOfflineExpireTime(1000 * 600);
+        message.setOfflineExpireTime(1000 * 60*60*24);
         IPushResult ret = push.pushMessageToApp(message);
         System.out.println(ret.getResponse().toString());
 

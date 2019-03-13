@@ -73,12 +73,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String no) {
+    public int resetPassword(String no) {
         if (isExisted(no)) {
             User user = userDao.findByNo(no);
-            user.setPassword(DEFAULT_PASSWORD);
-            userDao.saveAndFlush(user);
-        }
+            if (DEFAULT_PASSWORD.equals(user.getPassword()))
+                return 0;
+            else {
+                user.setPassword(DEFAULT_PASSWORD);
+                userDao.saveAndFlush(user);
+                return 1;
+            }
+        } else return -1;
     }
 
     @Override
@@ -89,16 +94,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isExisted(String account) {
-        if (userDao.findByNo(account) == null)
-            return false;
-        return true;
+        return userDao.findByNo(account) != null;
     }
 
     @Override
     public boolean checkPassword(String account, String password) {
-        if (userDao.findByNoAndPassword(account, password) == null)
-            return false;
-        return true;
+        return userDao.findByNoAndPassword(account, password) != null;
     }
 
     @Override
@@ -130,7 +131,23 @@ public class UserServiceImpl implements UserService {
                 users.add(userInfo(user.getNo()));
         }
         resultData.putIfAbsent("staffs", users);
-        System.out.println(resultData);
         return resultData;
+    }
+
+    public boolean updateTags(String no, String tags) {
+        if (isExisted(no)) {
+            User user = userDao.findByNo(no);
+            user.setTags(tags);
+            return true;
+        }
+        return false;
+    }
+
+    public String getTags(String no) {
+        if (isExisted(no)) {
+            User user = userDao.findByNo(no);
+            return user.getTags();
+        }
+        return null;
     }
 }

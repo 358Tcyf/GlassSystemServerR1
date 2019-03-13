@@ -48,19 +48,18 @@ public class PushTest {
 
     @Test
     public void testPushItem1() {
-        LocalDate date = LocalDate.parse("2019-03-09");
-        System.out.println(pushService.packDailyData(date));
+//        LocalDate date = LocalDate.parse("2019-03-09");
+//        System.out.println(pushService.packDailyData(date));
     }
 
     @Test
     public void testGetui() {
-        String[] dataArray = new String[]{"2019-03-09", "2019-03-10"};
-        for (CharSequence data : dataArray) {
-            LocalDate date = LocalDate.parse(data);
-            String push = JSON.toJSONString(pushService.packDailyData(date));
-            sendMessage(transmissionTemplate(push));
-        }
-
+//        String[] dataArray = new String[]{"2019-03-09", "2019-03-10"};
+//        for (CharSequence data : dataArray) {
+//            LocalDate date = LocalDate.parse(data);
+//            String push = JSON.toJSONString(pushService.packDailyData(date));
+//            sendMessage(transmissionTemplate(push));
+//        }
     }
 
     @After

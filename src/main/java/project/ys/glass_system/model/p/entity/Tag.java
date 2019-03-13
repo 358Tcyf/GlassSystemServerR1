@@ -2,31 +2,19 @@ package project.ys.glass_system.model.p.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import java.util.List;
 
-@Entity
-public class Role extends BaseEntity {
+/**
+ * @author Simple
+ * @date on 2019/1/3 15:52
+ */
+@Entity(name = "push_tags")
+public class Tag extends BaseEntity {
 
-
-    public Role() {
-    }
-
-    public Role(String name) {
-        this.name = name;
-    }
-
-    /*角色身份*/
-    @Column(nullable = false, unique = true)
+    @Column(name = "tag_name", nullable = false, unique = true)
     private String name;
 
-    /*角色描述，可空*/
-    @Column
+    @Column(name = "tag_path")
     private String description;
-
-    /*角色权限，可空*/
-    @ManyToMany
-    private List<Permission> permissionList;
 
     public String getName() {
         return name;

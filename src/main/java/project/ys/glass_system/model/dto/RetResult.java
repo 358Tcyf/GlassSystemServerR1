@@ -37,4 +37,12 @@ public class RetResult<T> {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "RetResult{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

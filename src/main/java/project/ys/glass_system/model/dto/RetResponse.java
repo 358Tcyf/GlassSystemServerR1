@@ -31,4 +31,5 @@ public class RetResponse {
     public static <T> RetResult<T> makeRsp(int code, String msg, T data) {
         return new RetResult<T>().setCode(code).setMsg(msg).setData(data);
     }
+
 }

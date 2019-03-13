@@ -69,24 +69,39 @@
         <dependency>
             <groupId>com.gexin.platform</groupId>
             <artifactId>gexin-rp-sdk-base</artifactId>
-            <version>4.0.0.26</version>
-            <scope>system</scope> <!--system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它-->
-            <systemPath>${basedir}/lib/gexin-rp-sdk-base-4.0.0.26.jar</systemPath> <!--项目根目录下的lib文件夹下-->
+            <version>4.0.0.12</version>
         </dependency>
         <dependency>
             <groupId>com.gexin.platform</groupId>
             <artifactId>gexin-rp-sdk-http</artifactId>
-            <version>4.1.0.1</version>
-            <scope>system</scope> <!--system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它-->
-            <systemPath>${basedir}/lib/gexin-rp-sdk-http-4.1.0.1.jar</systemPath> <!--项目根目录下的lib文件夹下-->
+            <version>4.0.1.7</version>
         </dependency>
         <dependency>
             <groupId>com.gexin.platform</groupId>
             <artifactId>gexin-rp-sdk-template</artifactId>
-            <version>4.0.0.20</version>
-            <scope>system</scope> <!--system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它-->
-            <systemPath>${basedir}/lib/gexin-rp-sdk-template-4.0.0.20.jar</systemPath> <!--项目根目录下的lib文件夹下-->
+            <version>4.0.0.4</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.gexin.platform</groupId>-->
+            <!--<artifactId>gexin-rp-sdk-base</artifactId>-->
+            <!--<version>4.0.0.26</version>-->
+            <!--<scope>system</scope> &lt;!&ndash;system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它&ndash;&gt;-->
+            <!--<systemPath>${basedir}/lib/gexin-rp-sdk-base-4.0.0.26.jar</systemPath> &lt;!&ndash;项目根目录下的lib文件夹下&ndash;&gt;-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.gexin.platform</groupId>-->
+            <!--<artifactId>gexin-rp-sdk-http</artifactId>-->
+            <!--<version>4.1.0.1</version>-->
+            <!--<scope>system</scope> &lt;!&ndash;system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它&ndash;&gt;-->
+            <!--<systemPath>${basedir}/lib/gexin-rp-sdk-http-4.1.0.1.jar</systemPath> &lt;!&ndash;项目根目录下的lib文件夹下&ndash;&gt;-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.gexin.platform</groupId>-->
+            <!--<artifactId>gexin-rp-sdk-template</artifactId>-->
+            <!--<version>4.0.0.20</version>-->
+            <!--<scope>system</scope> &lt;!&ndash;system，类似provided，需要显式提供依赖的jar以后，Maven就不会在Repository中查找它&ndash;&gt;-->
+            <!--<systemPath>${basedir}/lib/gexin-rp-sdk-template-4.0.0.20.jar</systemPath> &lt;!&ndash;项目根目录下的lib文件夹下&ndash;&gt;-->
+        <!--</dependency>-->
 
     </dependencies>
 
@@ -102,6 +117,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>

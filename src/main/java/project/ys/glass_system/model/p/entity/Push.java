@@ -1,8 +1,11 @@
-package project.ys.glass_system.model.p.bean;
+package project.ys.glass_system.model.p.entity;
 
 
-public class Push {
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
+@Entity(name = "push_table")
+public class Push extends BaseEntity{
 
     public Push() {
 
@@ -17,16 +20,25 @@ public class Push {
         this.content = content;
     }
 
+    @Column(name = "push_title", nullable = false)
     private String title;
 
+    @Column(name = "push_content")
     private String content;
 
+    @Column(name = "receiver_uuid")
     private String receiver;
 
+    @Column(name = "push_uuid", nullable = false, unique = true)
     private String pushUuid;
 
+    @Column(name = "receiver_default_see")
+    private String defaultSubMenu;
+
+    @Column(name = "push_createTime", nullable = false)
     private long createTime;
 
+    @Column(name = "receiver_haveRead")
     private boolean haveRead;
 
     public String getTitle() {
@@ -61,6 +73,14 @@ public class Push {
         this.pushUuid = pushUuid;
     }
 
+    public String getDefaultSubMenu() {
+        return defaultSubMenu;
+    }
+
+    public void setDefaultSubMenu(String defaultSubMenu) {
+        this.defaultSubMenu = defaultSubMenu;
+    }
+
     public long getCreateTime() {
         return createTime;
     }
@@ -77,15 +97,5 @@ public class Push {
         this.haveRead = haveRead;
     }
 
-    @Override
-    public String toString() {
-        return "Push{" +
-                "title='" + title + '\'' +
-                ",\n content='" + content + '\'' +
-                ",\n  receiver='" + receiver + '\'' +
-                ",\n  pushUuid='" + pushUuid + '\'' +
-                ",\n  createTime=" + createTime +
-                ",\n  haveRead=" + haveRead +
-                '}';
-    }
+
 }

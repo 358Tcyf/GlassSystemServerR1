@@ -13,7 +13,7 @@ public interface UserService {
 
     String getLatestNo(int roleId);
 
-    void resetPassword(String no);
+    int resetPassword(String no);
 
     void logoffUser(String no);
 
@@ -26,4 +26,8 @@ public interface UserService {
     Map<String, Object> userInfo(String no);
 
     Map<String, Object> userList();
+
+    boolean updateTags(String no,String tags);
+
+    String getTags(String no);
 }
