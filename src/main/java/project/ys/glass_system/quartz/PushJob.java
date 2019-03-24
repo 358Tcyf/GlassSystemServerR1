@@ -2,19 +2,19 @@ package project.ys.glass_system.quartz;
 
 import com.alibaba.fastjson.JSON;
 import org.quartz.Job;
-import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import project.ys.glass_system.service.impl.GlassServiceImpl;
+import project.ys.glass_system.model.p.entity.PushSet;
 import project.ys.glass_system.service.impl.PushServiceImpl;
-import project.ys.glass_system.service.impl.SaleServiceImpl;
+import project.ys.glass_system.service.impl.SetServiceImpl;
 import project.ys.glass_system.util.ApplicationContextUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static project.ys.glass_system.getui.GetuiUtil.sendMessage;
 import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
+import static project.ys.glass_system.model.p.entity.PushSet.getTime;
 
 public class PushJob implements Job {
 
@@ -22,13 +22,17 @@ public class PushJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         PushServiceImpl pushService = ApplicationContextUtils.getBean(PushServiceImpl.class);
+        SetServiceImpl setService = ApplicationContextUtils.getBean(SetServiceImpl.class);
+        PushSet set = setService.getPushSet("P0001");
+        int pushTime = getTime(set.getTime());
+        int nowTime = LocalTime.now().getHour();
+        if ((pushTime + 1) % pushTime == 0) {
+            System.out.println("系统于" + LocalDateTime.now() + "发布了推送");
+            LocalDateTime time = LocalDateTime.now();
+            String push = JSON.toJSONString(pushService.packDailyData(time.toLocalDate(), set.getTags()));
+            sendMessage(transmissionTemplate(push));
+        }
 
-        JobDataMap map = jobExecutionContext.getMergedJobDataMap();
-        System.out.println("系统于" + LocalDateTime.now() + "发布了推送");
-
-        LocalDateTime time = LocalDateTime.now();
-        String push = JSON.toJSONString(pushService.packDailyData(time.toLocalDate()));
-        sendMessage(transmissionTemplate(push));
 
     }
 }

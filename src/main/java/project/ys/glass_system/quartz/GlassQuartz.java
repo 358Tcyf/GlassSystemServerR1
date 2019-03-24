@@ -146,7 +146,7 @@ public class GlassQuartz {
         if (h.length() == 1)
             h = "0" + h;
         int min = time.getMinute();
-        LocalDateTime dateTime = LocalDateTime.parse(dateToStr(LocalDate.now(), DATE_FORMAT) + "T" + h + ":00:00");
+        LocalDateTime dateTime = LocalDateTime.parse(dateToStr(LocalDate.now(), DATE_FORMAT) + "T" + h + ":59:00");
         Date statTime = localDateTimeToDate(dateTime);
 //        Date statTime = localDateTimeToDate(LocalDateTime.now());
 

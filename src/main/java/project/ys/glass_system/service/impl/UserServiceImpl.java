@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static project.ys.glass_system.controller.FileController.FILE;
+
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -116,6 +118,8 @@ public class UserServiceImpl implements UserService {
         result.put("name", find.getName());
         result.put("email", find.getEmail());
         result.put("roleName", find.getRole().getName());
+        if (find.getPic() != null)
+            result.put("picPath", FILE + "/" + find.getNo());
         return result;
     }
 
@@ -134,20 +138,22 @@ public class UserServiceImpl implements UserService {
         return resultData;
     }
 
-    public boolean updateTags(String no, String tags) {
+    @Override
+    public boolean updateUser(String no, String email, String phone) {
         if (isExisted(no)) {
             User user = userDao.findByNo(no);
-            user.setTags(tags);
+            user.setEmail(email);
+            user.setPhone(phone);
             return true;
         }
         return false;
     }
 
-    public String getTags(String no) {
-        if (isExisted(no)) {
-            User user = userDao.findByNo(no);
-            return user.getTags();
-        }
-        return null;
+
+    @Override
+    public void updatePassword(String no, String newPassword) {
+        User user = userDao.findByNo(no);
+        user.setPassword(newPassword);
     }
+
 }

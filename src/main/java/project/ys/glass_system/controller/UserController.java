@@ -1,7 +1,5 @@
 package project.ys.glass_system.controller;
 
-import com.alibaba.fastjson.JSON;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.ys.glass_system.model.dto.RetResponse;
@@ -10,7 +8,6 @@ import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -61,19 +58,29 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = USER + "/updateTags")
-    public RetResult updateTags(String account, @RequestBody List<String> newTags) {
-        String tags = JSON.toJSONString(newTags);
-        if (userService.updateTags(account, tags))
+
+    @RequestMapping(value = USER + "/updateUser")
+    public RetResult updateUser(String account, String email, String phone) {
+        if (userService.updateUser(account, email, phone))
             return RetResponse.makeOKRsp();
         else
             return RetResponse.makeErrRsp("账号不存在");
     }
 
-    @RequestMapping(value = USER + "/getTags")
-    public RetResult getTags(String account) {
-        return RetResponse.makeOKRsp(userService.getTags(account));
+    @RequestMapping(value = USER + "/updatePassword")
+    public RetResult updatePassword(String account, String oldPassword, String newPassword) {
+        if (!userService.isExisted(account)) {
+            return RetResponse.makeErrRsp("账号不存在");
+        } else if (!userService.checkPassword(account, oldPassword)) {
+            return RetResponse.makeErrRsp("原密码错误");
+        } else if (oldPassword.equals(newPassword)) {
+            return RetResponse.makeErrRsp("密码一致");
+        } else {
+            userService.updatePassword(account, newPassword);
+            return RetResponse.makeOKRsp("修改成功");
+        }
     }
+
 
     @RequestMapping(value = USER + "/deleteUser")
     public RetResult deleteUser(String account) {

@@ -61,4 +61,10 @@ public class UserTest {
     public void testGetLatestNo() {
 //        userService.getLatestNo(SUPER_MANAGER);
     }
+
+    @Test
+    public void testGetUserInfo() {
+        System.out.println(userService.userInfo("P0001"));
+//        userService.getLatestNo(SUPER_MANAGER);
+    }
 }

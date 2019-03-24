@@ -55,6 +55,14 @@ public class User extends BaseEntity {
     @ManyToMany
     private List<File> files;
 
+    /*可公开*/
+    @OneToOne
+    private File pic;
+
+    /*可公开*/
+    @OneToOne
+    private PushSet pushSet;
+
     /*不必公开*/
     @ManyToMany
     private List<Tag> care;
@@ -121,6 +129,22 @@ public class User extends BaseEntity {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public File getPic() {
+        return pic;
+    }
+
+    public void setPic(File pic) {
+        this.pic = pic;
+    }
+
+    public PushSet getPushSet() {
+        return pushSet;
+    }
+
+    public void setPushSet(PushSet pushSet) {
+        this.pushSet = pushSet;
     }
 
     public List<Tag> getCare() {

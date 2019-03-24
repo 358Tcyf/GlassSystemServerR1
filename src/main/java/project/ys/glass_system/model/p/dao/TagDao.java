@@ -5,5 +5,5 @@ import project.ys.glass_system.model.p.entity.Tag;
 
 public interface TagDao extends JpaRepository<Tag, Integer> {
 
-
+    Tag findByName(String name);
 }

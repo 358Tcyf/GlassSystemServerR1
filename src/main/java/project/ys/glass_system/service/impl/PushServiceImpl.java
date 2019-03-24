@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
 import project.ys.glass_system.model.p.entity.Push;
+import project.ys.glass_system.model.p.entity.Tag;
 import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.model.s.dao.ProductNoteDao;
 import project.ys.glass_system.model.s.entity.Glass;
@@ -16,15 +17,17 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static project.ys.glass_system.model.p.bean.BaseChart.*;
+import static project.ys.glass_system.model.p.entity.Tag.*;
 import static project.ys.glass_system.util.LocalDateUtils.*;
 
 @Service
 @Transactional
 public class PushServiceImpl implements PushService {
-
 
     @Resource
     ProductDao productDao;
@@ -34,6 +37,29 @@ public class PushServiceImpl implements PushService {
 
     @Resource
     GlassServiceImpl glassService;
+
+    @Override
+    public Push packDailyData(LocalDate date, List<Tag> tags) {
+        LocalDateTime now = LocalDateTime.now();
+        long time = localDateTimeToMilli(now);
+        System.out.println("Push CreateTime ->" + time);
+        Push push = new Push(time);
+        List<BaseChart> content = new ArrayList<>();
+        for (Tag tag : tags) {
+            if (tag.getName().equals(DailyProduceCountList))
+                content.add(packDailyProduceCountList(date));
+            if (tag.getName().equals(DailyCountOfModel))
+                content.add(packDailyCountOfModel(date));
+            if (tag.getName().equals(DailyProduceQualityList))
+                content.add(packDailyProduceQualityList(date));
+            if (tag.getName().equals(DailyConsume))
+                content.add(packDailyConsume(date));
+        }
+        push.setContent(JSON.toJSONString(content));
+        push.setDefaultSubMenu(content.get(0).getSubmenu());
+        push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "推送数据");
+        return push;
+    }
 
     @Override
     public Push packDailyData(LocalDate date) {

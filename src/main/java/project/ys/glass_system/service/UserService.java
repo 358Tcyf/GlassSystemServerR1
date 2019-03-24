@@ -27,7 +27,7 @@ public interface UserService {
 
     Map<String, Object> userList();
 
-    boolean updateTags(String no,String tags);
+    boolean updateUser(String no, String email, String phone);
 
-    String getTags(String no);
+    void updatePassword(String no, String newPassword);
 }
