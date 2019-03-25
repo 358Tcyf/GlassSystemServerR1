@@ -39,6 +39,10 @@ public class UserController {
         return RetResponse.makeOKRsp(userService.userList());
     }
 
+    @RequestMapping(value = USER + "/searchUserList")
+    public RetResult<Map<String, Object>> searchUserList(String searchText) {
+        return RetResponse.makeOKRsp(userService.searchUserList(searchText));
+    }
 
     @RequestMapping(value = USER + "/addUser")
     public RetResult addUser(String name, String no, String email, String phone, int roleId) {

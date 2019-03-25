@@ -30,4 +30,6 @@ public interface UserService {
     boolean updateUser(String no, String email, String phone);
 
     void updatePassword(String no, String newPassword);
+
+    Map<String, Object> searchUserList(String searchText);
 }

@@ -1,8 +1,7 @@
 package project.ys.glass_system.model.p.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "push_set_table")
@@ -24,6 +23,7 @@ public class PushSet extends BaseEntity {
         }
     }
 
+
     public PushSet() {
     }
 
@@ -31,8 +31,23 @@ public class PushSet extends BaseEntity {
         this.pushSwitch = pushSwitch;
         this.time = time;
         this.alarmSwitch = alarmSwitch;
+        Date date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        this.start = date.getTime();
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+        this.end = date.getTime();
     }
 
+
+    @Column(name = "common_start_date")
+    private long start;
+
+    @Column(name = "common_end_date")
+    private long end;
 
     @Column(name = "push_switch")
     private boolean pushSwitch;
@@ -40,11 +55,28 @@ public class PushSet extends BaseEntity {
     @Column(name = "push_time")
     private int time;
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
     @Column(name = "alarm_switch")
     private boolean alarmSwitch;
+
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getEnd() {
+        return end;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
+    }
 
     public boolean isPushSwitch() {
         return pushSwitch;
@@ -81,8 +113,11 @@ public class PushSet extends BaseEntity {
     @Override
     public String toString() {
         return "PushSet{" +
-                "pushSwitch=" + pushSwitch +
+                "start=" + start +
+                ", end=" + end +
+                ", pushSwitch=" + pushSwitch +
                 ", time=" + time +
+                ", tags=" + tags +
                 ", alarmSwitch=" + alarmSwitch +
                 '}';
     }

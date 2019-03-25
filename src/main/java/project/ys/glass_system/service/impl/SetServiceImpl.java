@@ -59,6 +59,8 @@ public class SetServiceImpl implements SetService {
         set.setPushSwitch(pushSet.isPushSwitch());
         set.setTime(pushSet.getTime());
         set.setAlarmSwitch(pushSet.isAlarmSwitch());
+        set.setStart(pushSet.getStart());
+        set.setEnd(pushSet.getEnd());
         pushSetDao.saveAndFlush(set);
         user.setPushSet(pushSet);
         return true;

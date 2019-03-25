@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static project.ys.glass_system.controller.FileController.FILE;
+import static project.ys.glass_system.util.EncodeUtils.encode;
 
 @Service
 @Transactional
@@ -78,10 +79,10 @@ public class UserServiceImpl implements UserService {
     public int resetPassword(String no) {
         if (isExisted(no)) {
             User user = userDao.findByNo(no);
-            if (DEFAULT_PASSWORD.equals(user.getPassword()))
+            if (encode(DEFAULT_PASSWORD).equals(user.getPassword()))
                 return 0;
             else {
-                user.setPassword(DEFAULT_PASSWORD);
+                user.setPassword(encode(DEFAULT_PASSWORD));
                 userDao.saveAndFlush(user);
                 return 1;
             }
@@ -101,12 +102,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkPassword(String account, String password) {
-        return userDao.findByNoAndPassword(account, password) != null;
+        return userDao.findByNoAndPassword(account, encode(password)) != null;
     }
 
     @Override
     public User login(String account, String password) {
-        return userDao.findByNoAndPassword(account, password);
+        return userDao.findByNoAndPassword(account, encode(password));
     }
 
     @Override
@@ -153,7 +154,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePassword(String no, String newPassword) {
         User user = userDao.findByNo(no);
-        user.setPassword(newPassword);
+        user.setPassword(encode(newPassword));
+    }
+
+    @Override
+    public Map<String, Object> searchUserList(String searchText) {
+        List<User> allUsers = userDao.searchUsers(searchText);
+        if (allUsers == null)
+            return null;
+        Map<String, Object> resultData = new HashMap<>();
+        List<Map<String, Object>> users = new ArrayList<>();
+        for (User user : allUsers) {
+            if (!user.getNo().startsWith("A"))
+                users.add(userInfo(user.getNo()));
+        }
+        resultData.putIfAbsent("staffs", users);
+        return resultData;
     }
 
 }

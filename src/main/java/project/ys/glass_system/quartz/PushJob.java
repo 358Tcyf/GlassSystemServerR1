@@ -26,11 +26,17 @@ public class PushJob implements Job {
         PushSet set = setService.getPushSet("P0001");
         int pushTime = getTime(set.getTime());
         int nowTime = LocalTime.now().getHour();
-        if ((pushTime + 1) % pushTime == 0) {
+        System.out.println(pushTime);
+        if ((nowTime + 1) % pushTime == 0) {
             System.out.println("系统于" + LocalDateTime.now() + "发布了推送");
             LocalDateTime time = LocalDateTime.now();
             String push = JSON.toJSONString(pushService.packDailyData(time.toLocalDate(), set.getTags()));
             sendMessage(transmissionTemplate(push));
+        } else {
+            System.out.println("现在是" + nowTime + 1 + "时");
+            int h = 0;
+            for (h = 0; h < nowTime + 1; h += pushTime) ;
+            System.out.println("系统将在" + h + "时发送推送");
         }
 
 

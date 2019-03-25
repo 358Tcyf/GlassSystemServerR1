@@ -3,6 +3,8 @@ package project.ys.glass_system.model.p.entity;
 import javax.persistence.*;
 import java.util.List;
 
+import static project.ys.glass_system.util.EncodeUtils.encode;
+
 @Entity
 public class User extends BaseEntity {
 
@@ -10,13 +12,12 @@ public class User extends BaseEntity {
     }
 
     public User(String no, String password) {
-        this.no = no;
-        this.password = password;
+        this(no, password, null, null, null);
     }
 
     public User(String no, String password, String name, String phone, String email) {
         this.no = no;
-        this.password = password;
+        this.password = encode(password);
         this.name = name;
         this.phone = phone;
         this.email = email;
