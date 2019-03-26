@@ -17,10 +17,7 @@ import project.ys.glass_system.util.FileUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static project.ys.glass_system.util.UuidUtil.getUUID32;
 
@@ -79,16 +76,8 @@ public class FileController {
         User user = userDao.findByNo(account);
         String path = user.getPic().getPath();
         System.out.println(path);
-//        if (!new File(path).exists()) {
-//            System.out.println("文件不存在");
-//            path = path.substring(1);
-//        }
-//        System.out.println(path);
-//        if (!new File(path).exists()) {
-//            System.out.println("文件不存在");
-//            return;
-//        }
-        InputStream inputStream = new ClassPathResource(path).getInputStream();
+        File pic = FileUtil.download(path);
+        InputStream inputStream = new FileInputStream(pic);
         data = new byte[inputStream.available()];
         inputStream.read(data);
         inputStream.close();

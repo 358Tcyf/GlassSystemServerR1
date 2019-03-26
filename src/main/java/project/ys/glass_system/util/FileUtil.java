@@ -40,7 +40,7 @@ public class FileUtil {
         System.out.println("path is " + path);
         ClassLoader classLoader = new ClassLoader();
         classLoader.getResource(path);
-        File downloadFile = new File(String.valueOf(classLoader.getResource(path)));
+        File downloadFile = new File(absolutePath,path);
         return downloadFile;
     }
 
