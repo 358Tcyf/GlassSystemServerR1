@@ -1,6 +1,9 @@
 package project.ys.glass_system.model.p.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import java.util.Date;
 import java.util.List;
 
@@ -27,10 +30,16 @@ public class PushSet extends BaseEntity {
     public PushSet() {
     }
 
+
     public PushSet(boolean pushSwitch, int time, boolean alarmSwitch) {
-        this.pushSwitch = pushSwitch;
-        this.time = time;
-        this.alarmSwitch = alarmSwitch;
+        this(true, true, true, true, pushSwitch, time, alarmSwitch);
+    }
+
+    public PushSet(boolean commonSwitch, boolean sound, boolean vibrate, boolean flags, boolean pushSwitch, int time, boolean alarmSwitch) {
+        this.commonSwitch = commonSwitch;
+        this.sound = sound;
+        this.vibrate = vibrate;
+        this.flags = flags;
         Date date = new Date();
         date.setHours(0);
         date.setMinutes(0);
@@ -40,7 +49,23 @@ public class PushSet extends BaseEntity {
         date.setMinutes(59);
         date.setSeconds(59);
         this.end = date.getTime();
+        this.pushSwitch = pushSwitch;
+        this.time = time;
+        this.alarmSwitch = alarmSwitch;
     }
+
+
+    @Column(name = "common_switch")
+    private boolean commonSwitch;
+
+    @Column(name = "sound_swithc")
+    private boolean sound;
+
+    @Column(name = "vibrate_switch")
+    private boolean vibrate;
+
+    @Column(name = "flags_switch")
+    private boolean flags;
 
 
     @Column(name = "common_start_date")
@@ -58,9 +83,43 @@ public class PushSet extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
+    @ManyToMany
+    private List<AlarmTag> alarmTags;
+
     @Column(name = "alarm_switch")
     private boolean alarmSwitch;
 
+    public boolean isCommonSwitch() {
+        return commonSwitch;
+    }
+
+    public void setCommonSwitch(boolean commonSwitch) {
+        this.commonSwitch = commonSwitch;
+    }
+
+    public boolean isSound() {
+        return sound;
+    }
+
+    public void setSound(boolean sound) {
+        this.sound = sound;
+    }
+
+    public boolean isVibrate() {
+        return vibrate;
+    }
+
+    public void setVibrate(boolean vibrate) {
+        this.vibrate = vibrate;
+    }
+
+    public boolean isFlags() {
+        return flags;
+    }
+
+    public void setFlags(boolean flags) {
+        this.flags = flags;
+    }
 
     public long getStart() {
         return start;
@@ -110,14 +169,27 @@ public class PushSet extends BaseEntity {
         this.alarmSwitch = alarmSwitch;
     }
 
+    public List<AlarmTag> getAlarmTags() {
+        return alarmTags;
+    }
+
+    public void setAlarmTags(List<AlarmTag> alarmTags) {
+        this.alarmTags = alarmTags;
+    }
+
     @Override
     public String toString() {
         return "PushSet{" +
-                "start=" + start +
+                "commonSwitch=" + commonSwitch +
+                ", sound=" + sound +
+                ", vibrate=" + vibrate +
+                ", flags=" + flags +
+                ", start=" + start +
                 ", end=" + end +
                 ", pushSwitch=" + pushSwitch +
                 ", time=" + time +
                 ", tags=" + tags +
+                ", alarmTags=" + alarmTags +
                 ", alarmSwitch=" + alarmSwitch +
                 '}';
     }

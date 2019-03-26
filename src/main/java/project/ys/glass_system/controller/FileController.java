@@ -79,16 +79,15 @@ public class FileController {
         User user = userDao.findByNo(account);
         String path = user.getPic().getPath();
         System.out.println(path);
-        System.out.println(path);
-        if (!new File(path).exists()) {
-            System.out.println("文件不存在");
-            path = path.substring(1);
-        }
-        System.out.println(path);
-        if (!new File(path).exists()) {
-            System.out.println("文件不存在");
-            return;
-        }
+//        if (!new File(path).exists()) {
+//            System.out.println("文件不存在");
+//            path = path.substring(1);
+//        }
+//        System.out.println(path);
+//        if (!new File(path).exists()) {
+//            System.out.println("文件不存在");
+//            return;
+//        }
         InputStream inputStream = new ClassPathResource(path).getInputStream();
         data = new byte[inputStream.available()];
         inputStream.read(data);

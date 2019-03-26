@@ -16,7 +16,6 @@ public class Tag extends BaseEntity {
     public static String DailyConsume = "生产能耗";
 
     public Tag() {
-
     }
 
     public Tag(String name) {

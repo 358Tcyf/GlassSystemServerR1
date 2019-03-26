@@ -155,4 +155,21 @@ public class User extends BaseEntity {
     public void setCare(List<Tag> care) {
         this.care = care;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "no='" + no + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", role=" + role +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", tags='" + tags + '\'' +
+                ", files=" + files +
+                ", pic=" + pic +
+                ", pushSet=" + pushSet +
+                ", care=" + care +
+                '}';
+    }
 }

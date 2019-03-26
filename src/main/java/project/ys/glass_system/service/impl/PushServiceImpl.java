@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
+import project.ys.glass_system.model.p.dao.UserDao;
 import project.ys.glass_system.model.p.entity.Push;
+import project.ys.glass_system.model.p.entity.PushSet;
 import project.ys.glass_system.model.p.entity.Tag;
+import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.model.s.dao.ProductNoteDao;
 import project.ys.glass_system.model.s.entity.Glass;
@@ -17,17 +20,24 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static project.ys.glass_system.getui.GetuiUtil.sendSingleMessage;
+import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
 import static project.ys.glass_system.model.p.bean.BaseChart.*;
+import static project.ys.glass_system.model.p.entity.PushSet.getTime;
 import static project.ys.glass_system.model.p.entity.Tag.*;
 import static project.ys.glass_system.util.LocalDateUtils.*;
 
 @Service
 @Transactional
 public class PushServiceImpl implements PushService {
+
+    @Resource
+    UserDao userDao;
 
     @Resource
     ProductDao productDao;
@@ -39,26 +49,67 @@ public class PushServiceImpl implements PushService {
     GlassServiceImpl glassService;
 
     @Override
-    public Push packDailyData(LocalDate date, List<Tag> tags) {
-        LocalDateTime now = LocalDateTime.now();
-        long time = localDateTimeToMilli(now);
-        System.out.println("Push CreateTime ->" + time);
-        Push push = new Push(time);
-        List<BaseChart> content = new ArrayList<>();
-        for (Tag tag : tags) {
-            if (tag.getName().equals(DailyProduceCountList))
-                content.add(packDailyProduceCountList(date));
-            if (tag.getName().equals(DailyCountOfModel))
-                content.add(packDailyCountOfModel(date));
-            if (tag.getName().equals(DailyProduceQualityList))
-                content.add(packDailyProduceQualityList(date));
-            if (tag.getName().equals(DailyConsume))
-                content.add(packDailyConsume(date));
+    public void pushEveryUser(LocalDate date) {
+        List<User> userList = userDao.findAll();
+        for (User user : userList) {
+            PushSet set = user.getPushSet();
+            if (set != null) {
+                if (set.isCommonSwitch()) {
+                    if (set.isPushSwitch()) {
+                        LocalDateTime dateTime = LocalDateTime.now();
+                        long localDateTimeToMilli = localDateTimeToMilli(dateTime);
+                        int pushTime = getTime(set.getTime());
+                        int nowTime = LocalTime.now().getHour();
+                        if (set.getStart() == 0 || set.getEnd() == 0) {
+                            System.out.println(user.getName() + "的推送起止时间设置不合法");
+                        } else if (!(localDateTimeToMilli > set.getStart() && localDateTimeToMilli < set.getEnd())) {
+                            System.out.println(user.getName() + "的推送不在推送时间段内");
+                        } else if ((nowTime + 1) % pushTime == 0) {
+                            System.out.println(user.getName() + "的推送在推送时间段内");
+                            System.out.println("系统于" + LocalDateTime.now() + "发布了给：" + user.getName() + "的推送");
+                            Push push = packDailyData(date, set.getTags());
+                            if (push != null) {
+                                String message = JSON.toJSONString(push);
+                                System.out.println(push);
+                                sendSingleMessage(1, user.getNo(), transmissionTemplate(message));
+                            }
+                        } else {
+                            System.out.println("现在是" + nowTime + "时");
+                            int h = 0;
+                            for (h = 0; h < nowTime + 1; h += pushTime) ;
+                            System.out.println("系统将在" + h + "时给" + user.getName() + "发送推送");
+                        }
+                    }
+                }
+            }
         }
-        push.setContent(JSON.toJSONString(content));
-        push.setDefaultSubMenu(content.get(0).getSubmenu());
-        push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "推送数据");
-        return push;
+    }
+
+    @Override
+    public Push packDailyData(LocalDate date, List<Tag> tags) {
+        if (tags.size() == 0)
+            return null;
+        else {
+            LocalDateTime now = LocalDateTime.now();
+            long time = localDateTimeToMilli(now);
+            System.out.println("Push CreateTime ->" + time);
+            Push push = new Push(time);
+            List<BaseChart> content = new ArrayList<>();
+            for (Tag tag : tags) {
+                if (tag.getName().equals(DailyProduceCountList))
+                    content.add(packDailyProduceCountList(date));
+                if (tag.getName().equals(DailyCountOfModel))
+                    content.add(packDailyCountOfModel(date));
+                if (tag.getName().equals(DailyProduceQualityList))
+                    content.add(packDailyProduceQualityList(date));
+                if (tag.getName().equals(DailyConsume))
+                    content.add(packDailyConsume(date));
+            }
+            push.setContent(JSON.toJSONString(content));
+            push.setDefaultSubMenu(content.get(0).getSubmenu());
+            push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "推送数据");
+            return push;
+        }
     }
 
     @Override

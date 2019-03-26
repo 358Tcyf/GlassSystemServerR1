@@ -61,9 +61,12 @@ public class PushTest {
 
 
     @Test
-    public void testPushItem1() {
-//        LocalDate date = LocalDate.parse("2019-03-09");
-//        System.out.println(pushService.packDailyData(date));
+    public void testPushEveryBody() {
+//        String[] dataArray = new String[]{"2019-03-20"};
+//        for (CharSequence data : dataArray) {
+//            LocalDate date = LocalDate.parse(data);
+//            pushService.pushEveryUser(date);
+//        }
     }
 
     @Test
@@ -72,7 +75,7 @@ public class PushTest {
 //        for (CharSequence data : dataArray) {
 //            LocalDate date = LocalDate.parse(data);
 //            PushSet pushSet = setService.getPushSet("P0001");
-//            String push = JSON.toJSONString(pushService.packDailyData(date,pushSet.getTags()));
+//            String push = JSON.toJSONString(pushService.packDailyData(date, pushSet.getTags()));
 //            sendMessage(transmissionTemplate(push));
 //        }
     }

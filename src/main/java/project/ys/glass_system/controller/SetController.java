@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
+import project.ys.glass_system.model.p.entity.AlarmTag;
 import project.ys.glass_system.model.p.entity.PushSet;
 import project.ys.glass_system.service.impl.SetServiceImpl;
 import project.ys.glass_system.service.impl.UserServiceImpl;
@@ -42,6 +43,14 @@ public class SetController {
             return RetResponse.makeOKRsp(setService.getTags(account));
     }
 
+    @RequestMapping(value = SET + "/getAlarmTags")
+    public RetResult getAlarmTags(String account) {
+        if (!userService.isExisted(account))
+            return RetResponse.makeErrRsp("用户不存在");
+        else
+            return RetResponse.makeOKRsp(setService.getAlarmTags(account));
+    }
+
     @RequestMapping(value = SET + "/uploadSet")
     public RetResult uploadSet(String account, @RequestBody PushSet pushSet) {
         if (setService.updateSet(account, pushSet))
@@ -57,5 +66,14 @@ public class SetController {
         else
             return RetResponse.makeErrRsp("账号不存在");
     }
+
+    @RequestMapping(value = SET + "/updateAlarmTags")
+    public RetResult updateAlarmTags(String account, @RequestBody List<AlarmTag> tags) {
+        if (setService.updateAlarmTags(account, tags))
+            return RetResponse.makeOKRsp();
+        else
+            return RetResponse.makeErrRsp("账号不存在");
+    }
+
 
 }

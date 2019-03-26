@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface PushService {
+
+    void pushEveryUser(LocalDate date);
+
     Push packDailyData(LocalDate date, List<Tag> tags);
 
     Push packDailyData(LocalDate date);
