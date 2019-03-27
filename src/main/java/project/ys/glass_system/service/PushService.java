@@ -1,15 +1,17 @@
 package project.ys.glass_system.service;
 
 import project.ys.glass_system.model.p.bean.BaseChart;
-import project.ys.glass_system.model.p.entity.Push;
-import project.ys.glass_system.model.p.entity.Tag;
+import project.ys.glass_system.model.p.entity.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PushService {
 
-    void pushEveryUser(LocalDate date);
+    void pushEveryUser(LocalDate date, boolean ignoreTime);
+
+    void pushWithAlias(LocalDate date, User user, boolean ignoreTime);
 
     Push packDailyData(LocalDate date, List<Tag> tags);
 
@@ -24,5 +26,16 @@ public interface PushService {
     BaseChart packDailyProduceQualityList(LocalDate date);
 
     BaseChart packDailyConsume(LocalDate date);
+
+    Alarm packDailyAlarm(LocalDateTime date, List<AlarmTag> tags);
+
+    String observeFailRate(LocalDateTime date, AlarmTag tag);
+
+    String observeElecConsu(LocalDateTime date, AlarmTag tag);
+
+    String observeWtrConsu(LocalDateTime date, AlarmTag tag);
+
+    String observeCoalConsu(LocalDateTime date, AlarmTag tag);
+
 
 }

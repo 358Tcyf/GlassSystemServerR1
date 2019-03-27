@@ -9,8 +9,12 @@ import com.gexin.rp.sdk.exceptions.RequestException;
 import com.gexin.rp.sdk.http.IGtPush;
 import com.gexin.rp.sdk.template.TransmissionTemplate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static project.ys.glass_system.util.DateUtils.format1;
+import static project.ys.glass_system.util.LocalDateUtils.dateToStr;
 
 /**
  * @author Simple
@@ -66,7 +70,7 @@ public class GetuiUtil {
             ret = push.pushMessageToSingle(message, target, e.getRequestId());
         }
         if (ret != null) {
-            System.out.println(ret.getResponse().toString());
+            System.out.println(dateToStr(LocalDateTime.now(), format1) +"目标用户："+str + "的推送已发出");
         } else {
             System.out.println("服务器响应异常");
         }

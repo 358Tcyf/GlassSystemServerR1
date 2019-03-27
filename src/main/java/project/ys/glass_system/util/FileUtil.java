@@ -28,7 +28,7 @@ public class FileUtil {
         createDirIfNotExists();
 
         String resultPath = staticDir + uuid + getSuffix(file.getOriginalFilename());
-        System.out.println("resultPath is " + resultPath);
+//        System.out.println("resultPath is " + resultPath);
         //存文件
         File uploadFile = new File(absolutePath, resultPath);
         file.transferTo(uploadFile);
@@ -37,7 +37,7 @@ public class FileUtil {
 
     public static File download(String path) {
         createDirIfNotExists();
-        System.out.println("path is " + path);
+//        System.out.println("path is " + path);
         ClassLoader classLoader = new ClassLoader();
         classLoader.getResource(path);
         File downloadFile = new File(absolutePath,path);

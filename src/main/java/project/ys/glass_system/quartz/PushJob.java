@@ -17,6 +17,6 @@ public class PushJob implements Job {
         PushServiceImpl pushService = ApplicationContextUtils.getBean(PushServiceImpl.class);
         SetServiceImpl setService = ApplicationContextUtils.getBean(SetServiceImpl.class);
         LocalDate date = LocalDate.now();
-        pushService.pushEveryUser(date);
+        pushService.pushEveryUser(date,false);
     }
 }

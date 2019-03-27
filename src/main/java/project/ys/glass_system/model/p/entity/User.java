@@ -48,9 +48,6 @@ public class User extends BaseEntity {
     @Column
     private String email;
 
-    /*不可公开*/
-    @Column
-    private String tags;
 
     /*可公开*/
     @ManyToMany
@@ -60,13 +57,10 @@ public class User extends BaseEntity {
     @OneToOne
     private File pic;
 
-    /*可公开*/
+    /*不必公开*/
     @OneToOne
     private PushSet pushSet;
 
-    /*不必公开*/
-    @ManyToMany
-    private List<Tag> care;
 
     public String getNo() {
         return no;
@@ -116,13 +110,6 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
 
     public List<File> getFiles() {
         return files;
@@ -148,13 +135,6 @@ public class User extends BaseEntity {
         this.pushSet = pushSet;
     }
 
-    public List<Tag> getCare() {
-        return care;
-    }
-
-    public void setCare(List<Tag> care) {
-        this.care = care;
-    }
 
     @Override
     public String toString() {
@@ -165,11 +145,9 @@ public class User extends BaseEntity {
                 ", role=" + role +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
-                ", tags='" + tags + '\'' +
                 ", files=" + files +
                 ", pic=" + pic +
                 ", pushSet=" + pushSet +
-                ", care=" + care +
                 '}';
     }
 }

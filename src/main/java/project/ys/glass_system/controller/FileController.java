@@ -75,7 +75,6 @@ public class FileController {
         }
         User user = userDao.findByNo(account);
         String path = user.getPic().getPath();
-        System.out.println(path);
         File pic = FileUtil.download(path);
         InputStream inputStream = new FileInputStream(pic);
         data = new byte[inputStream.available()];

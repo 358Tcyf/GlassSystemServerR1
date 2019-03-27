@@ -84,4 +84,14 @@ public class ProductNotes extends BaseEntity {
         this.coal = coal;
     }
 
+    @Override
+    public String toString() {
+        return "ProductNotes{" +
+                "date=" + date +
+                ", products=" + products +
+                ", water=" + water +
+                ", electricity=" + electricity +
+                ", coal=" + coal +
+                '}';
+    }
 }

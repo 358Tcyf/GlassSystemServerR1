@@ -15,9 +15,13 @@ public interface UserDao extends JpaRepository<User, Integer> {
 
     User findByNo(String no);
 
+    User findDistinctByNoOrPhoneOrEmail(String no, String phone, String email);
+
     void deleteByNo(String no);
 
     User findByNoAndPassword(String no, String password);
+
+    User findDistinctByNoOrPhoneOrEmailAndPassword(String no, String phone, String email, String password);
 
     User findDistinctFirstByRoleOrderByNoDesc(Role role);
 

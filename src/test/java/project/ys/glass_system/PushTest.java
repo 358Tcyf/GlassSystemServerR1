@@ -1,20 +1,17 @@
 package project.ys.glass_system;
 
-import com.alibaba.fastjson.JSON;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import project.ys.glass_system.model.p.entity.PushSet;
+import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.service.impl.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
-
-import static project.ys.glass_system.getui.GetuiUtil.sendMessage;
-import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
+import java.time.LocalDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GlassSystemApplication.class)
@@ -35,6 +32,9 @@ public class PushTest {
 
     @Resource
     SetServiceImpl setService;
+
+    @Resource
+    ProductDao productDao;
 
     @Before
     public void before() {
@@ -62,10 +62,12 @@ public class PushTest {
 
     @Test
     public void testPushEveryBody() {
+        LocalDateTime time = LocalDateTime.now();
+        pushService.pushEveryUser(time.toLocalDate(), true);
+
 //        String[] dataArray = new String[]{"2019-03-20"};
 //        for (CharSequence data : dataArray) {
 //            LocalDate date = LocalDate.parse(data);
-//            pushService.pushEveryUser(date);
 //        }
     }
 
@@ -78,6 +80,16 @@ public class PushTest {
 //            String push = JSON.toJSONString(pushService.packDailyData(date, pushSet.getTags()));
 //            sendMessage(transmissionTemplate(push));
 //        }
+    }
+
+    @Test
+    public void testAlarm() {
+//        List<AlarmTag> tags = new ArrayList<>();
+////        tags.add(new AlarmTag(ALARM_TAGS[0]));
+//        tags.add(new AlarmTag(ALARM_TAGS[1]));
+//        tags.add(new AlarmTag(ALARM_TAGS[2]));
+//        tags.add(new AlarmTag(ALARM_TAGS[3]));
+//        System.out.println(pushService.packDailyAlarm(LocalDateTime.now(), tags));
     }
 
     @After

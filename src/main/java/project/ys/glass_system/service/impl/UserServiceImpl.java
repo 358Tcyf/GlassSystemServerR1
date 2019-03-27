@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int resetPassword(String no) {
         if (isExisted(no)) {
-            User user = userDao.findByNo(no);
+            User user = userDao.findDistinctByNoOrPhoneOrEmail(no, no, no);
             if (encode(DEFAULT_PASSWORD).equals(user.getPassword()))
                 return 0;
             else {
@@ -97,17 +97,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isExisted(String account) {
-        return userDao.findByNo(account) != null;
+        return userDao.findDistinctByNoOrPhoneOrEmail(account, account, account) != null;
     }
 
     @Override
     public boolean checkPassword(String account, String password) {
-        return userDao.findByNoAndPassword(account, encode(password)) != null;
+        return userDao.findDistinctByNoOrPhoneOrEmailAndPassword(account, account, account, encode(password)) != null;
     }
 
     @Override
     public User login(String account, String password) {
-        return userDao.findByNoAndPassword(account, encode(password));
+        return userDao.findDistinctByNoOrPhoneOrEmailAndPassword(account,account,account, encode(password));
     }
 
     @Override
