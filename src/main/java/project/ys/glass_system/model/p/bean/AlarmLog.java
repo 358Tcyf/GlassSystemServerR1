@@ -1,6 +1,9 @@
 package project.ys.glass_system.model.p.bean;
 
 public class AlarmLog {
+    public static String[] ALARM_TAGS = {"残片率/%", "电消耗/kw·h", "水消耗/吨", "煤消耗/吨"};
+
+
     private String tag;
 
     private String log;
