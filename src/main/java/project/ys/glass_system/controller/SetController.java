@@ -13,10 +13,12 @@ import project.ys.glass_system.service.impl.UserServiceImpl;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static project.ys.glass_system.constant.HttpConstant.*;
+
 @RestController
+@RequestMapping(SET)
 public class SetController {
 
-    private static final String SET = "/set";
 
     @Resource
     UserServiceImpl userService;
@@ -24,7 +26,7 @@ public class SetController {
     @Resource
     SetServiceImpl setService;
 
-    @RequestMapping(value = SET + "/getSets")
+    @RequestMapping(GET_SETS)
     public RetResult<PushSet> getSets(String account) {
         if (!userService.isExisted(account))
             return RetResponse.makeErrRsp("用户不存在");
@@ -35,7 +37,7 @@ public class SetController {
     }
 
 
-    @RequestMapping(value = SET + "/getTags")
+    @RequestMapping(GET_TAGS)
     public RetResult getTags(String account) {
         if (!userService.isExisted(account))
             return RetResponse.makeErrRsp("用户不存在");
@@ -43,7 +45,7 @@ public class SetController {
             return RetResponse.makeOKRsp(setService.getTags(account));
     }
 
-    @RequestMapping(value = SET + "/getAlarmTags")
+    @RequestMapping(GET_ALARM_TAGS)
     public RetResult getAlarmTags(String account) {
         if (!userService.isExisted(account))
             return RetResponse.makeErrRsp("用户不存在");
@@ -51,7 +53,7 @@ public class SetController {
             return RetResponse.makeOKRsp(setService.getAlarmTags(account));
     }
 
-    @RequestMapping(value = SET + "/uploadSet")
+    @RequestMapping(UPLOAD_SETS)
     public RetResult uploadSet(String account, @RequestBody PushSet pushSet) {
         if (setService.updateSet(account, pushSet))
             return RetResponse.makeOKRsp();
@@ -59,7 +61,7 @@ public class SetController {
             return RetResponse.makeErrRsp("账号不存在");
     }
 
-    @RequestMapping(value = SET + "/updateTags")
+    @RequestMapping(UPDATE_TAGS)
     public RetResult updateTags(String account, @RequestBody List<String> tags) {
         if (setService.updateTags(account, tags))
             return RetResponse.makeOKRsp();
@@ -67,7 +69,7 @@ public class SetController {
             return RetResponse.makeErrRsp("账号不存在");
     }
 
-    @RequestMapping(value = SET + "/updateAlarmTags")
+    @RequestMapping(UPDATE_ALARM_TAGS)
     public RetResult updateAlarmTags(String account, @RequestBody List<AlarmTag> tags) {
         if (setService.updateAlarmTags(account, tags))
             return RetResponse.makeOKRsp();

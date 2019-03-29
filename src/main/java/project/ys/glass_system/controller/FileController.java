@@ -1,6 +1,5 @@
 package project.ys.glass_system.controller;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +18,15 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
+import static project.ys.glass_system.constant.HttpConstant.FILE;
+import static project.ys.glass_system.constant.HttpConstant.UPLOAD;
 import static project.ys.glass_system.util.UuidUtil.getUUID32;
 
 
 @Controller
+@RequestMapping(FILE)
 public class FileController {
 
-    public static final String FILE = "/file";
 
     @Resource
     private FileServiceImpl fileService;
@@ -37,7 +38,7 @@ public class FileController {
     @Resource
     private UserDao userDao;
 
-    @RequestMapping(FILE + "/upload")
+    @RequestMapping(UPLOAD)
     @ResponseBody
     public RetResult upload(@RequestParam("image") MultipartFile file, String account) throws IOException {
         if (file.isEmpty())
@@ -60,12 +61,12 @@ public class FileController {
         return RetResponse.makeOKRsp("上传成功");
     }
 
-    @RequestMapping(FILE + "/{account:.+}")
+    @RequestMapping("/{account:.+}")
     public void getPic(@PathVariable String account, HttpServletResponse response) throws IOException {
         getPicWithTime(account, "", response);
     }
 
-    @RequestMapping(FILE + "/{account:.+}" + "/{time:.+}")
+    @RequestMapping("/{account:.+}" + "/{time:.+}")
     public void getPicWithTime(@PathVariable String account, @PathVariable String time, HttpServletResponse response) throws IOException {
         response.setContentType("image/png");
         byte[] data;

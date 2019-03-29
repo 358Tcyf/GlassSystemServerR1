@@ -1,5 +1,8 @@
 package project.ys.glass_system.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.p.dao.RoleDao;
 import project.ys.glass_system.model.p.dao.UserDao;
@@ -14,18 +17,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static project.ys.glass_system.controller.FileController.FILE;
+import static org.hibernate.internal.util.StringHelper.isEmpty;
+import static project.ys.glass_system.constant.HttpConstant.FILE;
+import static project.ys.glass_system.constant.UserConstant.*;
 import static project.ys.glass_system.util.EncodeUtils.encode;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    public static final int SUPER_MANAGER = 1;
-    public static final int MANAGEMENT_SECTION = 2;
-    public static final int PRODUCT_SECTION = 3;
-    public static final int SALE_SECTION = 4;
-    public static final String DEFAULT_PASSWORD = "123456";
 
     @Resource
     private UserDao userDao;
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String account, String password) {
-        return userDao.findDistinctByNoOrPhoneOrEmailAndPassword(account,account,account, encode(password));
+        return userDao.findDistinctByNoOrPhoneOrEmailAndPassword(account, account, account, encode(password));
     }
 
     @Override
@@ -170,6 +170,38 @@ public class UserServiceImpl implements UserService {
         }
         resultData.putIfAbsent("staffs", users);
         return resultData;
+    }
+
+    @Override
+    public Map<String, Object> userQuery(String name, String account, int role, String phone, String email, int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<User> allList = null;
+        if (isEmpty(name) && isEmpty(account) && isEmpty(phone) && isEmpty(email) && role == 0)
+            allList = userDao.findAll(pageable);
+        else if (role == 0)
+            allList = userDao.queryUsersByNameLikeAndNoLikeAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%", "%"+phone+"%", "%"+email+"%", pageable);
+        else {
+            Role role1 = roleDao.findById(role+1);
+            allList = userDao.queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%",role1, "%"+phone+"%", "%"+email+"%", pageable);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", allList.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (User user : allList) {
+            if (!user.getNo().startsWith("A")) {
+                Map<String, Object> u = new HashMap<>();
+                u.put("id", user.getId());
+                u.put("account", user.getNo());
+                u.put("role", user.getRole().getName());
+                u.put("name", user.getName());
+                u.put("phone", user.getPhone());
+                u.put("email", user.getEmail());
+                listMap.add(u);
+            }
+        }
+        map.put("object", listMap);
+
+        return map;
     }
 
 }

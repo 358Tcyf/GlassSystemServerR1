@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生选课管理</title>
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <style type="text/css">
+        .layui-layer-page .layui-layer-content {
+            overflow: inherit !important;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="name" name="name" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">工号:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="account" name="account" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门:</label>
+                    <div class="layui-input-inline">
+                        <select class="select" id="role" name="role" lay-filter="type">
+                            <option value="0" selected>全部</option>
+                            <option value="1">管理部门</option>
+                            <option value="2">生产部门</option>
+                            <option value="3">销售部门</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="phone" name="phone" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="email" name="email" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+        <div class="layui-card-body">
+            <table id="table" lay-filter="table"></table>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="addUser" style="display: none">
+    <div class="layui-card">
+        <div class=" layui-card-body">
+            <form class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="add_name" id="add_name" lay-verify="required" autocomplete="off"
+                               placeholder="请输入姓名" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <select name="add_role" id="add_role" lay-verify="required">
+                            <option value="">请选择部门</option>
+                            <option value="1">管理部门</option>
+                            <option value="2">生产部门</option>
+                            <option value="3">销售部门</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="add_account" id="add_account" lay-verify="required" autocomplete="off"
+                               placeholder="请输入工号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="add_phone" id="add_phone" lay-verify="required" autocomplete="off"
+                               placeholder="请输入手机" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="add_email" id="add_email" lay-verify="required" autocomplete="off"
+                               placeholder="请输入邮箱" class="layui-input">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div id="userInfo" style="display: none">
+    <div class="layui-card">
+        <div class=" layui-card-body">
+            <form class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_name" id="edit_name" lay-verify="required" autocomplete="off"
+                               placeholder="请输入姓名" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_role" id="edit_role" lay-verify="required" autocomplete="off"
+                               placeholder="请输入部门" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_account" id="edit_account" lay-verify="required"
+                               autocomplete="off"
+                               placeholder="请输入工号" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_phone" id="edit_phone" lay-verify="required" autocomplete="off"
+                               placeholder="请输入手机" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_email" id="edit_email" lay-verify="required" autocomplete="off"
+                               placeholder="请输入邮箱" class="layui-input">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-sm" lay-event="add">添加用户</a>
+</script>
+
+<script type="text/html" id="bar">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="/static/assets/layui/layui.js"></script>
+<script src="/static/js/notice.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script>
+    layui.use(['table', 'jquery', 'layer', 'form', 'laydate'], function () {
+        var $ = layui.$,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+
+        var tableIns = table.render({
+            elem: '#table',
+            height: 'full-160',
+            toolbar: '#toolbar',
+            defaultToolbar: ['print', 'exports'],
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: '10%', sort: true},
+                    {field: 'account', title: '工号', width: '10%', sort: true},
+                    {field: 'role', title: '部门', width: '15%', sort: true},
+                    {field: 'name', title: "姓名", width: '10%', sort: true},
+                    {field: 'phone', title: "手机", width: '20%', sort: true},
+                    {field: 'email', title: "邮箱",  width: '20%',sort: true},
+                    {title: '操作', align: 'center', width: '15%', toolbar: '#bar'}
+                ]
+            ],
+            text: {
+                none: '暂无相关数据'
+            },
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            url: "/user/userQuery",
+            where: {
+                name: $("#name").val(),
+                account: $("#account").val(),
+                role: $("#role").val(),
+                phone: $("#phone").val(),
+                email: $("#email").val()
+            },
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "data": res.data.object,
+                    "count": res.data.count,
+                };
+            }
+        });
+
+        table.on('toolbar(table)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 1,
+                        title: '添加用户',
+                        content: $('#addUser'),
+                        area: ['600px', '500px'],
+                        shadeClose: true,
+                        btn: ['确定', '取消'],
+                        success: function (layero, index) {
+
+                        },
+                        yes: function (index, layero) {
+                            var data = {
+                                name: $("#add_name").val(),
+                                no: $("#add_account").val(),
+                                email: $("#add_email").val(),
+                                phone: $("#add_phone").val(),
+                                roleId: $("#add_role").val()
+                            };
+                            console.log(data)
+                            layui.jquery.ajax({
+                                url: '/user/addUser',
+                                type: 'post',
+                                data: data,
+                                // contentType: 'application/json',
+                                dataType: 'json'
+                            }, function (res) {
+                                if (res.code === 200) {
+                                    tableIns.reload();
+                                    notice_success('新增用户成功');
+                                } else
+                                    notice_error(res.msg);
+                            });
+
+                            layer.close(index);
+                        }
+                    });
+                    break;
+            }
+        });
+
+
+        table.on('tool(table)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit':
+                    layer.open({
+                        type: 1,
+                        title: '修改学生',
+                        content: $('#userInfo'),
+                        area: ['600px', '500px'],
+                        shadeClose: true,
+                        btn: ['确定', '取消'],
+                        success: function (layero, index) {
+                            $("#edit_name").val(data.name);
+                            $("#edit_account").val(data.account);
+                            $("#edit_role").val(data.role);
+                            $("#edit_phone").val(data.phone);
+                            $("#edit_email").val(data.email);
+                        },
+                        yes: function (index, layero) {
+                            var data = {
+                                no: $("#edit_account").val(),
+                                phone: $("#edit_phone").val(),
+                                email: $("#edit_email").val(),
+                            };
+                            layui.jquery.ajax({
+                                url: '/user/updateUser',
+                                type: 'post',
+                                data: data,
+                                // contentType: 'application/json',
+                                dataType: 'json'
+                            }, function (res) {
+                                if (res.code === 200) {
+                                    tableIns.reload();
+                                    notice_success('修改用户成功');
+                                } else
+                                    notice_error(res.msg);
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'del':
+                    layer.confirm('真的删除么', {title: '删除用户', shadeClose: true}, function (index) {
+                        layer.close(index);
+                        $.get('/user/deleteUser', {
+                            account: data.account
+                        }, function (res) {
+                            if (res.code === 200) {
+                                obj.del();
+                                notice_success('删除成功');
+                            } else {
+                                notice_error(res.msg);
+                            }
+                        });
+                    });
+                    break;
+            }
+        });
+
+
+        form.on('submit(search)', function (data) {
+            tableIns.reload({
+                url: '/user/userQuery',
+                where: {
+                    name: $("#name").val(),
+                    account: $("#account").val(),
+                    role: $("#role").val(),
+                    phone: $("#phone").val(),
+                    email: $("#email").val()
+                },
+
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+        form.on('select(type)', function (data) {
+            tableIns.reload({
+                url: '/user/userQuery',
+                where: {
+                    name: $("#name").val(),
+                    account: $("#account").val(),
+                    role: $("#role").val(),
+                    phone: $("#phone").val(),
+                    email: $("#email").val()
+                },
+
+                page: {
+                    curr: 1
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

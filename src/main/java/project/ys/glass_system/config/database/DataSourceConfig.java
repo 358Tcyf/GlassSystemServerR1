@@ -1,4 +1,4 @@
-package project.ys.glass_system.config;
+package project.ys.glass_system.config.database;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;

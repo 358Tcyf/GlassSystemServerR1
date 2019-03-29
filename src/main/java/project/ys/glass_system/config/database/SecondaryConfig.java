@@ -1,4 +1,4 @@
-package project.ys.glass_system.config;
+package project.ys.glass_system.config.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,29 +19,27 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef="entityManagerFactoryPrimary",
-        transactionManagerRef="transactionManagerPrimary",
-        basePackages= {"project.ys.glass_system.model.p.dao"}) //设置Repository所在位置
-public class PrimaryConfig {
+        entityManagerFactoryRef = "entityManagerFactorySecondary",
+        transactionManagerRef = "transactionManagerSecondary",
+        basePackages = {"project.ys.glass_system.model.s.dao"}) //设置Repository所在位置
+public class SecondaryConfig {
 
     @Autowired
-    @Qualifier("primaryDataSource")
-    private DataSource primaryDataSource;
+    @Qualifier("secondaryDataSource")
+    private DataSource secondaryDataSource;
 
-    @Primary
-    @Bean(name = "entityManagerPrimary")
+    @Bean(name = "entityManagerSecondary")
     public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
-        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
+        return entityManagerFactorySecondary(builder).getObject().createEntityManager();
     }
 
-    @Primary
-    @Bean(name = "entityManagerFactoryPrimary")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) {
+    @Bean(name = "entityManagerFactorySecondary")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactorySecondary(EntityManagerFactoryBuilder builder) {
         return builder
-                .dataSource(primaryDataSource)
+                .dataSource(secondaryDataSource)
                 .properties(getVendorProperties())
-                .packages("project.ys.glass_system.model.p.entity") //设置实体类所在位置
-                .persistenceUnit("primaryPersistenceUnit")
+                .packages("project.ys.glass_system.model.s.entity") //设置实体类所在位置
+                .persistenceUnit("secondaryPersistenceUnit")
                 .build();
     }
 
@@ -53,10 +50,9 @@ public class PrimaryConfig {
         return jpaProperties.getProperties();
     }
 
-    @Primary
-    @Bean(name = "transactionManagerPrimary")
-    public PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
-        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
+    @Bean(name = "transactionManagerSecondary")
+    PlatformTransactionManager transactionManagerSecondary(EntityManagerFactoryBuilder builder) {
+        return new JpaTransactionManager(entityManagerFactorySecondary(builder).getObject());
     }
 
 }

@@ -1,5 +1,7 @@
 package project.ys.glass_system.model.p.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import project.ys.glass_system.model.p.entity.Role;
@@ -24,5 +26,14 @@ public interface UserDao extends JpaRepository<User, Integer> {
     User findDistinctByNoOrPhoneOrEmailAndPassword(String no, String phone, String email, String password);
 
     User findDistinctFirstByRoleOrderByNoDesc(Role role);
+
+    Page<User> queryUsersByNameLikeAndNoLikeAndPhoneLikeAndEmailLike(String name, String no, String phone, String email, Pageable pageable);
+
+    Page<User> queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike(String name, String no, Role role, String phone, String email, Pageable pageable);
+
+//
+//    @Query(value = "select u from User u where u.name LIKE %?1% AND u.account LIKE %?2% AND u.phone LIKE %?5% AND u.email LIKE %?4%")
+//    Page<User> queryUsers(String name, String account, String phone, String email, Pageable pageable);
+
 
 }
