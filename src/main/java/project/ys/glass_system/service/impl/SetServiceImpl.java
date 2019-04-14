@@ -103,6 +103,25 @@ public class SetServiceImpl implements SetService {
     }
 
     @Override
+    public boolean cleanTags(String no, List<String> tags) {
+        User user = userDao.findByNo(no);
+        if (user == null)
+            return false;
+        PushSet set = user.getPushSet();
+        List<Tag> setTags = set.getTags();
+        setTags.clear();
+        for (String name : tags) {
+            for (Tag tag : setTags) {
+                if (name.equals(tag.getName()))
+                    setTags.remove(tag);
+            }
+        }
+        set.setTags(setTags);
+        pushSetDao.saveAndFlush(set);
+        return true;
+    }
+
+    @Override
     public boolean updateAlarmTags(String no, List<AlarmTag> tags) {
         User user = userDao.findByNo(no);
         if (user == null)

@@ -1,4 +1,4 @@
-package project.ys.glass_system.util;
+package project.ys.glass_system.config;
 
 
 import org.springframework.web.context.request.RequestContextHolder;
@@ -64,7 +64,7 @@ public class SessionUtil {
 
     public void setMobileSessionTimeout() {
         if (isMobile())
-            getHttpSession().setMaxInactiveInterval(60 * 60);
+            getHttpSession().setMaxInactiveInterval(60 * 60 * 24 * 30);
     }
 
     public void logout() {

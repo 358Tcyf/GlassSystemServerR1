@@ -3,7 +3,9 @@ package project.ys.glass_system.constant;
 
 public class HttpConstant {
     public static final String USER = "/user";
+    public static final String _USER = "user";
     public static final String LOGIN = "/login";
+    public static final String WEB_LOGIN = "/webLogin";
     public static final String LOGOUT = "/logout";
     public static final String USER_INFO = "/userInfo";
     public static final String USER_LIST = "/userList";
@@ -23,13 +25,17 @@ public class HttpConstant {
     public static final String UPLOAD_SETS = "/uploadSet";
     public static final String GET_TAGS = "/getTags";
     public static final String UPDATE_TAGS = "/updateTags";
+    public static final String CLEAN_TAGS = "/cleanTags";
     public static final String GET_ALARM_TAGS = "/getAlarmTags";
     public static final String UPDATE_ALARM_TAGS = "/updateAlarmTags";
 
 
     public static final String PUSH = "/push";
     public static final String INSTANT = "/instantPush";
-
+    public static final String UPDATE_PUSH = "/updatePushes";
+    public static final String DOWNLOAD_PUSH = "/downloadPushes";
+    public static final String UPDATE_ALARM = "/updateAlarms";
+    public static final String DOWNLOAD_ALARM = "/downloadAlarms";
 
     public static final String FILE = "/file";
     public static final String UPLOAD = "/upload";
@@ -37,7 +43,9 @@ public class HttpConstant {
 
     public static final String INDEX = "/index";
     public static final String HOME = "/home";
-    public static final String COMMON = "/common";
+    public static final String _ABOUT = "about";
+    public static final String ABOUT = "/about";
+    public static final String _COMMON = "common";
     public static final String REDIRECT = "/redirect";
     public static final String _401 = "/401";
     public static final String _404 = "/404";

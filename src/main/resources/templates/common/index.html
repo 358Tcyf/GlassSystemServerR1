@@ -43,7 +43,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
-                    <a><cite ></cite>
+                    <a><cite th:text="${user.no}"></cite>
                         <span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
                         <dd style="text-align: center;"><a lay-href="/user/resetPassword">修改密码</a></dd>
@@ -73,7 +73,7 @@
                     </li>
                     <li data-name="userManage" class="layui-nav-item">
                         <a lay-tips="用户管理" lay-href="/user/userManager" lay-direction="2">
-                            <i class="layui-icon layui-icon-survey"></i>
+                            <i class="layui-icon layui-icon-user"></i>
                             <cite>用户管理</cite>
                         </a>
                     </li>

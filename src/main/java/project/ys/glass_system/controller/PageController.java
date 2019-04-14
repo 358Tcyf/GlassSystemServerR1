@@ -4,8 +4,8 @@ package project.ys.glass_system.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import project.ys.glass_system.model.p.entity.User;
-import project.ys.glass_system.util.SessionUtil;
+import project.ys.glass_system.config.SessionUtil;
+import project.ys.glass_system.config.Unlimited;
 
 import static project.ys.glass_system.constant.HttpConstant.*;
 
@@ -13,52 +13,62 @@ import static project.ys.glass_system.constant.HttpConstant.*;
 @Controller
 public class PageController {
 
+    @Unlimited
     @GetMapping(LOGIN)
     public String login() {
-        return USER + LOGIN;
+        return _USER + LOGIN;
+    }
+
+    @Unlimited
+    @GetMapping(ABOUT)
+    public String index() {
+        return _ABOUT + INDEX;
     }
 
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("user", SessionUtil.getInstance().getUser());
-        return COMMON + INDEX;
+        return _COMMON + INDEX;
     }
 
     @GetMapping(HOME)
     public String home(Model model) {
-        User loginUser = SessionUtil.getInstance().getUser();
-        return USER + USER_MANAGER;
+        return _USER + USER_MANAGER;
     }
 
     @GetMapping(USER + USER_MANAGER)
     public String userManager(Model model) {
-        return USER + USER_MANAGER;
+        return _USER + USER_MANAGER;
     }
 
 
     @GetMapping(USER + RESET_PASSWORD)
     public String changePwd() {
-        return USER + RESET_PASSWORD;
+        return _USER + RESET_PASSWORD;
     }
 
+    @Unlimited
     @GetMapping(REDIRECT)
     public String redirect() {
-        return COMMON + REDIRECT;
+        return _COMMON + REDIRECT;
     }
 
+    @Unlimited
     @GetMapping(_401)
     public String unauthorized() {
-        return COMMON + _401;
+        return _COMMON + _401;
     }
 
+    @Unlimited
     @GetMapping(_404)
     public String pageNotFound() {
-        return COMMON + _404;
+        return _COMMON + _404;
     }
 
     @GetMapping(ERROR)
+    @Unlimited
     public String error() {
-        return COMMON + ERROR;
+        return _COMMON + ERROR;
     }
 
 }

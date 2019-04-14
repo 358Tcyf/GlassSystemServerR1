@@ -5,7 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity(name = "push_table")
-public class Push extends BaseEntity{
+public class Push extends BaseEntity {
 
     public Push() {
 
@@ -23,7 +23,7 @@ public class Push extends BaseEntity{
     @Column(name = "push_title", nullable = false)
     private String title;
 
-    @Column(name = "push_content")
+    @Column(name = "push_content", columnDefinition="text")
     private String content;
 
     @Column(name = "receiver_uuid")
@@ -97,5 +97,16 @@ public class Push extends BaseEntity{
         this.haveRead = haveRead;
     }
 
-
+    @Override
+    public String toString() {
+        return "Push{" +
+                "title='" + title + '\'' +
+                ",\n content='" + content + '\'' +
+                ",\n receiver='" + receiver + '\'' +
+                ",\n pushUuid='" + pushUuid + '\'' +
+                ",\n defaultSubMenu='" + defaultSubMenu + '\'' +
+                ",\n createTime=" + createTime +
+                ",\n haveRead=" + haveRead +
+                '}';
+    }
 }

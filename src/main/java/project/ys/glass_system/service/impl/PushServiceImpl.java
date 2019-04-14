@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.p.bean.AlarmLog;
 import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
+import project.ys.glass_system.model.p.dao.AlarmDao;
+import project.ys.glass_system.model.p.dao.PushDao;
 import project.ys.glass_system.model.p.dao.UserDao;
 import project.ys.glass_system.model.p.entity.*;
 import project.ys.glass_system.model.s.dao.ProductDao;
@@ -53,6 +55,12 @@ public class PushServiceImpl implements PushService {
 
     @Resource
     GlassServiceImpl glassService;
+
+    @Resource
+    PushDao pushDao;
+
+    @Resource
+    AlarmDao alarmDao;
 
     @Override
     public void pushEveryUser(LocalDate date, boolean ignoreTime) {
@@ -138,7 +146,7 @@ public class PushServiceImpl implements PushService {
             return null;
         else {
             LocalDateTime now = LocalDateTime.now();
-            long time = localDateTimeToMilli(now);
+            long time = localDateTimeToMilli(now) + 60 * 1000;
             Push push = new Push(time);
             List<BaseChart> content = new ArrayList<>();
             for (Tag tag : tags) {
@@ -161,7 +169,7 @@ public class PushServiceImpl implements PushService {
     @Override
     public Push packDailyData(LocalDate date) {
         LocalDateTime now = LocalDateTime.now();
-        long time = localDateTimeToMilli(now);
+        long time = localDateTimeToMilli(now) + 60 * 1000;
         System.out.println("Push CreateTime ->" + time);
         Push push = new Push(time);
         List<BaseChart> content = new ArrayList<>();
@@ -318,7 +326,7 @@ public class PushServiceImpl implements PushService {
             return null;
         else {
             LocalDateTime now = LocalDateTime.now();
-            long time = localDateTimeToMilli(now);
+            long time = localDateTimeToMilli(now) + 60 * 1000;
             Alarm alarm = new Alarm(time);
             List<AlarmLog> alarmContent = new ArrayList<>();
             for (AlarmTag tag : tags) {
@@ -424,5 +432,38 @@ public class PushServiceImpl implements PushService {
             return "";
     }
 
+    @Override
+    public void updatePush(String account, List<Push> pushes) {
+        List<Push> oldPushes = pushDao.findPushesByReceiver(account);
+        for (Push oldPush : oldPushes) {
+            pushDao.delete(oldPush);
+        }
+        for (Push push : pushes) {
+            pushDao.save(push);
+        }
+    }
+
+    @Override
+    public List<Push> downloadPush(String account) {
+        List<Push> oldPushes = pushDao.findPushesByReceiver(account);
+        return oldPushes;
+    }
+
+    @Override
+    public void updateAlarm(String account, List<Alarm> alarms) {
+        List<Alarm> oldAlarms = alarmDao.findAlarmsByReceiver(account);
+        for (Alarm oldAlarm : oldAlarms) {
+            alarmDao.delete(oldAlarm);
+        }
+        for (Alarm alarm : alarms) {
+            alarmDao.save(alarm);
+        }
+    }
+
+    @Override
+    public List<Alarm> downloadAlarm(String account) {
+        List<Alarm> oldAlarms = alarmDao.findAlarmsByReceiver(account);
+        return oldAlarms;
+    }
 
 }

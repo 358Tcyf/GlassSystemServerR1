@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
 import project.ys.glass_system.model.p.dao.UserDao;
@@ -23,6 +24,7 @@ import static project.ys.glass_system.constant.HttpConstant.UPLOAD;
 import static project.ys.glass_system.util.UuidUtil.getUUID32;
 
 
+@Unlimited
 @Controller
 @RequestMapping(FILE)
 public class FileController {

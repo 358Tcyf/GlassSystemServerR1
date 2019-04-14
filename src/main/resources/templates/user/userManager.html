@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>学生选课管理</title>
+    <title>用户管理</title>
     <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
     <style type="text/css">
@@ -33,7 +33,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">部门:</label>
                     <div class="layui-input-inline">
-                        <select class="select" id="role" name="role" lay-filter="type">
+                        <select class="select" id="role" name="role" lay-filter="section">
                             <option value="0" selected>全部</option>
                             <option value="1">管理部门</option>
                             <option value="2">生产部门</option>
@@ -88,11 +88,11 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">部门</label>
                     <div class="layui-input-block">
-                        <select name="add_role" id="add_role" lay-verify="required">
+                        <select name="add_role" id="add_role" lay-verify="required"lay-filter="add_section">
                             <option value="">请选择部门</option>
-                            <option value="1">管理部门</option>
-                            <option value="2">生产部门</option>
-                            <option value="3">销售部门</option>
+                            <option value="2">管理部门</option>
+                            <option value="3">生产部门</option>
+                            <option value="4">销售部门</option>
                         </select>
                     </div>
                 </div>
@@ -176,7 +176,7 @@
 </script>
 
 <script type="text/html" id="bar">
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
@@ -184,6 +184,7 @@
 <script src="/static/js/notice.js"></script>
 <script src="/static/js/ajax.js"></script>
 <script>
+
     layui.use(['table', 'jquery', 'layer', 'form', 'laydate'], function () {
         var $ = layui.$,
             table = layui.table,
@@ -246,28 +247,20 @@
 
                         },
                         yes: function (index, layero) {
-                            var data = {
+                            $.post('/user/addUser', {
                                 name: $("#add_name").val(),
                                 no: $("#add_account").val(),
                                 email: $("#add_email").val(),
                                 phone: $("#add_phone").val(),
                                 roleId: $("#add_role").val()
-                            };
-                            console.log(data)
-                            layui.jquery.ajax({
-                                url: '/user/addUser',
-                                type: 'post',
-                                data: data,
-                                // contentType: 'application/json',
-                                dataType: 'json'
                             }, function (res) {
                                 if (res.code === 200) {
                                     tableIns.reload();
                                     notice_success('新增用户成功');
-                                } else
+                                } else {
                                     notice_error(res.msg);
+                                }
                             });
-
                             layer.close(index);
                         }
                     });
@@ -295,23 +288,17 @@
                             $("#edit_email").val(data.email);
                         },
                         yes: function (index, layero) {
-                            var data = {
-                                no: $("#edit_account").val(),
+                            $.post('/user/updateUser', {
+                                account: $("#edit_account").val(),
                                 phone: $("#edit_phone").val(),
                                 email: $("#edit_email").val(),
-                            };
-                            layui.jquery.ajax({
-                                url: '/user/updateUser',
-                                type: 'post',
-                                data: data,
-                                // contentType: 'application/json',
-                                dataType: 'json'
                             }, function (res) {
                                 if (res.code === 200) {
                                     tableIns.reload();
                                     notice_success('修改用户成功');
-                                } else
+                                } else {
                                     notice_error(res.msg);
+                                }
                             });
                             layer.close(index);
                         }
@@ -334,9 +321,7 @@
                     break;
             }
         });
-
-
-        form.on('submit(search)', function (data) {
+        var search = function () {
             tableIns.reload({
                 url: '/user/userQuery',
                 where: {
@@ -351,21 +336,24 @@
                     curr: 1
                 }
             });
+        };
+
+        form.on('submit(search)', function (data) {
+            search();
             return false;
         });
-        form.on('select(type)', function (data) {
-            tableIns.reload({
-                url: '/user/userQuery',
-                where: {
-                    name: $("#name").val(),
-                    account: $("#account").val(),
-                    role: $("#role").val(),
-                    phone: $("#phone").val(),
-                    email: $("#email").val()
-                },
+        form.on('select(section)', function (data) {
+            search();
+        });
 
-                page: {
-                    curr: 1
+        form.on('select(add_section)', function (data) {
+            $.get('/user/latestNo', {
+                roleId: $("#add_role").val()
+            }, function (res) {
+                if (res.code === 200) {
+                    $("#add_account").val(res.msg);
+                } else {
+                    notice_error(res.msg);
                 }
             });
         });

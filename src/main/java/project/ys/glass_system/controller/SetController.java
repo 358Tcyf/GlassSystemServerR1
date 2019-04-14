@@ -3,6 +3,7 @@ package project.ys.glass_system.controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
 import project.ys.glass_system.model.p.entity.AlarmTag;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static project.ys.glass_system.constant.HttpConstant.*;
 
+@Unlimited
 @RestController
 @RequestMapping(SET)
 public class SetController {
@@ -64,6 +66,14 @@ public class SetController {
     @RequestMapping(UPDATE_TAGS)
     public RetResult updateTags(String account, @RequestBody List<String> tags) {
         if (setService.updateTags(account, tags))
+            return RetResponse.makeOKRsp();
+        else
+            return RetResponse.makeErrRsp("账号不存在");
+    }
+
+    @RequestMapping(CLEAN_TAGS)
+    public RetResult cleanTags(String account, @RequestBody List<String> tags) {
+        if (setService.cleanTags(account, tags))
             return RetResponse.makeOKRsp();
         else
             return RetResponse.makeErrRsp("账号不存在");

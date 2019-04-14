@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import project.ys.glass_system.config.SessionUtil;
+import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
 import project.ys.glass_system.model.p.entity.User;
@@ -13,11 +15,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+import static org.hibernate.internal.util.StringHelper.isEmpty;
 import static project.ys.glass_system.constant.HttpConstant.*;
 import static project.ys.glass_system.util.RegexUtils.checkEmail;
 import static project.ys.glass_system.util.RegexUtils.checkMobile;
 
 
+@Unlimited
 @RestController
 @RequestMapping(USER)
 public class UserController {
@@ -26,32 +30,39 @@ public class UserController {
     @Resource
     UserServiceImpl userService;
 
-    @RequestMapping(LOGIN)
-    public RetResult<User> login(String account, String password) {
+    @RequestMapping(WEB_LOGIN)
+    public RetResult<User> webLogin(String account, String password, boolean isWeb) {
         if (account.length() > 5 || account.length() < 3) {
             if (!checkEmail(account)) {
                 if (!checkMobile(account)) {
-                    System.out.println("不是合法的账号");
                     return RetResponse.makeErrRsp("不是合法的账号");
                 }
             }
         }
         if (!userService.isExisted(account)) {
-            System.out.println("账号错误");
             return RetResponse.makeErrRsp("账号错误");
         } else if (!userService.checkPassword(account, password)) {
-            System.out.println("密码错误");
             return RetResponse.makeErrRsp("密码错误");
         } else {
-            System.out.println("登陆成功");
-            return RetResponse.makeOKRsp("登陆成功", userService.login(account, password));
+            User user = userService.login(account, password);
+            //禁止学生、教师在网页端登陆
+            if ((!user.getRole().getName().equals("超级管理员")) && isWeb)
+                return RetResponse.makeErrRsp("网页端仅限超级管理员登录");
+            SessionUtil.getInstance().setSessionMap(user);
+            //判断是否为客户端，如果是客户端则延长session过期时间
+            SessionUtil.getInstance().setMobileSessionTimeout();
+            return RetResponse.makeOKRsp("登陆成功", user);
         }
+    }
+
+    @RequestMapping(LOGIN)
+    public RetResult<User> login(String account, String password) {
+        return webLogin(account, password, false);
     }
 
     @GetMapping(LOGOUT)
     public RetResult logout(HttpServletRequest request) {
-//        SessionUtil.getInstance().logout();
-        request.getSession().invalidate();
+        SessionUtil.getInstance().logout();
         return RetResponse.makeOKRsp();
     }
 
@@ -112,6 +123,8 @@ public class UserController {
     @RequestMapping(UPDATE_PASSWORD)
     @ResponseBody
     public RetResult updatePassword(String account, String oldPassword, String newPassword) {
+        if (isEmpty(account))
+            account = SessionUtil.getInstance().getIdNumber();
         if (!userService.isExisted(account)) {
             return RetResponse.makeErrRsp("账号不存在");
         } else if (!userService.checkPassword(account, oldPassword)) {
@@ -133,9 +146,12 @@ public class UserController {
 
     @RequestMapping(LATEST_NO)
     public RetResult latestNo(int roleId) {
-        String no = userService.getLatestNo(roleId);
-        return RetResponse.makeOKRsp(no);
+        System.out.println(roleId);
+        if (roleId == 2 || roleId == 3 || roleId == 4) {
+            String no = userService.getLatestNo(roleId);
+            return RetResponse.makeOKRsp(no);
+        } else
+            return RetResponse.makeErrRsp("工号获取失败");
     }
-
 
 }

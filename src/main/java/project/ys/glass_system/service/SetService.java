@@ -16,6 +16,7 @@ public interface SetService {
     boolean updateSet(String no, PushSet pushSet);
 
     boolean updateTags(String no, List<String> tags);
+    boolean cleanTags(String no, List<String> tags);
 
     boolean updateAlarmTags(String no, List<AlarmTag> tags);
 }

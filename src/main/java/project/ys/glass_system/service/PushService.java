@@ -37,5 +37,11 @@ public interface PushService {
 
     String observeCoalConsu(LocalDateTime date, AlarmTag tag);
 
+    void updatePush(String account, List<Push> pushes);
 
+    List<Push> downloadPush(String account);
+
+    void updateAlarm(String account, List<Alarm> alarms);
+
+    List<Alarm> downloadAlarm(String account);
 }

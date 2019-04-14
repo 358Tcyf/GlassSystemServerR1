@@ -6,12 +6,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import project.ys.glass_system.model.p.dao.UserDao;
+import project.ys.glass_system.model.p.entity.PushSet;
+import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.service.impl.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GlassSystemApplication.class)
@@ -35,6 +37,8 @@ public class PushTest {
 
     @Resource
     ProductDao productDao;
+    @Resource
+    UserDao userDao;
 
     @Before
     public void before() {
@@ -62,8 +66,8 @@ public class PushTest {
 
     @Test
     public void testPushEveryBody() {
-        LocalDateTime time = LocalDateTime.now();
-        pushService.pushEveryUser(time.toLocalDate(), true);
+//        LocalDateTime time = LocalDateTime.now();
+//        pushService.pushEveryUser(time.toLocalDate(), true);
 
 //        String[] dataArray = new String[]{"2019-03-20"};
 //        for (CharSequence data : dataArray) {
@@ -73,13 +77,12 @@ public class PushTest {
 
     @Test
     public void testGetui() {
-//        String[] dataArray = new String[]{"2019-03-20", "2019-03-21", "2019-03-22", "2019-03-23",};
-//        for (CharSequence data : dataArray) {
-//            LocalDate date = LocalDate.parse(data);
-//            PushSet pushSet = setService.getPushSet("P0001");
-//            String push = JSON.toJSONString(pushService.packDailyData(date, pushSet.getTags()));
-//            sendMessage(transmissionTemplate(push));
-//        }
+        String[] dataArray = new String[]{"2019-04-14","2019-04-14",};
+        for (CharSequence data : dataArray) {
+            LocalDate date = LocalDate.parse(data);
+            User p0001 = userDao.findByNo("P0001");
+            pushService.pushWithAlias(date, p0001, true);
+        }
     }
 
     @Test
