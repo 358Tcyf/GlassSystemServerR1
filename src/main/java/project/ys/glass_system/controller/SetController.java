@@ -55,6 +55,15 @@ public class SetController {
             return RetResponse.makeOKRsp(setService.getAlarmTags(account));
     }
 
+    @RequestMapping(CANCEL_SMART_SUB)
+    public RetResult cancelSmartSub(String account) {
+        if (!userService.isExisted(account))
+            return RetResponse.makeErrRsp("用户不存在");
+        else
+            setService.cancelSmartSub(account);
+        return RetResponse.makeOKRsp();
+    }
+
     @RequestMapping(UPLOAD_SETS)
     public RetResult uploadSet(String account, @RequestBody PushSet pushSet) {
         if (setService.updateSet(account, pushSet))
@@ -71,9 +80,9 @@ public class SetController {
             return RetResponse.makeErrRsp("账号不存在");
     }
 
-    @RequestMapping(CLEAN_TAGS)
-    public RetResult cleanTags(String account, @RequestBody List<String> tags) {
-        if (setService.cleanTags(account, tags))
+    @RequestMapping(CANCEL_TAGS)
+    public RetResult cancelTags(String account, @RequestBody List<String> tags) {
+        if (setService.cancelTags(account, tags))
             return RetResponse.makeOKRsp();
         else
             return RetResponse.makeErrRsp("账号不存在");

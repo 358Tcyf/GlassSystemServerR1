@@ -12,7 +12,7 @@ public class LocalDateUtils {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    public static final String DATE_FORMAT_CN = "yyyy年MM月dd日 ";
+    public static final String DATE_FORMAT_CN = "MM月dd日 ";
 
 
     public static final String TIME_FORMAT = "HH:mm:ss";

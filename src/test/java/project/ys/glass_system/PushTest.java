@@ -77,12 +77,12 @@ public class PushTest {
 
     @Test
     public void testGetui() {
-        String[] dataArray = new String[]{"2019-04-14","2019-04-14",};
-        for (CharSequence data : dataArray) {
-            LocalDate date = LocalDate.parse(data);
-            User p0001 = userDao.findByNo("P0001");
-            pushService.pushWithAlias(date, p0001, true);
-        }
+//        String[] dataArray = new String[]{"2019-04-14","2019-04-14",};
+//        for (CharSequence data : dataArray) {
+//            LocalDate date = LocalDate.parse(data);
+//            User p0001 = userDao.findByNo("P0001");
+//            pushService.pushWithAlias(date, p0001, true);
+//        }
     }
 
     @Test

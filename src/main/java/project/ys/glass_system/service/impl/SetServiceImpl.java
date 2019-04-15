@@ -73,9 +73,9 @@ public class SetServiceImpl implements SetService {
         set.setStart(pushSet.getStart());
         set.setEnd(pushSet.getEnd());
         set.setTime(pushSet.getTime());
-        set.setPushSwitch(pushSet.isPushSwitch());
-        set.setAlarmSwitch(pushSet.isAlarmSwitch());
-
+        set.setPushSwitch(pushSet.isCommonSwitch() && pushSet.isPushSwitch());
+        set.setSmartSub(pushSet.isCommonSwitch() && pushSet.isPushSwitch());
+        set.setAlarmSwitch(pushSet.isCommonSwitch() && pushSet.isAlarmSwitch());
         pushSetDao.saveAndFlush(set);
         user.setPushSet(pushSet);
         return true;
@@ -103,17 +103,17 @@ public class SetServiceImpl implements SetService {
     }
 
     @Override
-    public boolean cleanTags(String no, List<String> tags) {
+    public boolean cancelTags(String no, List<String> tags) {
         User user = userDao.findByNo(no);
         if (user == null)
             return false;
         PushSet set = user.getPushSet();
         List<Tag> setTags = set.getTags();
-        setTags.clear();
         for (String name : tags) {
-            for (Tag tag : setTags) {
-                if (name.equals(tag.getName()))
-                    setTags.remove(tag);
+            for(int i = 0;i < setTags.size();i++){
+                if(name.equals(setTags.get(i).getName())){
+                    setTags.remove(i);
+                }
             }
         }
         set.setTags(setTags);
@@ -142,6 +142,15 @@ public class SetServiceImpl implements SetService {
         set.setAlarmTags(setTags);
         pushSetDao.saveAndFlush(set);
         return true;
+    }
+
+    @Override
+    public void cancelSmartSub(String no) {
+        User user = userDao.findByNo(no);
+        PushSet set = user.getPushSet();
+        set.setSmartSub(false);
+        pushSetDao.save(set);
+
     }
 
 }

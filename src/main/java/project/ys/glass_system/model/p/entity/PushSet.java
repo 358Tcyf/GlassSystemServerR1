@@ -83,6 +83,10 @@ public class PushSet extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
+    @Column(name = "smart_subscription_switch")
+    private boolean smartSub;
+
+
     @ManyToMany
     private List<AlarmTag> alarmTags;
 
@@ -177,6 +181,14 @@ public class PushSet extends BaseEntity {
         this.alarmTags = alarmTags;
     }
 
+    public boolean isSmartSub() {
+        return smartSub;
+    }
+
+    public void setSmartSub(boolean smartSub) {
+        this.smartSub = smartSub;
+    }
+
     @Override
     public String toString() {
         return "PushSet{" +
@@ -189,6 +201,7 @@ public class PushSet extends BaseEntity {
                 ", pushSwitch=" + pushSwitch +
                 ", time=" + time +
                 ", tags=" + tags +
+                ", smartSub=" + smartSub +
                 ", alarmTags=" + alarmTags +
                 ", alarmSwitch=" + alarmSwitch +
                 '}';
