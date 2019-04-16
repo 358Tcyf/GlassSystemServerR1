@@ -13,9 +13,9 @@ public interface PushService {
 
     void pushWithAlias(LocalDate date, User user, boolean ignoreTime);
 
-    Push packDailyData(LocalDate date, List<Tag> tags);
+    Push packDailyProduceData(LocalDate date, List<Tag> tags);
 
-    Push packDailyData(LocalDate date);
+    Push packDailySaleData(LocalDate date, List<Tag> tags);
 
     BaseChart packDailyProduceCount(LocalDate date);
 
@@ -26,6 +26,15 @@ public interface PushService {
     BaseChart packDailyProduceQualityList(LocalDate date);
 
     BaseChart packDailyConsume(LocalDate date);
+
+    BaseChart packDailySaleCount(LocalDate date);
+
+    BaseChart packDailyDeliveryCount(LocalDate date);
+
+    BaseChart packDailySale(LocalDate date);
+
+    BaseChart packDailyCustomRate(LocalDate date);
+
 
     Alarm packDailyAlarm(LocalDateTime date, List<AlarmTag> tags);
 

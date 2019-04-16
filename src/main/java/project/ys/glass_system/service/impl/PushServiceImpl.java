@@ -7,11 +7,14 @@ import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
 import project.ys.glass_system.model.p.dao.AlarmDao;
 import project.ys.glass_system.model.p.dao.PushDao;
+import project.ys.glass_system.model.p.dao.TagDao;
 import project.ys.glass_system.model.p.dao.UserDao;
 import project.ys.glass_system.model.p.entity.*;
+import project.ys.glass_system.model.s.dao.OrderDao;
 import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.model.s.dao.ProductNoteDao;
 import project.ys.glass_system.model.s.entity.Glass;
+import project.ys.glass_system.model.s.entity.Orders;
 import project.ys.glass_system.model.s.entity.ProductNotes;
 import project.ys.glass_system.model.s.entity.Products;
 import project.ys.glass_system.service.PushService;
@@ -48,7 +51,14 @@ public class PushServiceImpl implements PushService {
     UserDao userDao;
 
     @Resource
+    TagDao tagDao;
+
+    @Resource
     ProductDao productDao;
+
+    @Resource
+    OrderDao orderDao;
+
 
     @Resource
     ProductNoteDao productNoteDao;
@@ -119,13 +129,17 @@ public class PushServiceImpl implements PushService {
 
 
     private void push(LocalDate date, List<Tag> tags, String alias) {
-        Push push = packDailyData(date, tags);
-        push.setPushUuid(getNum19());
-        push.setReceiver(alias);
-        if (push != null) {
-            String message = JSON.toJSONString(push);
+        Push push1 = packDailyProduceData(date, tags);
+        Push push2 = packDailySaleData(date, tags);
+        if (push1 != null || push2 != null)
             System.out.println(dateToStr(LocalDateTime.now(), format1) + "系统尝试发送数据推送，目标别名：" + alias);
-            sendSingleMessage(1, alias, transmissionTemplate(message));
+        if (push1 != null) {
+            push1.setReceiver(alias);
+            sendSingleMessage(1, alias, transmissionTemplate(JSON.toJSONString(push1)));
+        }
+        if (push2 != null) {
+            push2.setReceiver(alias);
+            sendSingleMessage(1, alias, transmissionTemplate(JSON.toJSONString(push2)));
         }
     }
 
@@ -141,10 +155,15 @@ public class PushServiceImpl implements PushService {
     }
 
     @Override
-    public Push packDailyData(LocalDate date, List<Tag> tags) {
-        if (tags.size() == 0)
-            return null;
-        else {
+    public Push packDailyProduceData(LocalDate date, List<Tag> tags) {
+        Tag tagDailyProduceCountList = tagDao.findByName(DailyProduceCountList);
+        Tag tagDailyCountOfModel = tagDao.findByName(DailyCountOfModel);
+        Tag tagDailyProduceQualityList = tagDao.findByName(DailyProduceQualityList);
+        Tag tagDailyConsume = tagDao.findByName(DailyConsume);
+        if (tags.contains(tagDailyProduceCountList) ||
+                tags.contains(tagDailyCountOfModel) ||
+                tags.contains(tagDailyProduceQualityList) ||
+                tags.contains(tagDailyConsume)) {
             LocalDateTime now = LocalDateTime.now();
             long time = localDateTimeToMilli(now) + 60 * 1000;
             Push push = new Push(time);
@@ -160,42 +179,62 @@ public class PushServiceImpl implements PushService {
                     content.add(packDailyConsume(date));
             }
             push.setContent(JSON.toJSONString(content));
-            push.setDefaultSubMenu(content.get(0).getSubmenu());
+            if (content.size() > 0)
+                push.setDefaultSubMenu(content.get(0).getSubmenu());
             push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "数据");
+            push.setPushUuid(getNum19());
             return push;
-        }
+        } else
+            return null;
     }
 
     @Override
-    public Push packDailyData(LocalDate date) {
-        LocalDateTime now = LocalDateTime.now();
-        long time = localDateTimeToMilli(now) + 60 * 1000;
-        System.out.println("Push CreateTime ->" + time);
-        Push push = new Push(time);
-        List<BaseChart> content = new ArrayList<>();
-        content.add(packDailyProduceCountList(date));
-        content.add(packDailyCountOfModel(date));
-        content.add(packDailyProduceQualityList(date));
-        content.add(packDailyConsume(date));
-        push.setContent(JSON.toJSONString(content));
-        push.setDefaultSubMenu(content.get(0).getSubmenu());
-        push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "推送数据");
-        return push;
+    public Push packDailySaleData(LocalDate date, List<Tag> tags) {
+        Tag tagDailySaleCount = tagDao.findByName(DailySaleCount);
+        Tag tagDailyDeliveryCount = tagDao.findByName(DailyDeliveryCount);
+        Tag tagDailySale = tagDao.findByName(DailySale);
+        Tag tagDailyCustomRate = tagDao.findByName(DailyCustomRate);
+        if (tags.contains(tagDailySaleCount) ||
+                tags.contains(tagDailyDeliveryCount) ||
+                tags.contains(tagDailySale) ||
+                tags.contains(tagDailyCustomRate)) {
+            LocalDateTime now = LocalDateTime.now();
+            long time = localDateTimeToMilli(now) + 60 * 1000;
+            Push push = new Push(time);
+            List<BaseChart> content = new ArrayList<>();
+            for (Tag tag : tags) {
+                if (tag.getName().equals(DailySaleCount))
+                    content.add(packDailySaleCount(date));
+                if (tag.getName().equals(DailyDeliveryCount))
+                    content.add(packDailyDeliveryCount(date));
+                if (tag.getName().equals(DailySale))
+                    content.add(packDailySale(date));
+                if (tag.getName().equals(DailyCustomRate))
+                    content.add(packDailyCustomRate(date));
+            }
+            push.setContent(JSON.toJSONString(content));
+            if (content.size() > 0)
+                push.setDefaultSubMenu(content.get(0).getSubmenu());
+            push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "数据");
+            push.setPushUuid(getNum19());
+            return push;
+        } else
+            return null;
     }
 
     private final String[] sixDivideTimes = {"00:00:00", "04:00:00", "08:00:00", "12:00:00", "16:00:00", "20:00:00", "23:59:59"};
 
     @Override
     public BaseChart packDailyProduceCount(LocalDate date) {
-        BaseChart produceDate = new BaseChart();
+        BaseChart produceData = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
-        produceDate.setMenu("生产信息");
-        produceDate.setSubmenu("生产量");
-        produceDate.setTitle("产品生产总量统计");
-        produceDate.setLabel("生产总量");
-        produceDate.setChart_type(bar_chart);
-        produceDate.setOnly(true);
-        produceDate.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
+        produceData.setMenu("生产信息");
+        produceData.setSubmenu("生产量");
+        produceData.setTitle("产品生产总量统计");
+        produceData.setLabel("生产总量");
+        produceData.setChart_type(bar_chart);
+        produceData.setOnly(true);
+        produceData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
             List<Products> products = productDao.findProductsByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
             int success = 0;
@@ -204,23 +243,23 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry((float) j, (float) success));
         }
-        produceDate.setyValues(yValues);
-        return produceDate;
+        produceData.setyValues(yValues);
+        return produceData;
     }
 
     @Override
     public BaseChart packDailyProduceCountList(LocalDate date) {
-        BaseChart produceDate = new BaseChart();
+        BaseChart produceData = new BaseChart();
         List<List<BaseEntry>> yValues = new ArrayList<>();
         List<BaseEntry> yValue1 = new ArrayList<>();
         List<BaseEntry> yValue2 = new ArrayList<>();
-        produceDate.setMenu("生产信息");
-        produceDate.setSubmenu("生产量");
-        produceDate.setTitle("产品生产总量统计");
-        produceDate.setLabels(Arrays.asList("生产数", "残片数"));
-        produceDate.setChart_type(bar_chart);
-        produceDate.setOnly(true);
-        produceDate.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
+        produceData.setMenu("生产信息");
+        produceData.setSubmenu("生产量");
+        produceData.setTitle("产品生产总量统计");
+        produceData.setLabels(Arrays.asList("生产数", "残片数"));
+        produceData.setChart_type(bar_chart);
+        produceData.setOnly(true);
+        produceData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
             List<Products> products = productDao.findProductsByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
             int plan = 0, fail = 0;
@@ -233,24 +272,24 @@ public class PushServiceImpl implements PushService {
         }
         yValues.add(yValue1);
         yValues.add(yValue2);
-        produceDate.setyListValues(yValues);
-        return produceDate;
+        produceData.setyListValues(yValues);
+        return produceData;
     }
 
     @Override
     public BaseChart packDailyCountOfModel(LocalDate date) {
-        BaseChart produceDate = new BaseChart();
+        BaseChart produceData = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
-        produceDate.setMenu("生产信息");
-        produceDate.setSubmenu("生产型号统计");
-        produceDate.setTitle("各型号生产统计");
-        produceDate.setDescription("各型号玻璃生产数量");
-        produceDate.setLabel("各型号玻璃生产数量");
-        produceDate.setChart_type(pie_chart);
-        produceDate.setOnly(true);
+        produceData.setMenu("生产信息");
+        produceData.setSubmenu("生产型号统计");
+        produceData.setTitle("各型号生产统计");
+        produceData.setDescription("各型号玻璃生产数量");
+        produceData.setLabel("各型号玻璃生产数量");
+        produceData.setChart_type(pie_chart);
+        produceData.setOnly(true);
         String[] labels = glassService.xValues();
-        produceDate.setLabels(Arrays.asList(labels));
-        produceDate.setxValues(labels);
+        produceData.setLabels(Arrays.asList(labels));
+        produceData.setxValues(labels);
         for (int i = 0; i < labels.length; i++) {
             List<Products> products = productDao.findProductsByModel(glassService.findByModel(labels[i]));
             int success = 0;
@@ -259,24 +298,24 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry(labels[i], (float) success));
         }
-        produceDate.setyValues(yValues);
-        return produceDate;
+        produceData.setyValues(yValues);
+        return produceData;
     }
 
     @Override
     public BaseChart packDailyProduceQualityList(LocalDate date) {
-        BaseChart produceDate = new BaseChart();
+        BaseChart produceData = new BaseChart();
         List<List<BaseEntry>> yValues = new ArrayList<>();
         List<BaseEntry> yValue1 = new ArrayList<>();
         List<BaseEntry> yValue2 = new ArrayList<>();
         List<BaseEntry> yValue3 = new ArrayList<>();
-        produceDate.setMenu("生产信息");
-        produceDate.setSubmenu("生产质量");
-        produceDate.setTitle("产品生产总量统计");
-        produceDate.setLabels(Arrays.asList("镀膜成功率", "钢化成功率", "残片率"));
-        produceDate.setChart_type(bar_chart);
-        produceDate.setOnly(false);
-        produceDate.setxValues(glassService.xValues());
+        produceData.setMenu("生产信息");
+        produceData.setSubmenu("生产质量");
+        produceData.setTitle("产品生产质量统计");
+        produceData.setLabels(Arrays.asList("镀膜成功率", "钢化成功率", "残片率"));
+        produceData.setChart_type(bar_chart);
+        produceData.setOnly(false);
+        produceData.setxValues(glassService.xValues());
         List<Glass> glasses = glassService.findAll();
         for (int i = 0; i < glasses.size(); i++) {
             List<Products> products = productDao.findProductsByModel(glasses.get(i));
@@ -291,12 +330,11 @@ public class PushServiceImpl implements PushService {
             yValue2.add(new BaseEntry((float) i + 1, (float) harden * 100 / (float) plan));
             yValue3.add(new BaseEntry((float) i + 1, (float) fail * 100 / (float) plan));
         }
-
         yValues.add(yValue1);
         yValues.add(yValue2);
         yValues.add(yValue3);
-        produceDate.setyListValues(yValues);
-        return produceDate;
+        produceData.setyListValues(yValues);
+        return produceData;
     }
 
     @Override
@@ -318,6 +356,26 @@ public class PushServiceImpl implements PushService {
         yValues.add(new BaseEntry(labels[2], (float) productNote.getWater()));
         produceDate.setyValues(yValues);
         return produceDate;
+    }
+
+    @Override
+    public BaseChart packDailySaleCount(LocalDate date) {
+       return null;
+    }
+
+    @Override
+    public BaseChart packDailyDeliveryCount(LocalDate date) {
+        return null;
+    }
+
+    @Override
+    public BaseChart packDailySale(LocalDate date) {
+        return null;
+    }
+
+    @Override
+    public BaseChart packDailyCustomRate(LocalDate date) {
+        return null;
     }
 
     @Override

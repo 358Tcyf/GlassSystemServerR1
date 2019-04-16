@@ -6,15 +6,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import project.ys.glass_system.model.s.entity.Customers;
+import project.ys.glass_system.model.s.entity.OrderItems;
+import project.ys.glass_system.model.s.entity.Orders;
 import project.ys.glass_system.model.s.entity.Products;
 import project.ys.glass_system.service.impl.GlassServiceImpl;
 import project.ys.glass_system.service.impl.ProductServiceImpl;
 import project.ys.glass_system.service.impl.SaleServiceImpl;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static project.ys.glass_system.model.s.entity.Customers.CUST_PHONE;
+import static project.ys.glass_system.model.s.entity.Glass.GLASS_MODEL;
 import static project.ys.glass_system.util.RandomUtils.randomInt;
 
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -10,10 +10,17 @@ import javax.persistence.Entity;
 @Entity(name = "push_tags")
 public class Tag extends BaseEntity {
 
+    public static String ProduceData = "生产信息";
+    public static String SaleData = "销售信息";
+
     public static String DailyProduceCountList = "生产量";
     public static String DailyCountOfModel = "生产型号统计";
     public static String DailyProduceQualityList = "生产质量";
     public static String DailyConsume = "生产能耗";
+    public static String DailySaleCount = "销售量";
+    public static String DailyDeliveryCount = "交易量";
+    public static String DailySale = "销售额";
+    public static String DailyCustomRate = "顾客满意率";
 
     public Tag() {
     }

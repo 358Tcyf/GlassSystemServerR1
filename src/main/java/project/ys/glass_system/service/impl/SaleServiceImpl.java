@@ -57,6 +57,7 @@ public class SaleServiceImpl implements SaleService {
         List<OrderItems> list = new ArrayList<>();
         for (OrderItems item : items) {
             list.add(orderItem(item));
+            orders.setPrice(orders.getPrice() + item.getPrice());
         }
         orders.setOrderItems(list);
         return orderDao.saveAndFlush(orders);

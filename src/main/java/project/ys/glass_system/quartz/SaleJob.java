@@ -36,6 +36,7 @@ public class SaleJob implements Job {
             orderItems.add(glassService.virtualSale(GLASS_MODEL[randomInt(0, 4)]));
         }
         Orders orders = new Orders(LocalDateTime.now(), customer);
+        orders.setRate(randomInt(4.0, 5.0));
         saleService.ordersOfDay(saleService.ordersOfCustomer(orders, orderItems));
     }
 }
