@@ -16,9 +16,12 @@ import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static project.ys.glass_system.constant.HttpConstant.*;
+import static project.ys.glass_system.util.DateUtils.format1;
+import static project.ys.glass_system.util.LocalDateUtils.dateToStr;
 
 @Unlimited
 @RestController
@@ -45,6 +48,7 @@ public class PushController {
     public RetResult instantPush(@PathVariable String alias) {
         User user = userDao.findByNo(alias);
         if (user != null) {
+            System.out.println(dateToStr(LocalDateTime.now(), format1) + "请求忽略日期和时间限制");
             pushService.pushWithAlias(LocalDate.now(), user, true);
             return RetResponse.makeOKRsp("发送成功");
         } else

@@ -10,13 +10,11 @@ import project.ys.glass_system.model.p.dao.PushDao;
 import project.ys.glass_system.model.p.dao.TagDao;
 import project.ys.glass_system.model.p.dao.UserDao;
 import project.ys.glass_system.model.p.entity.*;
+import project.ys.glass_system.model.s.dao.GlassDao;
 import project.ys.glass_system.model.s.dao.OrderDao;
 import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.model.s.dao.ProductNoteDao;
-import project.ys.glass_system.model.s.entity.Glass;
-import project.ys.glass_system.model.s.entity.Orders;
-import project.ys.glass_system.model.s.entity.ProductNotes;
-import project.ys.glass_system.model.s.entity.Products;
+import project.ys.glass_system.model.s.entity.*;
 import project.ys.glass_system.service.PushService;
 
 import javax.annotation.Resource;
@@ -62,7 +60,8 @@ public class PushServiceImpl implements PushService {
 
     @Resource
     ProductNoteDao productNoteDao;
-
+    @Resource
+    GlassDao glassDao;
     @Resource
     GlassServiceImpl glassService;
 
@@ -133,21 +132,21 @@ public class PushServiceImpl implements PushService {
         Push push2 = packDailySaleData(date, tags);
         if (push1 != null || push2 != null)
             System.out.println(dateToStr(LocalDateTime.now(), format1) + "系统尝试发送数据推送，目标别名：" + alias);
-        if (push1 != null) {
-            push1.setReceiver(alias);
-            sendSingleMessage(1, alias, transmissionTemplate(JSON.toJSONString(push1)));
-        }
         if (push2 != null) {
             push2.setReceiver(alias);
             sendSingleMessage(1, alias, transmissionTemplate(JSON.toJSONString(push2)));
+        }
+        if (push1 != null) {
+            push1.setReceiver(alias);
+            sendSingleMessage(1, alias, transmissionTemplate(JSON.toJSONString(push1)));
         }
     }
 
     private void alarm(LocalDateTime date, List<AlarmTag> tags, String alias) {
         Alarm alarm = packDailyAlarm(date, tags);
-        alarm.setAlarmUuid(getNum19());
-        alarm.setReceiver(alias);
         if (alarm != null) {
+            alarm.setAlarmUuid(getNum19());
+            alarm.setReceiver(alias);
             String message = JSON.toJSONString(alarm);
             System.out.println(dateToStr(LocalDateTime.now(), format1) + "系统尝试发送预警推送，目标别名：" + alias);
             sendSingleMessage(1, alias, transmissionTemplate(message));
@@ -360,22 +359,117 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public BaseChart packDailySaleCount(LocalDate date) {
-       return null;
+        BaseChart saleData = new BaseChart();
+        List<List<BaseEntry>> yValues = new ArrayList<>();
+        saleData.setMenu(SaleData);
+        saleData.setSubmenu(DailySaleCount);
+        saleData.setTitle("产品销售量统计");
+        String[] labels = glassService.xValues();
+        List<Glass> glasses = glassDao.findAll();
+        saleData.setLabels(Arrays.asList(labels));
+        saleData.setChart_type(line_chart);
+        saleData.setOnly(false);
+        saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
+        for (Glass glass : glasses) {
+            List<BaseEntry> yValue = new ArrayList<>();
+            for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
+                List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
+                for (Orders order : orders) {
+                    List<OrderItems> orderItems = order.getOrderItems();
+                    float sum = 0;
+                    for (OrderItems orderItem : orderItems) {
+                        if (orderItem.getModel() == glass) {
+                            sum += orderItem.getDelivery();
+                        }
+                    }
+                    yValue.add(new BaseEntry((float) j, (float) sum));
+                }
+            }
+            yValues.add(yValue);
+        }
+        saleData.setyListValues(yValues);
+        return saleData;
     }
 
     @Override
     public BaseChart packDailyDeliveryCount(LocalDate date) {
-        return null;
+        BaseChart saleData = new BaseChart();
+        List<List<BaseEntry>> yValues = new ArrayList<>();
+        saleData.setMenu(SaleData);
+        saleData.setSubmenu(DailyDeliveryCount);
+        saleData.setTitle("产品交易量统计");
+        String[] labels = glassService.xValues();
+        List<Glass> glasses = glassDao.findAll();
+        saleData.setLabels(Arrays.asList(labels));
+        saleData.setChart_type(line_chart);
+        saleData.setOnly(false);
+        saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
+        for (Glass glass : glasses) {
+            List<BaseEntry> yValue = new ArrayList<>();
+            for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
+                List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
+                for (Orders order : orders) {
+                    List<OrderItems> orderItems = order.getOrderItems();
+                    float sum = 0;
+                    for (OrderItems orderItem : orderItems) {
+                        if (orderItem.getModel() == glass) {
+                            sum += orderItem.getDelivery();
+                        }
+                    }
+                    yValue.add(new BaseEntry((float) j, (float) sum));
+                }
+            }
+            yValues.add(yValue);
+        }
+        saleData.setyListValues(yValues);
+        return saleData;
     }
 
     @Override
     public BaseChart packDailySale(LocalDate date) {
-        return null;
+        BaseChart saleData = new BaseChart();
+        List<BaseEntry> yValues = new ArrayList<>();
+        saleData.setMenu(SaleData);
+        saleData.setSubmenu(DailySale);
+        saleData.setTitle("产品销售总额统计");
+        saleData.setLabel("产品销售总额");
+        saleData.setChart_type(line_chart);
+        saleData.setOnly(true);
+        saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
+        for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
+            List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
+            int sum = 0;
+            for (Orders order : orders) {
+                sum += order.getPrice();
+            }
+            yValues.add(new BaseEntry((float) j, (float) sum));
+        }
+        saleData.setyValues(yValues);
+        return saleData;
     }
 
     @Override
     public BaseChart packDailyCustomRate(LocalDate date) {
-        return null;
+        BaseChart saleData = new BaseChart();
+        List<BaseEntry> yValues = new ArrayList<>();
+        saleData.setMenu(SaleData);
+        saleData.setSubmenu(DailyCustomRate);
+        saleData.setTitle("销售订单满意率统计");
+        saleData.setLabel("顾客满意率");
+        saleData.setChart_type(line_chart);
+        saleData.setOnly(true);
+        saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
+        for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
+            List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
+            int sum = 0;
+            int count = orders.size();
+            for (Orders order : orders) {
+                sum += order.getRate();
+            }
+            yValues.add(new BaseEntry((float) j, (float) sum / (count * 5.0) * 100));
+        }
+        saleData.setyValues(yValues);
+        return saleData;
     }
 
     @Override
