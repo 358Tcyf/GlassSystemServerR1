@@ -33,6 +33,12 @@ public class HttpConstant {
 
 
     public static final String PUSH = "/push";
+    public static final String _PUSH = "push";
+    public static final String PUSH_MANAGER = "/pushManager";
+    public static final String ALARM_MANAGER = "/alarmManager";
+    public static final String PUSH_QUERY = "/pushQuery";
+    public static final String PUSH_DELETE = "/deletePush";
+    public static final String PUSH_LIST_DELETE = "/deletePushList";
     public static final String INSTANT = "/instantPush";
     public static final String UPDATE_PUSH = "/updatePushes";
     public static final String DOWNLOAD_PUSH = "/downloadPushes";

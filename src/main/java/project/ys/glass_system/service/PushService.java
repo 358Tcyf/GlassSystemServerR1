@@ -6,6 +6,7 @@ import project.ys.glass_system.model.p.entity.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface PushService {
 
@@ -53,4 +54,10 @@ public interface PushService {
     void updateAlarm(String account, List<Alarm> alarms);
 
     List<Alarm> downloadAlarm(String account);
+
+    Map<String, Object> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver,int type, int read, int page, int limit);
+
+    boolean deletePush(String uuid);
+
+    void deletePushList(List<String> uuids);
 }

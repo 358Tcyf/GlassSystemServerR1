@@ -200,7 +200,6 @@ public class UserServiceImpl implements UserService {
             }
         }
         map.put("object", listMap);
-
         return map;
     }
 

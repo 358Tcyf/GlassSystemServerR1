@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>推送管理</title>
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <style type="text/css">
+        .layui-layer-page .layui-layer-content {
+            overflow: inherit !important;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">标题:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="title" name="title" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">开始时间:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="startTime" name="startTime" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结束时间:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="endTime" name="endTime" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户工号:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="receiverID" name="receiverID" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户姓名:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="receiver" name="receiver" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">推送类型:</label>
+                    <div class="layui-input-inline">
+                        <select class="select" id="type" name="type" lay-filter="section">
+                            <option value="0" selected>全部</option>
+                            <option value="1">数据推送</option>
+                            <option value="2">预警推送</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">已读:</label>
+                    <div class="layui-input-inline">
+                        <select class="select" id="read" name="read" lay-filter="section">
+                            <option value="0" selected>全部</option>
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+        <div class="layui-card-body">
+            <table id="table" lay-filter="table"
+                   lay-data="{initSort: {field:'createTime', type:'desc'}}"></table>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="userInfo" style="display: none">
+    <div class="layui-card">
+        <div class=" layui-card-body">
+            <form class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_name" id="edit_name" lay-verify="required" autocomplete="off"
+                               placeholder="请输入姓名" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_role" id="edit_role" lay-verify="required" autocomplete="off"
+                               placeholder="请输入部门" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_account" id="edit_account" lay-verify="required"
+                               autocomplete="off"
+                               placeholder="请输入工号" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_phone" id="edit_phone" lay-verify="required" autocomplete="off"
+                               placeholder="请输入手机" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="edit_email" id="edit_email" lay-verify="required" autocomplete="off"
+                               placeholder="请输入邮箱" class="layui-input">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-sm" lay-event="pushInstant">发送消息</a>
+    <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteList">批量删除</a>
+</script>
+
+<script type="text/html" id="bar">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="/static/assets/layui/layui.js"></script>
+<script src="/static/js/notice.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script>
+
+    layui.use(['table', 'jquery', 'layer', 'form', 'laydate'], function () {
+        var $ = layui.$,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+
+        var tableIns = table.render({
+            elem: '#table',
+            height: 'full-160',
+            toolbar: '#toolbar',
+            defaultToolbar: ['print', 'exports'],
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {field: 'id', title: 'ID', width: '10%', sort: true},
+                    {field: 'title', title: '标题', width: '15%', sort: true},
+                    {field: 'createTime', title: "创建时间", width: '17%', sort: true},
+                    {field: 'receiver_id', title: '用户ID', width: '10%', sort: true},
+                    {field: 'receiver', title: '用户', width: '8%', sort: true},
+                    {
+                        field: 'content', title: "内容", width: '10%', sort: true
+                        , event: "pushContent", templet: function (row) {
+                            return "<a >查看详情</a>";
+                        }
+                    },
+                    {
+                        field: 'type', title: "类型", width: '10%', sort: true
+                        , templet: function (row) {
+                            return 1 === row.type ? "数据推送" : "预警推送"
+                        }
+                    },
+                    {field: 'read', title: "已读", width: '8%', sort: true},
+                    {title: '操作', align: 'center', width: '7%', toolbar: '#bar'}
+                ]
+            ],
+            text: {
+                none: '暂无相关数据'
+            },
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            url: "/push/pushQuery",
+            where: {
+                title: $("#title").val(),
+                startTime: 0,
+                endTime: 0,
+                receiverID: $("#receiverID").val(),
+                receiver: $("#receiver").val(),
+                type: $("#type").val(),
+                read: $("#read").val()
+            },
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "data": res.data.object,
+                    "count": res.data.count,
+                };
+            }
+        });
+
+        table.on('toolbar(table)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'pushInstant':
+
+                    break;
+                case 'deleteList':
+                    var arrayID = new Array();
+                    checkStatus.data.forEach(function (p) {
+                        arrayID.push(p.id);
+                    });
+                    layer.confirm('真的删除么', {title: '删除推送', shadeClose: true}, function (index) {
+                        layer.close(index);
+                        $.get('/push/deletePushList', {
+                            uuids: arrayID
+                        }, function (res) {
+                            if (res.code === 200) {
+                                obj.del();
+                                notice_success('删除成功');
+                            } else {
+                                notice_error(res.msg);
+                            }
+                        });
+                    });
+                    break;
+                case 'pushContent':
+                    switch (data.type) {
+                        case 1:
+                            newTab('/project/getDetails/' + obj.projectId, obj.projectName)
+                            break;
+                        case 2:
+                            newTab('/project/declare.htm?rule=' + obj.ruleId + '&publisher=' + obj.publisher, obj.ruleTitle)
+                            break;
+                    }
+                    break;
+            }
+        });
+
+        table.on('tool(table)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'del':
+                    layer.confirm('真的删除么', {title: '删除推送', shadeClose: true}, function (index) {
+                        layer.close(index);
+                        $.get('/push/deletePush', {
+                            uuid: data.id
+                        }, function (res) {
+                            if (res.code === 200) {
+                                obj.del();
+                                notice_success('删除成功');
+                            } else {
+                                notice_error(res.msg);
+                            }
+                        });
+                    });
+                    break;
+            }
+        });
+        var search = function () {
+            tableIns.reload({
+                url: '/push/pushQuery',
+                where: {
+                    name: $("#name").val(),
+                    account: $("#account").val(),
+                    role: $("#role").val(),
+                    phone: $("#phone").val(),
+                    email: $("#email").val()
+                },
+
+                page: {
+                    curr: 1
+                }
+            });
+        };
+
+    })
+</script>
+</body>
+</html>

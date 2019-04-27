@@ -9,4 +9,5 @@ public interface AlarmDao extends JpaRepository<Alarm, Integer> {
 
     List<Alarm> findAlarmsByReceiver(String receiver);
 
+    Alarm findByAlarmUuid(String alarmUuid);
 }

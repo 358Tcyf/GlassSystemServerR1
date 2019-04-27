@@ -1,0 +1,7 @@
+{
+  "name": "example",
+  "version": "0.1.0",
+  "description": "apiDoc basic example",
+  "title": "APIDoc 测试",
+  "url" : "https://127.0.0.1:8080/"
+}

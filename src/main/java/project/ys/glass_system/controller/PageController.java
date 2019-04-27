@@ -1,14 +1,11 @@
 package project.ys.glass_system.controller;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import project.ys.glass_system.config.SessionUtil;
 import project.ys.glass_system.config.Unlimited;
-
 import static project.ys.glass_system.constant.HttpConstant.*;
-
 
 @Controller
 public class PageController {
@@ -41,10 +38,14 @@ public class PageController {
         return _USER + USER_MANAGER;
     }
 
+    @GetMapping(PUSH + PUSH_MANAGER)
+    public String pushManager(Model model) {
+        return _PUSH + PUSH_MANAGER;
+    }
 
-    @GetMapping(USER + RESET_PASSWORD)
-    public String changePwd() {
-        return _USER + RESET_PASSWORD;
+    @GetMapping(PUSH + ALARM_MANAGER)
+    public String alarmManager(Model model) {
+        return _PUSH + ALARM_MANAGER;
     }
 
     @Unlimited
@@ -70,5 +71,4 @@ public class PageController {
     public String error() {
         return _COMMON + ERROR;
     }
-
 }

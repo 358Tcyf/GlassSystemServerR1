@@ -90,6 +90,9 @@ public class LocalDateUtils {
         return date.format(formatters);
     }
 
+    public static String dateToStr(long time, String format) {
+        return dateToStr(dateToLocalDateTime(new Date(time)), format);
+    }
 
     public static LocalDate strToDate(String str, String format) {
         DateTimeFormatter formatters = DateTimeFormatter.ofPattern(format);
@@ -154,7 +157,7 @@ public class LocalDateUtils {
     public static long localDateTimeToMilli(LocalDateTime time) {
         return LocalDateUtils.stringToDate(dateToStr(time, DATE_TIME_FORMAT), DATE_TIME_FORMAT).toInstant().toEpochMilli();
     }
-    
+
 
     /**
      * 将毫秒时间戳转换成Date

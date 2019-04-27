@@ -1,6 +1,9 @@
 package project.ys.glass_system.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.p.bean.AlarmLog;
 import project.ys.glass_system.model.p.bean.BaseChart;
@@ -23,10 +26,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 import static project.ys.glass_system.getui.GetuiUtil.sendSingleMessage;
@@ -56,18 +56,14 @@ public class PushServiceImpl implements PushService {
 
     @Resource
     OrderDao orderDao;
-
-
     @Resource
     ProductNoteDao productNoteDao;
     @Resource
     GlassDao glassDao;
     @Resource
     GlassServiceImpl glassService;
-
     @Resource
     PushDao pushDao;
-
     @Resource
     AlarmDao alarmDao;
 
@@ -125,7 +121,6 @@ public class PushServiceImpl implements PushService {
             }
         }
     }
-
 
     private void push(LocalDate date, List<Tag> tags, String alias) {
         Push push1 = packDailyProduceData(date, tags);
@@ -481,34 +476,44 @@ public class PushServiceImpl implements PushService {
             long time = localDateTimeToMilli(now) + 60 * 1000;
             Alarm alarm = new Alarm(time);
             List<AlarmLog> alarmContent = new ArrayList<>();
+            boolean error = false;
             for (AlarmTag tag : tags) {
                 if (tag.getContent().equals(ALARM_TAGS[0])) {
                     String observe = observeFailRate(date, tag);
-                    if (!isEmpty(observe))
+                    if (!isEmpty(observe)) {
+                        error = true;
                         alarmContent.add(new AlarmLog(tag.getContent(), observe));
+                    }
                 }
                 if (tag.getContent().equals(ALARM_TAGS[1])) {
                     String observe = observeElecConsu(date, tag);
-                    if (!isEmpty(observe))
+                    if (!isEmpty(observe)) {
+                        error = true;
                         alarmContent.add(new AlarmLog(tag.getContent(), observe));
+                    }
                 }
                 if (tag.getContent().equals(ALARM_TAGS[2])) {
                     String observe = observeWtrConsu(date, tag);
-                    if (!isEmpty(observe))
+                    if (!isEmpty(observe)) {
                         alarmContent.add(new AlarmLog(tag.getContent(), observe));
+                    }
                 }
                 if (tag.getContent().equals(ALARM_TAGS[3])) {
                     String observe = observeCoalConsu(date, tag);
-                    if (!isEmpty(observe))
+                    if (!isEmpty(observe)) {
+                        error = true;
                         alarmContent.add(new AlarmLog(tag.getContent(), observe));
+                    }
                 }
             }
             alarm.setContent(JSON.toJSONString(alarmContent));
             alarm.setTitle(dateToStr(date, DATE_FORMAT_CN) + "预警");
-            return alarm;
+            if (error)
+                return alarm;
+            else
+                return null;
         }
     }
-
 
     @Override
     public String observeFailRate(LocalDateTime date, AlarmTag tag) {
@@ -519,7 +524,6 @@ public class PushServiceImpl implements PushService {
         end.setMinutes(59);
         end.setSeconds(59);
         List<Products> products = productDao.findProductsByDateBetween(dateToLocalDateTime(start), dateToLocalDateTime(end));
-
         boolean error = false;
         String result = "观测" + ALARM_TAGS[0] + ": \n";
         for (Products product : products) {
@@ -533,7 +537,7 @@ public class PushServiceImpl implements PushService {
         if (error)
             return result;
         else
-            return "";
+            return null;
     }
 
     @Override
@@ -549,7 +553,7 @@ public class PushServiceImpl implements PushService {
         if (error)
             return result;
         else
-            return "";
+            return null;
     }
 
     @Override
@@ -565,7 +569,7 @@ public class PushServiceImpl implements PushService {
         if (error)
             return result;
         else
-            return "";
+            return null;
     }
 
     @Override
@@ -581,7 +585,7 @@ public class PushServiceImpl implements PushService {
         if (error)
             return result;
         else
-            return "";
+            return null;
     }
 
     @Override
@@ -618,4 +622,63 @@ public class PushServiceImpl implements PushService {
         return oldAlarms;
     }
 
+    @Override
+    public Map<String, Object> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver, int type, int read, int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<Push> pushList;
+        Page<Alarm> alarmList;
+        pushList = pushDao.findAll(pageable);
+        alarmList = alarmDao.findAll(pageable);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", pushList.getTotalElements() + alarmList.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (Push push : pushList) {
+            Map<String, Object> p = new HashMap<>();
+            User user = userDao.findByNo(push.getReceiver());
+            p.put("id", push.getPushUuid());
+            p.put("title", push.getTitle());
+            p.put("createTime", dateToStr(push.getCreateTime(),DATE_TIME_FORMAT));
+            p.put("receiver_id", user.getNo());
+            p.put("receiver", user.getName());
+            p.put("content", push.getContent());
+            p.put("type", 1);
+            p.put("read", push.isHaveRead());
+            listMap.add(p);
+        }
+        for (Alarm alarm : alarmList) {
+            Map<String, Object> p = new HashMap<>();
+            User user = userDao.findByNo(alarm.getReceiver());
+            p.put("id", alarm.getAlarmUuid());
+            p.put("title", alarm.getTitle());
+            p.put("createTime", dateToStr(alarm.getCreateTime(),DATE_TIME_FORMAT));
+            p.put("receiver_id", user.getNo());
+            p.put("receiver", user.getName());
+            p.put("content", alarm.getContent());
+            p.put("type", 2);
+            p.put("read", alarm.isHaveRead());
+            listMap.add(p);
+        }
+        map.put("object", listMap);
+        return map;
+    }
+
+    @Override
+    public boolean deletePush(String uuid) {
+        if (pushDao.findByPushUuid(uuid) != null) {
+            pushDao.delete(pushDao.findByPushUuid(uuid));
+            return true;
+        }
+        if (alarmDao.findByAlarmUuid(uuid) != null) {
+            alarmDao.delete(alarmDao.findByAlarmUuid(uuid));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void deletePushList(List<String> uuids) {
+        for(String uuid:uuids){
+            deletePush(uuid);
+        }
+    }
 }

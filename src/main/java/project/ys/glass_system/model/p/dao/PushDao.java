@@ -8,4 +8,6 @@ import java.util.List;
 public interface PushDao extends JpaRepository<Push, Integer> {
 
     List<Push> findPushesByReceiver(String receiver);
+
+    Push findByPushUuid(String pushUuid);
 }

@@ -1,9 +1,6 @@
 package project.ys.glass_system.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
@@ -18,6 +15,7 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static project.ys.glass_system.constant.HttpConstant.*;
 import static project.ys.glass_system.util.DateUtils.format1;
@@ -92,5 +90,25 @@ public class PushController {
         } else {
             return RetResponse.makeErrRsp("账号不存在");
         }
+    }
+
+    @RequestMapping(PUSH_QUERY)
+    @ResponseBody
+    public RetResult<Map<String, Object>> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver, int type, int read, int page, int limit) {
+        return RetResponse.makeOKRsp(pushService.pushQuery(title, startTime, endTime, receiverID, receiver, type, read, page, limit));
+    }
+
+    @RequestMapping(PUSH_DELETE)
+    public RetResult deletePush(String uuid) {
+        if (pushService.deletePush(uuid))
+            return RetResponse.makeOKRsp();
+        else
+            return RetResponse.makeErrRsp("没有这条推送了");
+    }
+
+    @RequestMapping(PUSH_LIST_DELETE)
+    public RetResult deletePushList(List<String> uuids) {
+        pushService.deletePushList(uuids);
+        return RetResponse.makeOKRsp();
     }
 }
