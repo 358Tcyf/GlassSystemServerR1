@@ -6,6 +6,7 @@ import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
 import project.ys.glass_system.model.p.entity.User;
+import project.ys.glass_system.service.impl.RecordServiceImpl;
 import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
@@ -27,6 +28,9 @@ public class UserController {
     @Resource
     UserServiceImpl userService;
 
+    @Resource
+    RecordServiceImpl recordService;
+
     @RequestMapping(WEB_LOGIN)
     public RetResult<User> webLogin(String account, String password, boolean isWeb) {
         if (account.length() > 5 || account.length() < 3) {
@@ -42,11 +46,11 @@ public class UserController {
             return RetResponse.makeErrRsp("密码错误");
         } else {
             User user = userService.login(account, password);
-            //禁止学生、教师在网页端登陆
-            if ((!user.getRole().getName().equals("超级管理员")) && isWeb)
+            if ((!user.getRole().getName().equals("超级管理员")) && isWeb) {
                 return RetResponse.makeErrRsp("网页端仅限超级管理员登录");
+            }
+            recordService.addRecord(user,isWeb?2:1);
             SessionUtil.getInstance().setSessionMap(user);
-            //判断是否为客户端，如果是客户端则延长session过期时间
             SessionUtil.getInstance().setMobileSessionTimeout();
             return RetResponse.makeOKRsp("登陆成功", user);
         }

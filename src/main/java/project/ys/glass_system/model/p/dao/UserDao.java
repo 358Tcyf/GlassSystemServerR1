@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import project.ys.glass_system.model.p.entity.Role;
 import project.ys.glass_system.model.p.entity.User;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface UserDao extends JpaRepository<User, Integer> {

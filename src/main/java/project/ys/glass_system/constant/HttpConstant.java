@@ -21,6 +21,11 @@ public class HttpConstant {
     public static final String USER_MANAGER = "/userManager";
 
 
+    public static final String RECORD = "/record";
+    public static final String LOGIN_RECORDS = "/loginRecords";
+    public static final String SYNC_RECORDS = "/syncRecords";
+
+
     public static final String SET = "/set";
     public static final String GET_SETS = "/getSets";
     public static final String UPLOAD_SETS = "/uploadSet";

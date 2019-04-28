@@ -10,6 +10,7 @@ import project.ys.glass_system.model.p.entity.Alarm;
 import project.ys.glass_system.model.p.entity.Push;
 import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.service.impl.PushServiceImpl;
+import project.ys.glass_system.service.impl.RecordServiceImpl;
 import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
@@ -38,6 +39,8 @@ public class PushController {
     @Resource
     UserDao userDao;
 
+    @Resource
+    RecordServiceImpl recordService;
 
     @RequestMapping(INSTANT)
     public RetResult instantPush() {
@@ -60,6 +63,7 @@ public class PushController {
     public RetResult updatePush(String account, @RequestBody List<Push> pushes) {
         if (userService.isExisted(account)) {
             pushService.updatePush(account, pushes);
+            recordService.addRecord(userDao.findByNo(account), 11);
             return RetResponse.makeOKRsp();
         } else {
             return RetResponse.makeErrRsp("账号不存在");
@@ -69,17 +73,18 @@ public class PushController {
     @RequestMapping(DOWNLOAD_PUSH)
     public RetResult downloadPush(String account) {
         if (userService.isExisted(account)) {
+            recordService.addRecord(userDao.findByNo(account), 12);
             return RetResponse.makeOKRsp(pushService.downloadPush(account));
         } else {
             return RetResponse.makeErrRsp("账号不存在");
         }
     }
 
-
     @RequestMapping(UPDATE_ALARM)
     public RetResult updateAlarm(String account, @RequestBody List<Alarm> alarms) {
         if (userService.isExisted(account)) {
             pushService.updateAlarm(account, alarms);
+            recordService.addRecord(userDao.findByNo(account), 11);
             return RetResponse.makeOKRsp();
         } else {
             return RetResponse.makeErrRsp("账号不存在");
@@ -89,6 +94,7 @@ public class PushController {
     @RequestMapping(DOWNLOAD_ALARM)
     public RetResult downloadAlarm(String account) {
         if (userService.isExisted(account)) {
+            recordService.addRecord(userDao.findByNo(account), 12);
             return RetResponse.makeOKRsp(pushService.downloadAlarm(account));
         } else {
             return RetResponse.makeErrRsp("账号不存在");
@@ -99,18 +105,18 @@ public class PushController {
     @ResponseBody
     public RetResult<Map<String, Object>> pushQuery(String title, String startTime, String endTime, String receiverID, String receiver, int type, int read, int page, int limit) {
         return RetResponse.makeOKRsp(pushService.pushQuery(title,
-                isEmpty(startTime)?0:strToLong(startTime),
-                isEmpty(endTime)?1999999999999L:strToLong(endTime)+1000*60*60*24,
+                isEmpty(startTime) ? 0 : strToLong(startTime),
+                isEmpty(endTime) ? 1999999999999L : strToLong(endTime) + 1000 * 60 * 60 * 24,
                 receiverID, receiver, type, read, page, limit));
     }
 
     @RequestMapping(PUSH_QUERY_SELF)
     @ResponseBody
-    public RetResult<Map<String, Object>> pushQuerySelf(String title, String startTime, String endTime,  int type, int read, int page, int limit) {
-       User user = SessionUtil.getInstance().getUser();
+    public RetResult<Map<String, Object>> pushQuerySelf(String title, String startTime, String endTime, int type, int read, int page, int limit) {
+        User user = SessionUtil.getInstance().getUser();
         return RetResponse.makeOKRsp(pushService.pushQuery(title,
-                isEmpty(startTime)?0:strToLong(startTime),
-                isEmpty(endTime)?1999999999999L:strToLong(endTime)+1000*60*60*24,
+                isEmpty(startTime) ? 0 : strToLong(startTime),
+                isEmpty(endTime) ? 1999999999999L : strToLong(endTime) + 1000 * 60 * 60 * 24,
                 user.getNo(), user.getName(), type, read, page, limit));
     }
 
