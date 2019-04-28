@@ -59,5 +59,5 @@ public interface PushService {
 
     boolean deletePush(String uuid);
 
-    void deletePushList(List<String> uuids);
+    void deletePushList(String[]  uuids);
 }

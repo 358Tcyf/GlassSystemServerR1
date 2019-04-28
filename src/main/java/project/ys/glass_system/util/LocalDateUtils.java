@@ -147,6 +147,9 @@ public class LocalDateUtils {
         return LocalDateUtils.stringToDate(time, DATE_TIME_FORMAT).toInstant().toEpochMilli();
     }
 
+    public static long strToLong(String time) {
+        return LocalDateUtils.stringToDate(time, DATE_FORMAT).toInstant().toEpochMilli();
+    }
 
     /**
      * 将time时间转换成毫秒时间戳

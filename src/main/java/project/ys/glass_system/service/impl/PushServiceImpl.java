@@ -627,8 +627,26 @@ public class PushServiceImpl implements PushService {
         Pageable pageable = new PageRequest(page - 1, limit);
         Page<Push> pushList;
         Page<Alarm> alarmList;
-        pushList = pushDao.findAll(pageable);
-        alarmList = alarmDao.findAll(pageable);
+        List<User> users;
+        List<String> receivers = new ArrayList<>();
+        if (isEmpty(receiver)) {
+            users = userDao.findAll();
+
+        } else {
+            users = userDao.findUsersByNameLike("%" + receiver + "%");
+        }
+        if (users.size() > 0) {
+            for (User user : users) {
+                receivers.add(user.getNo());
+            }
+        }
+        if (read != 0) {
+            pushList = pushDao.queryPushesByTitleLikeAndCreateTimeBetweenAndReceiverLikeAndReceiverInAndHaveRead("%" + title + "%", startTime, endTime, "%" + receiverID + "%", receivers, read == 1, pageable);
+            alarmList = alarmDao.queryAlarmsByTitleLikeAndCreateTimeBetweenAndReceiverLikeAndReceiverInAndHaveRead("%" + title + "%", startTime, endTime, "%" + receiverID + "%", receivers, read == 1, pageable);
+        } else {
+            pushList = pushDao.queryPushesByTitleLikeAndCreateTimeBetweenAndReceiverLikeAndReceiverIn("%" + title + "%", startTime, endTime, "%" + receiverID + "%", receivers, pageable);
+            alarmList = alarmDao.queryAlarmsByTitleLikeAndCreateTimeBetweenAndReceiverLikeAndReceiverIn("%" + title + "%", startTime, endTime, "%" + receiverID + "%", receivers, pageable);
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("count", pushList.getTotalElements() + alarmList.getTotalElements());
         List<Map<String, Object>> listMap = new ArrayList<>();
@@ -637,26 +655,28 @@ public class PushServiceImpl implements PushService {
             User user = userDao.findByNo(push.getReceiver());
             p.put("id", push.getPushUuid());
             p.put("title", push.getTitle());
-            p.put("createTime", dateToStr(push.getCreateTime(),DATE_TIME_FORMAT));
+            p.put("createTime", dateToStr(push.getCreateTime(), DATE_TIME_FORMAT));
             p.put("receiver_id", user.getNo());
             p.put("receiver", user.getName());
             p.put("content", push.getContent());
             p.put("type", 1);
             p.put("read", push.isHaveRead());
-            listMap.add(p);
+            if (type != 2)
+                listMap.add(p);
         }
         for (Alarm alarm : alarmList) {
-            Map<String, Object> p = new HashMap<>();
+            Map<String, Object> a = new HashMap<>();
             User user = userDao.findByNo(alarm.getReceiver());
-            p.put("id", alarm.getAlarmUuid());
-            p.put("title", alarm.getTitle());
-            p.put("createTime", dateToStr(alarm.getCreateTime(),DATE_TIME_FORMAT));
-            p.put("receiver_id", user.getNo());
-            p.put("receiver", user.getName());
-            p.put("content", alarm.getContent());
-            p.put("type", 2);
-            p.put("read", alarm.isHaveRead());
-            listMap.add(p);
+            a.put("id", alarm.getAlarmUuid());
+            a.put("title", alarm.getTitle());
+            a.put("createTime", dateToStr(alarm.getCreateTime(), DATE_TIME_FORMAT));
+            a.put("receiver_id", user.getNo());
+            a.put("receiver", user.getName());
+            a.put("content", alarm.getContent());
+            a.put("type", 2);
+            a.put("read", alarm.isHaveRead());
+            if (type != 1)
+                listMap.add(a);
         }
         map.put("object", listMap);
         return map;
@@ -676,8 +696,8 @@ public class PushServiceImpl implements PushService {
     }
 
     @Override
-    public void deletePushList(List<String> uuids) {
-        for(String uuid:uuids){
+    public void deletePushList(String[] uuids) {
+        for (String uuid : uuids) {
             deletePush(uuid);
         }
     }

@@ -35,4 +35,6 @@ public interface UserService {
     Map<String, Object> searchUserList(String searchText);
 
     Map<String, Object> userQuery(String name, String account, int role, String phone, String email, int page, int limit);
+
+    void logoffUserList(String[] ids);
 }

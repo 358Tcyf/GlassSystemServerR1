@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import project.ys.glass_system.config.SessionUtil;
 import project.ys.glass_system.config.Unlimited;
+import project.ys.glass_system.model.p.entity.User;
+
 import static project.ys.glass_system.constant.HttpConstant.*;
 
 @Controller
@@ -30,22 +32,22 @@ public class PageController {
 
     @GetMapping(HOME)
     public String home(Model model) {
-        return _USER + USER_MANAGER;
+        User user = SessionUtil.getInstance().getUser();
+        model.addAttribute("user", user);
+        if (user.getNo().startsWith("A"))
+            return _HOME + HOME_ROOT;
+        else
+            return _PUSH + PUSH_MANAGER_SELF;
     }
 
     @GetMapping(USER + USER_MANAGER)
-    public String userManager(Model model) {
+    public String userManager() {
         return _USER + USER_MANAGER;
     }
 
     @GetMapping(PUSH + PUSH_MANAGER)
-    public String pushManager(Model model) {
+    public String pushManager() {
         return _PUSH + PUSH_MANAGER;
-    }
-
-    @GetMapping(PUSH + ALARM_MANAGER)
-    public String alarmManager(Model model) {
-        return _PUSH + ALARM_MANAGER;
     }
 
     @Unlimited

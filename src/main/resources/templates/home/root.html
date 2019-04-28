@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <style type="text/css">
+        .layui-layer-page .layui-layer-content {
+            overflow: inherit !important;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
+
+        </form>
+        <div class="layui-card-body">
+            <table id="table" lay-filter="table"></table>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="/static/assets/layui/layui.js"></script>
+<script src="/static/js/notice.js"></script>
+<script src="/static/js/ajax.js"></script>
+<script>
+    layui.use(['table', 'jquery', 'layer', 'form', 'laydate'], function () {
+        var $ = layui.$,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+    })
+</script>
+</body>
+</html>

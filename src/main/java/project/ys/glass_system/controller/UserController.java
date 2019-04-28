@@ -1,9 +1,6 @@
 package project.ys.glass_system.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.ys.glass_system.config.SessionUtil;
 import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
@@ -141,6 +138,13 @@ public class UserController {
     @RequestMapping(USER_DELETE)
     public RetResult deleteUser(String account) {
         userService.logoffUser(account);
+        return RetResponse.makeOKRsp();
+    }
+
+    @RequestMapping(USER_LIST_DELETE)
+    @ResponseBody
+    public RetResult deleteUserList(@RequestBody String[] ids) {
+        userService.logoffUserList(ids);
         return RetResponse.makeOKRsp();
     }
 

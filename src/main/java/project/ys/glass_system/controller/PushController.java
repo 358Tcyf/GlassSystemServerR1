@@ -1,6 +1,7 @@
 package project.ys.glass_system.controller;
 
 import org.springframework.web.bind.annotation.*;
+import project.ys.glass_system.config.SessionUtil;
 import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.dto.RetResponse;
 import project.ys.glass_system.model.dto.RetResult;
@@ -17,9 +18,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static org.hibernate.internal.util.StringHelper.isEmpty;
 import static project.ys.glass_system.constant.HttpConstant.*;
 import static project.ys.glass_system.util.DateUtils.format1;
 import static project.ys.glass_system.util.LocalDateUtils.dateToStr;
+import static project.ys.glass_system.util.LocalDateUtils.strToLong;
 
 @Unlimited
 @RestController
@@ -94,8 +97,21 @@ public class PushController {
 
     @RequestMapping(PUSH_QUERY)
     @ResponseBody
-    public RetResult<Map<String, Object>> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver, int type, int read, int page, int limit) {
-        return RetResponse.makeOKRsp(pushService.pushQuery(title, startTime, endTime, receiverID, receiver, type, read, page, limit));
+    public RetResult<Map<String, Object>> pushQuery(String title, String startTime, String endTime, String receiverID, String receiver, int type, int read, int page, int limit) {
+        return RetResponse.makeOKRsp(pushService.pushQuery(title,
+                isEmpty(startTime)?0:strToLong(startTime),
+                isEmpty(endTime)?1999999999999L:strToLong(endTime)+1000*60*60*24,
+                receiverID, receiver, type, read, page, limit));
+    }
+
+    @RequestMapping(PUSH_QUERY_SELF)
+    @ResponseBody
+    public RetResult<Map<String, Object>> pushQuerySelf(String title, String startTime, String endTime,  int type, int read, int page, int limit) {
+       User user = SessionUtil.getInstance().getUser();
+        return RetResponse.makeOKRsp(pushService.pushQuery(title,
+                isEmpty(startTime)?0:strToLong(startTime),
+                isEmpty(endTime)?1999999999999L:strToLong(endTime)+1000*60*60*24,
+                user.getNo(), user.getName(), type, read, page, limit));
     }
 
     @RequestMapping(PUSH_DELETE)
@@ -107,8 +123,9 @@ public class PushController {
     }
 
     @RequestMapping(PUSH_LIST_DELETE)
-    public RetResult deletePushList(List<String> uuids) {
-        pushService.deletePushList(uuids);
+    @ResponseBody
+    public RetResult deletePushList(@RequestBody String[] ids) {
+        pushService.deletePushList(ids);
         return RetResponse.makeOKRsp();
     }
 }

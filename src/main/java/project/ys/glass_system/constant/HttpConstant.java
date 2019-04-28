@@ -16,6 +16,7 @@ public class HttpConstant {
     public static final String UPDATE_USER = "/updateUser";
     public static final String UPDATE_PASSWORD = "/updatePassword";
     public static final String USER_DELETE = "/deleteUser";
+    public static final String USER_LIST_DELETE = "/deleteUserList";
     public static final String LATEST_NO = "/latestNo";
     public static final String USER_MANAGER = "/userManager";
 
@@ -35,8 +36,9 @@ public class HttpConstant {
     public static final String PUSH = "/push";
     public static final String _PUSH = "push";
     public static final String PUSH_MANAGER = "/pushManager";
-    public static final String ALARM_MANAGER = "/alarmManager";
+    public static final String PUSH_MANAGER_SELF = "/pushManagerSelf";
     public static final String PUSH_QUERY = "/pushQuery";
+    public static final String PUSH_QUERY_SELF = "/pushQuerySelf";
     public static final String PUSH_DELETE = "/deletePush";
     public static final String PUSH_LIST_DELETE = "/deletePushList";
     public static final String INSTANT = "/instantPush";
@@ -51,6 +53,8 @@ public class HttpConstant {
 
     public static final String INDEX = "/index";
     public static final String HOME = "/home";
+    public static final String _HOME = "home";
+    public static final String HOME_ROOT = "/root";
     public static final String _ABOUT = "about";
     public static final String ABOUT = "/about";
     public static final String _COMMON = "common";

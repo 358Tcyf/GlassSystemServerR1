@@ -26,7 +26,6 @@ import static project.ys.glass_system.util.EncodeUtils.encode;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-
     @Resource
     private UserDao userDao;
 
@@ -150,7 +149,6 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-
     @Override
     public void updatePassword(String no, String newPassword) {
         User user = userDao.findByNo(no);
@@ -203,4 +201,10 @@ public class UserServiceImpl implements UserService {
         return map;
     }
 
+    @Override
+    public void logoffUserList(String[] accounts) {
+        for(String account:accounts){
+            logoffUser(account);
+        }
+    }
 }

@@ -40,22 +40,6 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">用户工号:</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="receiverID" name="receiverID" placeholder="" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">用户姓名:</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="receiver" name="receiver" placeholder="" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
                     <label class="layui-form-label">推送类型:</label>
                     <div class="layui-input-inline">
                         <select class="select" id="type" name="type" lay-filter="search">
@@ -93,7 +77,6 @@
 
 
 <script type="text/html" id="toolbar">
-    <a class="layui-btn layui-btn-sm" lay-event="pushInstant">发送消息</a>
     <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteList">批量删除</a>
 </script>
 
@@ -157,13 +140,11 @@
             page: true,
             limit: 10,
             limits: [10, 20, 30],
-            url: "/push/pushQuery",
+            url: "/push/pushQuerySelf",
             where: {
                 title: $("#title").val(),
                 startTime: $("#startTime").val(),
                 endTime: $("#endTime").val(),
-                receiverID: $("#receiverID").val(),
-                receiver: $("#receiver").val(),
                 type: $("#type").val(),
                 read: $("#read").val()
             },
@@ -248,13 +229,11 @@
         });
         var search = function () {
             tableIns.reload({
-                url: '/push/pushQuery',
+                url: '/push/pushQuerySelf',
                 where: {
                     title: $("#title").val(),
                     startTime: $("#startTime").val(),
                     endTime: $("#endTime").val(),
-                    receiverID: $("#receiverID").val(),
-                    receiver: $("#receiver").val(),
                     type: $("#type").val(),
                     read: $("#read").val()
                 },
