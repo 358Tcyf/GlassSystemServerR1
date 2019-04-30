@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <link rel="stylesheet" href="/static/css/download.css">
     <style type="text/css">
         .layui-layer-page .layui-layer-content {
             overflow: inherit !important;
         }
     </style>
 </head>
-<body layadmin-themealias="default">
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body">
@@ -24,6 +24,18 @@
                            lay-data="{initSort: {field:'createTime', type:'desc'}}"></table>
                 </div>
                 <div class="layui-col-md4">
+                    <center>
+                        <div class="info-area">
+                            <img class="d-item-logo" src="/static/img/Android.png" alt=""/>
+                            <div class="d-item-title">玻璃信息系统<br/>Android应用</div>
+                            <div class="d-item-desc">版本1.0 <span class="update-time">2019-04-30</span></div>
+                            <a href="https://www.pgyer.com/gx4K" class="layui-btn layui-btn-normal" target="_blank">下载</a>
+                            <div class="d-item-desc">请用手机扫码下载</div>
+                            <hr class="layui-bg-green">
+                            <img class="d-item-qrcode" src="/static/img/QRCode_336.png" alt="下载当前应用"/>
+                        </div>
+                    </center>
+
 
                 </div>
             </div>
@@ -44,12 +56,13 @@
             form = layui.form;
 
         table.render({
+            skin: 'nob',
             elem: '#loginTable',
-            height: 'full',
+            height: 'full-100',
             cols: [
                 [
                     {field: 'account', title: '账号', width: '25%', sort: true},
-                    {field: 'name', title: '用户名', width: '25%', sort: true},
+                    {field: 'name', title: '用户名', width: '25%', sort: true, style: 'color: #009688;'},
                     {field: 'time', title: '登录时间', width: '50%', sort: true},
                 ]
             ],
@@ -69,13 +82,14 @@
             }
         });
         table.render({
+            skin: 'nob',
             elem: '#sycnTable',
-            height: 'full',
+            height: 'full-100',
             cols: [
                 [
                     {field: 'account', title: '账号', width: '25%', sort: true},
+                    {field: 'action', title: '动作', width: '25%', sort: true, style: 'color: #009688;'},
                     {field: 'time', title: '同步时间', width: '50%', sort: true},
-                    {field: 'action', title: '动作', width: '25%', sort: true},
                 ]
             ],
             text: {

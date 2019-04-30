@@ -1,0 +1,33 @@
+.info-area {
+    position: absolute;
+    top: 50%;
+    bottom: 0;
+    width: 100%;
+}
+.d-item-logo {
+    width: 80px;
+    height: 80px;
+}
+
+.d-item-title {
+    line-height: 32px;
+    font-size: 24px;
+    color: #333;
+    text-align: center
+}
+
+.d-item-desc {
+    line-height: 24px;
+    font-size: 14px;
+    color: #333;
+    text-align: center
+}
+
+.d-item-desc .update-time {
+    padding-left: 8px
+}
+
+.d-item-qrcode {
+    width: 200px;
+    height: 200px;
+}
