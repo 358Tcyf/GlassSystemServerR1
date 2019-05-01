@@ -3,6 +3,7 @@ package project.ys.glass_system.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import project.ys.glass_system.config.SessionUtil;
 import project.ys.glass_system.config.Unlimited;
 import project.ys.glass_system.model.p.entity.User;
@@ -48,6 +49,13 @@ public class PageController {
     @GetMapping(PUSH + PUSH_MANAGER)
     public String pushManager() {
         return _PUSH + PUSH_MANAGER;
+    }
+
+    @Unlimited
+    @GetMapping(PUSH_CHART_TABS + "/{uuid:.+}")
+    public String charts(@PathVariable String uuid, Model model) {
+        model.addAttribute("pushId", uuid);
+        return _PUSH + PUSH_CHART_TABS;
     }
 
     @Unlimited

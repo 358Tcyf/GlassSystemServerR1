@@ -15,9 +15,9 @@ public class GlassSystemApplication {
         ApplicationContextUtils.setApplicationContext(ctx);
 //        SpringApplication.run(GlassSystemApplication.class, args);    //必须注释，否则上面两句无法执行
         System.out.println("\n\n\n==============================提示：服务器启动==============================\n\n\n");
-        onceProduct();
-        onceSale();
-        oncePush();
+//        onceProduct();
+//        onceSale();
+//        oncePush();
     }
 
 }

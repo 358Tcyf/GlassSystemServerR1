@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>数据详情</title>
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <style type="text/css">
+        .layui-layer-page .layui-layer-content {
+            overflow: inherit !important;
+        }
+    </style>
+    <script src="../../../../../../ydq/web/src/main/resources/static/js/privateMessage.js"></script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-tab layui-tab-brief" style="">
+            <ul id="chartTabs" class="layui-tab-title" style="width: 100%;">
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="/static/assets/layui/layui.js"></script>
+<script id="tabs" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <li><span>{{item}}</span></li>
+    {{# }); }}
+</script>
+
+<script th:inline="javascript">
+    layui.use(['jquery', 'layer'], function () {
+        var $ = layui.$;
+        var layer = layui.layer;
+        var uuid = [[${uuid}]];
+        getCharts();
+        function getCharts() {
+            $.get('/push/getCharts', {
+                uuid: uuid
+            }, function (res) {
+                if (res.code === 200) {
+                    var tabs = res.data.tabs;
+                    initTabs(tabs || []);
+
+                } else {
+                    console.log(res)
+                }
+            });
+        }
+
+        function initTabs(list) {
+            console.log(list)
+
+            layui.use(['laytpl', 'jquery'], function () {
+                var temp = tabs.innerHTML;
+                layui.laytpl(temp).render({list: list}, function (html) {
+                    chartTabs.innerHTML += html;
+                });
+            });
+        }
+
+    });
+</script>
+
+</body>
+</html>

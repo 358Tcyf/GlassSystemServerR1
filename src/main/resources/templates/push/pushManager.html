@@ -215,7 +215,7 @@
                 case 'pushContent':
                     switch (data.type) {
                         case 1:
-                            newTab('/project/getDetails/' + obj.projectId, obj.projectName)
+                            newTab('/pushChartTabs/' + data.id, "数据详情")
                             break;
                         case 2:
                             newTab('/project/declare.htm?rule=' + obj.ruleId + '&publisher=' + obj.publisher, obj.ruleTitle)
@@ -265,6 +265,15 @@
         };
 
     })
+</script>
+<script>
+    function newTab(url, tit) {
+        if (top.layui.index) {
+            top.layui.index.openTabsPage(url, tit)
+        } else {
+            window.open(url)
+        }
+    }
 </script>
 </body>
 </html>

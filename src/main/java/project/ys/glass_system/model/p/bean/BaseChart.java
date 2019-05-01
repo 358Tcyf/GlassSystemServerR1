@@ -4,6 +4,11 @@ import java.util.List;
 
 public class BaseChart {
 
+
+    public BaseChart() {
+
+    }
+
     public static int line_chart = 0;
     public static int bar_chart = 1;
     public static int pie_chart = 2;

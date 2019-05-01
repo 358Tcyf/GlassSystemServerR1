@@ -36,8 +36,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
 
             //防止重复登陆
             if (SessionUtil.getInstance().isUserLogin() && pathMatcher.match(LOGIN, requestUrl)) {
-                return false;
-            }
+                response.sendRedirect(REDIRECT);            }
 
             return true;
         }
@@ -57,7 +56,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                     || pathMatcher.match(PUSH + PUSH_MANAGER, requestUrl)
                     || pathMatcher.match(REDIRECT, requestUrl))
                 return true;
-
 
             return false;
         }

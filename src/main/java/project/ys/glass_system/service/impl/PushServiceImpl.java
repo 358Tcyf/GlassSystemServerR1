@@ -29,6 +29,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
+import static project.ys.glass_system.constant.PushConstant.PUSH_CHARTS;
 import static project.ys.glass_system.getui.GetuiUtil.sendSingleMessage;
 import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
 import static project.ys.glass_system.model.p.bean.AlarmLog.ALARM_TAGS;
@@ -631,7 +632,6 @@ public class PushServiceImpl implements PushService {
         List<String> receivers = new ArrayList<>();
         if (isEmpty(receiver)) {
             users = userDao.findAll();
-
         } else {
             users = userDao.findUsersByNameLike("%" + receiver + "%");
         }
@@ -680,6 +680,39 @@ public class PushServiceImpl implements PushService {
         }
         map.put("object", listMap);
         return map;
+    }
+
+
+    @Override
+    public Map<String, Object> getCharts(String uuid) {
+        Push push = pushDao.findByPushUuid(uuid);
+        Map<String, Object> result = new HashMap<>();
+
+        List<String> subMenus = new ArrayList<>();
+        String content = push.getContent();
+        String defaultSubMenu = push.getDefaultSubMenu();
+        List<BaseChart> charts = JSON.parseArray(content, BaseChart.class);
+        sortCharts(charts, defaultSubMenu, subMenus);
+        result.put("tabs", subMenus);
+        System.out.println(result);
+        return result;
+    }
+
+    void sortCharts(List<BaseChart> charts, String defaultSubMenu, List<String> subMenus) {
+        String[] push_charts = PUSH_CHARTS;
+
+        for (int i = 0; i < PUSH_CHARTS.length; i++) {
+            if (PUSH_CHARTS[i].equals(defaultSubMenu)) {
+                push_charts[i] = push_charts[0];
+                push_charts[0] = defaultSubMenu;
+            }
+        }
+        for (int i = 0; i < PUSH_CHARTS.length; i++)
+            for (BaseChart chart : charts) {
+                if (chart.getSubmenu().equals(PUSH_CHARTS[i])) {
+                    subMenus.add(chart.getSubmenu());
+                }
+            }
     }
 
     @Override

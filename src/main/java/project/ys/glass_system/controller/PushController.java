@@ -134,4 +134,12 @@ public class PushController {
         pushService.deletePushList(ids);
         return RetResponse.makeOKRsp();
     }
+
+    @RequestMapping(GET_CHARTS)
+    @ResponseBody
+    public RetResult<Map<String, Object>> getCharts(String uuid) {
+        System.out.println(uuid);
+        return RetResponse.makeOKRsp(pushService.getCharts(uuid));
+    }
+
 }

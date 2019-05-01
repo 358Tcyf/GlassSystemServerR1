@@ -55,9 +55,11 @@ public interface PushService {
 
     List<Alarm> downloadAlarm(String account);
 
-    Map<String, Object> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver,int type, int read, int page, int limit);
+    Map<String, Object> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver, int type, int read, int page, int limit);
+
+    Map<String, Object> getCharts(String uuid);
 
     boolean deletePush(String uuid);
 
-    void deletePushList(String[]  uuids);
+    void deletePushList(String[] uuids);
 }
