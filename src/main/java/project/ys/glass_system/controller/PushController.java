@@ -135,11 +135,17 @@ public class PushController {
         return RetResponse.makeOKRsp();
     }
 
-    @RequestMapping(GET_CHARTS)
+    @RequestMapping(GET_TABS)
     @ResponseBody
-    public RetResult<Map<String, Object>> getCharts(String uuid) {
+    public RetResult<Map<String, Object>> getTabs(String uuid) {
         System.out.println(uuid);
-        return RetResponse.makeOKRsp(pushService.getCharts(uuid));
+        return RetResponse.makeOKRsp(pushService.getTabs(uuid));
+    }
+
+    @RequestMapping(GET_TYPE)
+    @ResponseBody
+    public RetResult getType(String uuid,String subMenu) {
+        return RetResponse.makeOKRsp(pushService.getChart(uuid,subMenu));
     }
 
 }

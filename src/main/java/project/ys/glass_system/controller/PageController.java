@@ -53,9 +53,16 @@ public class PageController {
 
     @Unlimited
     @GetMapping(PUSH_CHART_TABS + "/{uuid:.+}")
-    public String charts(@PathVariable String uuid, Model model) {
+    public String pushChartTabs(@PathVariable String uuid, Model model) {
         model.addAttribute("pushId", uuid);
         return _PUSH + PUSH_CHART_TABS;
+    }
+
+    @Unlimited
+    @GetMapping(PUSH_CHART + "/{uuid:.+}")
+    public String pushChart(@PathVariable String uuid, Model model) {
+        model.addAttribute("pushId", uuid);
+        return _PUSH + PUSH_CHART;
     }
 
     @Unlimited

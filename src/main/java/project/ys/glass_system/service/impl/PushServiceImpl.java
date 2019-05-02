@@ -684,18 +684,29 @@ public class PushServiceImpl implements PushService {
 
 
     @Override
-    public Map<String, Object> getCharts(String uuid) {
+    public Map<String, Object> getTabs(String uuid) {
         Push push = pushDao.findByPushUuid(uuid);
         Map<String, Object> result = new HashMap<>();
-
         List<String> subMenus = new ArrayList<>();
         String content = push.getContent();
         String defaultSubMenu = push.getDefaultSubMenu();
-        List<BaseChart> charts = JSON.parseArray(content, BaseChart.class);
-        sortCharts(charts, defaultSubMenu, subMenus);
+        List<BaseChart> baseCharts = JSON.parseArray(content, BaseChart.class);
+        sortCharts(baseCharts, defaultSubMenu, subMenus);
+        List<Map<String, Object>> tabs = new ArrayList<>();
         result.put("tabs", subMenus);
-        System.out.println(result);
         return result;
+    }
+
+    @Override
+    public BaseChart getChart(String uuid, String subMenu) {
+        Push push = pushDao.findByPushUuid(uuid);
+        String content = push.getContent();
+        List<BaseChart> baseCharts = JSON.parseArray(content, BaseChart.class);
+        for (BaseChart baseChart : baseCharts) {
+            if (baseChart.getSubmenu().equals(subMenu))
+                return baseChart;
+        }
+        return null;
     }
 
     void sortCharts(List<BaseChart> charts, String defaultSubMenu, List<String> subMenus) {

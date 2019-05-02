@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <script src="/static/assets/layui/layui.js"></script>
+    <script src="/static/assets/lib/echarts.min.js"></script>
+</head>
+<body>
+<div id="pie" style="width: 500px;height:300px;"></div>
+</body>
+<script>
+    layui.use(['jquery'], function () {
+        var $ = layui.$;
+        //柱状图
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        myChart.showLoading(); //数据加载完之前先显示一段简单的loading动画
+        $.get('/project/stateCount').done(function (data) {
+            myChart.hideLoading();
+            var option = {
+                color: ['#9BCA63'],
+                title: {
+                    text: '项目审核状态',
+                    x: '200px',
+                    y: '5px'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['项目数'],
+                    x: '350px',
+                    y: '7px'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['初审通过', '立项评审完成', '已立项', '中期检查通过', '已结题']
+                },
+                yAxis: {
+                    type: 'value',
+                    minInterval: 1
+                },
+                series: [{
+                    name: '项目数',
+                    type: 'bar',
+                    barWidth: '50%',
+                    data: [
+                        {value: data.object.初审通过, name: '初审通过'},
+                        {value: data.object.立项评审完成, name: '立项评审完成'},
+                        {value: data.object.已立项, name: '已立项'},
+                        {value: data.object.中期检查通过, name: '中期检查通过'},
+                        {value: data.object.已结题, name: '已结题'},
+                    ]
+                }]
+            }
+            myChart.setOption(option);
+        });
+
+
+        //饼状图
+        var pieChart = echarts.init(document.getElementById('pie'));
+        pieChart.showLoading(); //数据加载完之前先显示一段简单的loading动画
+        $.get('/project/majorCount').done(function (data) {
+            pieChart.hideLoading();
+            var option = {
+                color: ['#C1232B','#B5C334','#FCCE10','#E87C25',],
+                title: {
+                    text: '项目专业分布',
+                    x: '100px',
+                    y: '5px'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'right',
+                    data: ['计算机科学与技术', '电子信息工程', '电子信息科学与技术', '数字媒体技术']
+                },
+                series: [
+                    {
+                        name: '所属专业',
+                        type: 'pie',
+                        radius: '80%',
+                        data: [
+                            {value: data.object.计算机科学与技术, name: '计算机科学与技术'},
+                            {value: data.object.电子信息工程, name: '电子信息工程'},
+                            {value: data.object.电子信息科学与技术, name: '电子信息科学与技术'},
+                            {value: data.object.数字媒体技术, name: '数字媒体技术'},
+                        ],
+                        itemStyle: {
+                            normal: {
+                                label: {        //此处为指示线文字
+                                    show: true,
+                                    position: 'inner', //标签的位置
+                                    textStyle: {
+                                        fontWeight: 200,
+                                        fontSize: 14    //文字的字体大小
+                                    },
+                                    formatter: '{d}%'
+                                },
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+            pieChart.setOption(option);
+        });
+
+
+    });
+
+
+</script>
+
+</html>

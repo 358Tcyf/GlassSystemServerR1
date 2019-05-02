@@ -57,9 +57,11 @@ public interface PushService {
 
     Map<String, Object> pushQuery(String title, long startTime, long endTime, String receiverID, String receiver, int type, int read, int page, int limit);
 
-    Map<String, Object> getCharts(String uuid);
+    Map<String, Object> getTabs(String uuid);
 
     boolean deletePush(String uuid);
 
     void deletePushList(String[] uuids);
+
+    BaseChart getChart(String uuid, String subMenu);
 }

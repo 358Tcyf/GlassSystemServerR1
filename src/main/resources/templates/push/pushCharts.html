@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>数据详情</title>
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
+    <style type="text/css">
+        .layui-layer-page .layui-layer-content {
+            overflow: inherit !important;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <center>
+                        <div class="layui-btn-group" id="chartTabs" name="chartTabs">
+                        </div>
+                    </center>
+                </div>
+            </div>
+        </form>
+        <div class="layui-card-body">
+            <center>
+                <div id="chartContent" style="width: 500px;height:300px;"></div>
+            </center>
+        </div>
+
+    </div>
+
+</div>
+<script src="/static/assets/layui/layui.js"></script>
+<script src="/static/assets/lib/echarts.min.js"></script>
+
+<script id="tabs" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <button class="layui-btn" type="submit" lay-submit lay-filter="show">{{item}}</button>
+    {{# }); }}
+</script>
+
+<script th:inline="javascript">
+
+    layui.use(['form', 'jquery', 'layer', 'element'], function () {
+        var $ = layui.$;
+        var layer = layui.layer;
+        var form = layui.form;
+        var element = layui.element;
+        uuid = [[${uuid}]];
+        getTabs();
+
+        function getTabs() {
+            $.get('/push/getTabs', {
+                uuid: uuid
+            }, function (res) {
+                if (res.code === 200) {
+                    var tabs = res.data.tabs;
+                    initTabs(tabs || []);
+                } else {
+                    console.log(res)
+                }
+            });
+        }
+
+        function initTabs(list) {
+            layui.use(['laytpl', 'jquery'], function () {
+                layui.laytpl(tabs.innerHTML).render({list: list}, function (html) {
+                    chartTabs.innerHTML += html;
+                });
+            });
+        }
+
+        function showChart(id, tab) {
+            $.get('/push/getChart', {
+                uuid: id,
+                subMenu: tab
+            }).done(function (res) {
+                myChart = echarts.init(document.getElementById('chartContent'));
+                myChart.clear();
+                switch (res.data.chart_type) {
+                    case 0:
+                        lineChart(res);
+                        break;
+                    case 1:
+                        barChart(res);
+                        break;
+                    case 2:
+                        pieChart(res);
+                        break;
+                    case 3:
+                        ringChart(res);
+                        break;
+                    default:
+                }
+                myChart.setOption(option);
+            });
+        }
+
+        form.on('submit(show)', function (data) {
+            var tab = data.elem.innerText;
+            showChart(uuid, tab);
+            return false;
+        });
+
+        function lineChart(res) {
+            option = {
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line'
+                }]
+            };
+        }
+
+        function barChart(res) {
+            option = {
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    type: 'bar'
+                }]
+            };
+        }
+
+
+        function pieChart(res) {
+            option = {
+                title: {
+                    text: '某站点用户访问来源',
+                    subtext: '纯属虚构',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: [
+                            {value: 335, name: '直接访问'},
+                            {value: 310, name: '邮件营销'},
+                            {value: 234, name: '联盟广告'},
+                            {value: 135, name: '视频广告'},
+                            {value: 1548, name: '搜索引擎'}
+                        ],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+        }
+
+        function ringChart(res) {
+            option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [
+                            {value: 335, name: '直接访问'},
+                            {value: 310, name: '邮件营销'},
+                            {value: 234, name: '联盟广告'},
+                            {value: 135, name: '视频广告'},
+                            {value: 1548, name: '搜索引擎'}
+                        ]
+                    }
+                ]
+            };
+
+        }
+
+
+    });
+
+
+</script>
+
+</body>
+</html>

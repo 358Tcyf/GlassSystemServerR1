@@ -215,7 +215,15 @@
                 case 'pushContent':
                     switch (data.type) {
                         case 1:
-                            newTab('/pushChartTabs/' + data.id, "数据详情")
+                            // newTab('/pushCharts/' + data.id, "数据详情");
+                            layer.open({
+                                type: 2,
+                                area: ['600px', '500px'],
+                                fixed: false, //不固定
+                                maxmin: true,
+                                title: '数据详情',
+                                content:'/pushCharts/' + data.id
+                            });
                             break;
                         case 2:
                             newTab('/project/declare.htm?rule=' + obj.ruleId + '&publisher=' + obj.publisher, obj.ruleTitle)
