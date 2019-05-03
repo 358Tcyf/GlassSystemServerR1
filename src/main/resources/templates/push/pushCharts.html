@@ -26,7 +26,7 @@
         </form>
         <div class="layui-card-body">
             <center>
-                <div id="chartContent" style="width: 500px;height:300px;"></div>
+                <div id="chartContent" style="width: 800px;height:300px;"></div>
             </center>
         </div>
 
@@ -80,22 +80,21 @@
             }).done(function (res) {
                 myChart = echarts.init(document.getElementById('chartContent'));
                 myChart.clear();
-                switch (res.data.chart_type) {
+                switch (res.data.type) {
                     case 0:
-                        lineChart(res);
+                        lineChart(res.data);
                         break;
                     case 1:
-                        barChart(res);
+                        barChart(res.data);
                         break;
                     case 2:
-                        pieChart(res);
+                        pieChart(res.data);
                         break;
                     case 3:
-                        ringChart(res);
+                        ringChart(res.data);
                         break;
                     default:
                 }
-                myChart.setOption(option);
             });
         }
 
@@ -105,68 +104,162 @@
             return false;
         });
 
-        function lineChart(res) {
-            option = {
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'line'
-                }]
-            };
-        }
-
-        function barChart(res) {
-            option = {
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [120, 200, 150, 80, 70, 110, 130],
-                    type: 'bar'
-                }]
-            };
-        }
-
-
-        function pieChart(res) {
+        function lineChart(chart) {
+            console.log(chart)
             option = {
                 title: {
-                    text: '某站点用户访问来源',
-                    subtext: '纯属虚构',
-                    x: 'center'
+                    text: chart.title,
+                    xValues: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    xValues: 'left',
+                    orient: 'vertical',
+                    data: chart.legend
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: chart.xAxis
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                grid: [
+                    {top: '35%'}
+                ],
+                dataZoom: [
+                    {
+                        type: 'inside'
+                    }
+                ],
+                series: [
+                    {
+                        name: chart.legend[0],
+                        type: 'line',
+                        data: chart.series[0]
+                    },
+                    {
+                        name: chart.legend[1],
+                        type: 'line',
+                        data: chart.series[1]
+                    },
+                    {
+                        name: chart.legend[2],
+                        type: 'line',
+                        data: chart.series[2]
+                    },
+                ]
+            };
+            myChart.setOption(option);
+            var zoomSize = 6;
+            myChart.on('click', function (params) {
+                console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+                myChart.dispatchAction({
+                    type: 'dataZoom',
+                    startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                    endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+                });
+            });
+        }
+
+        function barChart(chart) {
+            option = {
+                title: {
+                    text: chart.title,
+                    xValues: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    xValues: 'left',
+                    orient: 'vertical',
+                    data: chart.legend
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: chart.xAxis
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                grid: [
+                    {top: '35%'}
+                ],
+                dataZoom: [
+                    {
+                        type: 'inside'
+                    }
+                ],
+                series: [
+                    {
+                        name: chart.legend[0],
+                        type: 'bar',
+                        data: chart.series[0]
+                    },
+                    {
+                        name: chart.legend[1],
+                        type: 'bar',
+                        data: chart.series[1]
+                    },
+                    {
+                        name: chart.legend[2],
+                        type: 'bar',
+                        data: chart.series[2]
+                    },
+                ]
+            };
+            myChart.setOption(option);
+            var zoomSize = 6;
+            myChart.on('click', function (params) {
+                console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+                myChart.dispatchAction({
+                    type: 'dataZoom',
+                    startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                    endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+                });
+            });
+        }
+
+        function pieChart(chart) {
+            option = {
+                title: {
+                    text: chart.title,
+                    subtext: chart.subtitle,
+                    xValues: 'center'
                 },
                 tooltip: {
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
                 legend: {
+                    xValues: 'left',
                     orient: 'vertical',
-                    left: 'left',
-                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                    data: chart.legend
                 },
                 series: [
                     {
-                        name: '访问来源',
+                        name: chart.series,
                         type: 'pie',
                         radius: '55%',
                         center: ['50%', '60%'],
-                        data: [
-                            {value: 335, name: '直接访问'},
-                            {value: 310, name: '邮件营销'},
-                            {value: 234, name: '联盟广告'},
-                            {value: 135, name: '视频广告'},
-                            {value: 1548, name: '搜索引擎'}
-                        ],
+                        data: chart.data,
                         itemStyle: {
                             emphasis: {
                                 shadowBlur: 10,
@@ -177,24 +270,30 @@
                     }
                 ]
             };
+            myChart.setOption(option);
         }
 
-        function ringChart(res) {
+        function ringChart(chart) {
             option = {
+                title: {
+                    text: chart.title,
+                    subtext: '电量单位:KW·h、煤单位:吨、水单位:吨',
+                    xValues: 'center'
+                },
                 tooltip: {
                     trigger: 'item',
                     formatter: "{a} <br/>{b}: {c} ({d}%)"
                 },
                 legend: {
+                    xValues: 'left',
                     orient: 'vertical',
-                    x: 'left',
-                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                    data: chart.legend
                 },
                 series: [
                     {
-                        name: '访问来源',
+                        name: chart.series,
                         type: 'pie',
-                        radius: ['50%', '70%'],
+                        radius: ['50%', '60%'],
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -214,19 +313,12 @@
                                 show: false
                             }
                         },
-                        data: [
-                            {value: 335, name: '直接访问'},
-                            {value: 310, name: '邮件营销'},
-                            {value: 234, name: '联盟广告'},
-                            {value: 135, name: '视频广告'},
-                            {value: 1548, name: '搜索引擎'}
-                        ]
+                        data: chart.data
                     }
                 ]
             };
-
+            myChart.setOption(option);
         }
-
 
     });
 

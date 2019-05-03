@@ -175,9 +175,9 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = new PageRequest(page - 1, limit);
         Page<User> allList = null;
         if (isEmpty(name) && isEmpty(account) && isEmpty(phone) && isEmpty(email) && role == 0)
-            allList = userDao.findAll(pageable);
+            allList = userDao.queryUsersByNoNotLike("%A%",pageable);
         else if (role == 0)
-            allList = userDao.queryUsersByNameLikeAndNoLikeAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%", "%"+phone+"%", "%"+email+"%", pageable);
+            allList = userDao.queryUsersByNameLikeAndNoLikeAndNoNotLikeAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%", "%A%","%"+phone+"%", "%"+email+"%", pageable);
         else {
             Role role1 = roleDao.findById(role+1);
             allList = userDao.queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%",role1, "%"+phone+"%", "%"+email+"%", pageable);

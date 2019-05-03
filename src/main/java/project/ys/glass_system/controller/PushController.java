@@ -138,7 +138,6 @@ public class PushController {
     @RequestMapping(GET_TABS)
     @ResponseBody
     public RetResult<Map<String, Object>> getTabs(String uuid) {
-        System.out.println(uuid);
         return RetResponse.makeOKRsp(pushService.getTabs(uuid));
     }
 

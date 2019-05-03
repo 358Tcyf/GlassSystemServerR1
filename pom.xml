@@ -8,7 +8,7 @@
         <version>2.1.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>project.ys</groupId>
+    <groupId>project.yListValues</groupId>
     <artifactId>glass_system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>glass_system</name>

@@ -110,8 +110,8 @@ public class SetServiceImpl implements SetService {
         PushSet set = user.getPushSet();
         List<Tag> setTags = set.getTags();
         for (String name : tags) {
-            for(int i = 0;i < setTags.size();i++){
-                if(name.equals(setTags.get(i).getName())){
+            for (int i = 0; i < setTags.size(); i++) {
+                if (name.equals(setTags.get(i).getName())) {
                     setTags.remove(i);
                 }
             }
@@ -129,6 +129,8 @@ public class SetServiceImpl implements SetService {
         PushSet set = user.getPushSet();
         List<AlarmTag> setTags = set.getAlarmTags();
         setTags.clear();
+        set.setAlarmTags(setTags);
+        pushSetDao.save(set);
         AlarmTag alarmTag;
         for (AlarmTag tag : tags) {
             if (alarmTagDao.findByContentAndMinAndMax(tag.getContent(), tag.getMin(), tag.getMax()) == null) {

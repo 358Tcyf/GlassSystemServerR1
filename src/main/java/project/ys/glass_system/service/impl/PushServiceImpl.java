@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.p.bean.AlarmLog;
 import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
+import project.ys.glass_system.model.p.bean.EChartPieEntry;
 import project.ys.glass_system.model.p.dao.AlarmDao;
 import project.ys.glass_system.model.p.dao.PushDao;
 import project.ys.glass_system.model.p.dao.TagDao;
@@ -175,7 +176,7 @@ public class PushServiceImpl implements PushService {
             }
             push.setContent(JSON.toJSONString(content));
             if (content.size() > 0)
-                push.setDefaultSubMenu(content.get(0).getSubmenu());
+                push.setDefaultSubMenu(content.get(0).getSub());
             push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "数据");
             push.setPushUuid(getNum19());
             return push;
@@ -209,9 +210,10 @@ public class PushServiceImpl implements PushService {
             }
             push.setContent(JSON.toJSONString(content));
             if (content.size() > 0)
-                push.setDefaultSubMenu(content.get(0).getSubmenu());
+                push.setDefaultSubMenu(content.get(0).getSub());
             push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "数据");
             push.setPushUuid(getNum19());
+
             return push;
         } else
             return null;
@@ -224,10 +226,10 @@ public class PushServiceImpl implements PushService {
         BaseChart produceData = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
         produceData.setMenu("生产信息");
-        produceData.setSubmenu("生产量");
+        produceData.setSub("生产量");
         produceData.setTitle("产品生产总量统计");
         produceData.setLabel("生产总量");
-        produceData.setChart_type(bar_chart);
+        produceData.setType(bar_chart);
         produceData.setOnly(true);
         produceData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
@@ -238,7 +240,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry((float) j, (float) success));
         }
-        produceData.setyValues(yValues);
+        produceData.setY(yValues);
         return produceData;
     }
 
@@ -249,10 +251,10 @@ public class PushServiceImpl implements PushService {
         List<BaseEntry> yValue1 = new ArrayList<>();
         List<BaseEntry> yValue2 = new ArrayList<>();
         produceData.setMenu("生产信息");
-        produceData.setSubmenu("生产量");
+        produceData.setSub("生产量");
         produceData.setTitle("产品生产总量统计");
         produceData.setLabels(Arrays.asList("生产数", "残片数"));
-        produceData.setChart_type(bar_chart);
+        produceData.setType(bar_chart);
         produceData.setOnly(true);
         produceData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
@@ -276,11 +278,11 @@ public class PushServiceImpl implements PushService {
         BaseChart produceData = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
         produceData.setMenu("生产信息");
-        produceData.setSubmenu("生产型号统计");
+        produceData.setSub("生产型号统计");
         produceData.setTitle("各型号生产统计");
-        produceData.setDescription("各型号玻璃生产数量");
+        produceData.setDesc("各型号玻璃生产数量");
         produceData.setLabel("各型号玻璃生产数量");
-        produceData.setChart_type(pie_chart);
+        produceData.setType(pie_chart);
         produceData.setOnly(true);
         String[] labels = glassService.xValues();
         produceData.setLabels(Arrays.asList(labels));
@@ -293,7 +295,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry(labels[i], (float) success));
         }
-        produceData.setyValues(yValues);
+        produceData.setY(yValues);
         return produceData;
     }
 
@@ -305,10 +307,10 @@ public class PushServiceImpl implements PushService {
         List<BaseEntry> yValue2 = new ArrayList<>();
         List<BaseEntry> yValue3 = new ArrayList<>();
         produceData.setMenu("生产信息");
-        produceData.setSubmenu("生产质量");
+        produceData.setSub("生产质量");
         produceData.setTitle("产品生产质量统计");
         produceData.setLabels(Arrays.asList("镀膜成功率", "钢化成功率", "残片率"));
-        produceData.setChart_type(bar_chart);
+        produceData.setType(bar_chart);
         produceData.setOnly(false);
         produceData.setxValues(glassService.xValues());
         List<Glass> glasses = glassService.findAll();
@@ -337,11 +339,11 @@ public class PushServiceImpl implements PushService {
         BaseChart produceDate = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
         produceDate.setMenu("生产信息");
-        produceDate.setSubmenu("生产能耗");
+        produceDate.setSub("生产能耗");
         produceDate.setTitle("生产能耗统计");
-        produceDate.setDescription("各类型生产能耗");
+        produceDate.setDesc("各类型生产能耗");
         produceDate.setLabels(Arrays.asList(new String[]{"电消耗", "煤消耗", "水消耗"}));
-        produceDate.setChart_type(ring_chart);
+        produceDate.setType(ring_chart);
         produceDate.setOnly(true);
         String[] labels = new String[]{"电消耗", "煤消耗", "水消耗"};
         produceDate.setxValues(labels);
@@ -349,7 +351,7 @@ public class PushServiceImpl implements PushService {
         yValues.add(new BaseEntry(labels[0], (float) productNote.getElectricity()));
         yValues.add(new BaseEntry(labels[1], (float) productNote.getCoal()));
         yValues.add(new BaseEntry(labels[2], (float) productNote.getWater()));
-        produceDate.setyValues(yValues);
+        produceDate.setY(yValues);
         return produceDate;
     }
 
@@ -358,28 +360,28 @@ public class PushServiceImpl implements PushService {
         BaseChart saleData = new BaseChart();
         List<List<BaseEntry>> yValues = new ArrayList<>();
         saleData.setMenu(SaleData);
-        saleData.setSubmenu(DailySaleCount);
+        saleData.setSub(DailySaleCount);
         saleData.setTitle("产品销售量统计");
         String[] labels = glassService.xValues();
         List<Glass> glasses = glassDao.findAll();
         saleData.setLabels(Arrays.asList(labels));
-        saleData.setChart_type(line_chart);
+        saleData.setType(line_chart);
         saleData.setOnly(false);
         saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (Glass glass : glasses) {
             List<BaseEntry> yValue = new ArrayList<>();
             for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
                 List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
+                float sum = 0;
                 for (Orders order : orders) {
                     List<OrderItems> orderItems = order.getOrderItems();
-                    float sum = 0;
                     for (OrderItems orderItem : orderItems) {
-                        if (orderItem.getModel() == glass) {
-                            sum += orderItem.getDelivery();
+                        if (orderItem.getModel().getModel().equals(glass.getModel())) {
+                            sum += orderItem.getAppointment();
                         }
                     }
-                    yValue.add(new BaseEntry((float) j, (float) sum));
                 }
+                yValue.add(new BaseEntry((float) j, (float) sum));
             }
             yValues.add(yValue);
         }
@@ -392,28 +394,28 @@ public class PushServiceImpl implements PushService {
         BaseChart saleData = new BaseChart();
         List<List<BaseEntry>> yValues = new ArrayList<>();
         saleData.setMenu(SaleData);
-        saleData.setSubmenu(DailyDeliveryCount);
+        saleData.setSub(DailyDeliveryCount);
         saleData.setTitle("产品交易量统计");
         String[] labels = glassService.xValues();
         List<Glass> glasses = glassDao.findAll();
         saleData.setLabels(Arrays.asList(labels));
-        saleData.setChart_type(line_chart);
+        saleData.setType(line_chart);
         saleData.setOnly(false);
         saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (Glass glass : glasses) {
             List<BaseEntry> yValue = new ArrayList<>();
             for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
                 List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
+                float sum = 0;
                 for (Orders order : orders) {
                     List<OrderItems> orderItems = order.getOrderItems();
-                    float sum = 0;
                     for (OrderItems orderItem : orderItems) {
-                        if (orderItem.getModel() == glass) {
+                        if (orderItem.getModel().getModel().equals(glass.getModel())) {
                             sum += orderItem.getDelivery();
                         }
                     }
-                    yValue.add(new BaseEntry((float) j, (float) sum));
                 }
+                yValue.add(new BaseEntry((float) j, (float) sum));
             }
             yValues.add(yValue);
         }
@@ -426,10 +428,10 @@ public class PushServiceImpl implements PushService {
         BaseChart saleData = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
         saleData.setMenu(SaleData);
-        saleData.setSubmenu(DailySale);
+        saleData.setSub(DailySale);
         saleData.setTitle("产品销售总额统计");
         saleData.setLabel("产品销售总额");
-        saleData.setChart_type(line_chart);
+        saleData.setType(line_chart);
         saleData.setOnly(true);
         saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
@@ -440,7 +442,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry((float) j, (float) sum));
         }
-        saleData.setyValues(yValues);
+        saleData.setY(yValues);
         return saleData;
     }
 
@@ -449,22 +451,22 @@ public class PushServiceImpl implements PushService {
         BaseChart saleData = new BaseChart();
         List<BaseEntry> yValues = new ArrayList<>();
         saleData.setMenu(SaleData);
-        saleData.setSubmenu(DailyCustomRate);
+        saleData.setSub(DailyCustomRate);
         saleData.setTitle("销售订单满意率统计");
         saleData.setLabel("顾客满意率");
-        saleData.setChart_type(line_chart);
+        saleData.setType(line_chart);
         saleData.setOnly(true);
         saleData.setxValues(new String[]{"0时", "4时", "8时", "12时", "16时", "20时", "24时"});
         for (int i = 0, j = i + 1; j < sixDivideTimes.length; i++, j++) {
             List<Orders> orders = orderDao.findOrdersByDateBetween(stringToLocalDateTime(date, sixDivideTimes[i]), stringToLocalDateTime(date, sixDivideTimes[j]));
-            int sum = 0;
+            float sum = 0;
             int count = orders.size();
             for (Orders order : orders) {
                 sum += order.getRate();
             }
-            yValues.add(new BaseEntry((float) j, (float) sum / (count * 5.0) * 100));
+            yValues.add(new BaseEntry((float) j, sum / (float) (count * 5.0) * 100));
         }
-        saleData.setyValues(yValues);
+        saleData.setY(yValues);
         return saleData;
     }
 
@@ -675,6 +677,7 @@ public class PushServiceImpl implements PushService {
             a.put("content", alarm.getContent());
             a.put("type", 2);
             a.put("read", alarm.isHaveRead());
+
             if (type != 1)
                 listMap.add(a);
         }
@@ -697,21 +700,84 @@ public class PushServiceImpl implements PushService {
         return result;
     }
 
+
     @Override
-    public BaseChart getChart(String uuid, String subMenu) {
+    public Object getChart(String uuid, String subMenu) {
         Push push = pushDao.findByPushUuid(uuid);
         String content = push.getContent();
         List<BaseChart> baseCharts = JSON.parseArray(content, BaseChart.class);
         for (BaseChart baseChart : baseCharts) {
-            if (baseChart.getSubmenu().equals(subMenu))
-                return baseChart;
+            if (baseChart.getSub().equals(subMenu)) {
+                Map<String, Object> chart = new HashMap<>();
+                chart.put("type", baseChart.getType());
+                switch (baseChart.getType()) {
+                    case 0:
+                        chart.put("chart", baseChart);
+                        chart.put("title", baseChart.getTitle());
+                        if (baseChart.isOnly()) {
+                            String[] labels = new String[]{baseChart.getLabel()};
+                            chart.put("legend", labels);
+                            chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
+                            List<Object> data = new ArrayList<>();
+                            List<List<Object>> series = new ArrayList<>();
+                            for (BaseEntry entry : baseChart.getY()) {
+                                data.add(entry.getY());
+                            }
+                            series.add(data);
+                            chart.put("series", series);
+                        } else {
+                            chart.put("legend", baseChart.getLabels());
+                            chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
+                            List<List<Object>> series = new ArrayList<>();
+                            for (List<BaseEntry> entryList : baseChart.getyListValues()) {
+                                List<Object> data = new ArrayList<>();
+                                for (BaseEntry entry : entryList) {
+                                    data.add(entry.getY());
+                                }
+                                series.add(data);
+                            }
+                            chart.put("series", series);
+                        }
+                        return chart;
+                    case 1:
+                        chart.put("chart", baseChart);
+                        chart.put("title", baseChart.getTitle());
+                        chart.put("legend", baseChart.getLabels());
+                        if (baseChart.isOnly()) {
+                            chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
+                        } else chart.put("xAxis", baseChart.getxValues());
+                        List<List<Object>> series = new ArrayList<>();
+                        for (List<BaseEntry> entryList : baseChart.getyListValues()) {
+                            List<Object> data = new ArrayList<>();
+                            for (BaseEntry entry : entryList) {
+                                data.add(entry.getY());
+                            }
+                            series.add(data);
+                        }
+                        chart.put("series", series);
+                        return chart;
+                    case 2:
+                    case 3:
+                        chart.put("title", baseChart.getTitle());
+                        chart.put("subtitle", baseChart.getDesc());
+                        chart.put("series", baseChart.getLabel());
+                        chart.put("legend", baseChart.getxValues());
+                        List<EChartPieEntry> data = new ArrayList<>();
+                        for (BaseEntry entry : baseChart.getY()) {
+                            data.add(new EChartPieEntry((String) entry.getX(), entry.getY()));
+                        }
+                        chart.put("data", data);
+                        return chart;
+                    default:
+                        return baseChart;
+                }
+            }
         }
         return null;
     }
 
     void sortCharts(List<BaseChart> charts, String defaultSubMenu, List<String> subMenus) {
         String[] push_charts = PUSH_CHARTS;
-
         for (int i = 0; i < PUSH_CHARTS.length; i++) {
             if (PUSH_CHARTS[i].equals(defaultSubMenu)) {
                 push_charts[i] = push_charts[0];
@@ -720,8 +786,8 @@ public class PushServiceImpl implements PushService {
         }
         for (int i = 0; i < PUSH_CHARTS.length; i++)
             for (BaseChart chart : charts) {
-                if (chart.getSubmenu().equals(PUSH_CHARTS[i])) {
-                    subMenus.add(chart.getSubmenu());
+                if (chart.getSub().equals(PUSH_CHARTS[i])) {
+                    subMenus.add(chart.getSub());
                 }
             }
     }

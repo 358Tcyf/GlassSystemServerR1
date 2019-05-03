@@ -3,32 +3,31 @@ package project.ys.glass_system.model.p.bean;
 public class BaseEntry<T> {
 
     public BaseEntry() {
-
     }
 
     public BaseEntry(T xValue, T yValue) {
-        this.xValue = xValue;
-        this.yValue = yValue;
+        this.x = xValue;
+        this.y = yValue;
     }
 
-    private T xValue;
+    private T x;
 
-    private T yValue;
+    private T y;
 
-    public T getxValue() {
-        return xValue;
+    public T getX() {
+        return x;
     }
 
-    public void setxValue(T xValue) {
-        this.xValue = xValue;
+    public void setX(T x) {
+        this.x = x;
     }
 
-    public T getyValue() {
-        return yValue;
+    public T getY() {
+        return y;
     }
 
-    public void setyValue(T yValue) {
-        this.yValue = yValue;
+    public void setY(T y) {
+        this.y = y;
     }
 
 

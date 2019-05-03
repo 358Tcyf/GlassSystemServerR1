@@ -16,13 +16,13 @@ public class BaseChart {
 
     private String menu;
 
-    private String submenu;
+    private String sub;
 
     private String title;
 
-    private String description;
+    private String desc;
 
-    private int chart_type;
+    private int type;
 
     private boolean only;
 
@@ -32,7 +32,7 @@ public class BaseChart {
 
     private String[] xValues;
 
-    private List<BaseEntry> yValues;
+    private List<BaseEntry> y;
 
     private List<List<BaseEntry>> yListValues;
 
@@ -44,12 +44,12 @@ public class BaseChart {
         this.menu = menu;
     }
 
-    public String getSubmenu() {
-        return submenu;
+    public String getSub() {
+        return sub;
     }
 
-    public void setSubmenu(String submenu) {
-        this.submenu = submenu;
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 
     public String getTitle() {
@@ -60,20 +60,20 @@ public class BaseChart {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public int getChart_type() {
-        return chart_type;
+    public int getType() {
+        return type;
     }
 
-    public void setChart_type(int chart_type) {
-        this.chart_type = chart_type;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public boolean isOnly() {
@@ -108,12 +108,12 @@ public class BaseChart {
         this.xValues = xValues;
     }
 
-    public List<BaseEntry> getyValues() {
-        return yValues;
+    public List<BaseEntry> getY() {
+        return y;
     }
 
-    public void setyValues(List<BaseEntry> yValues) {
-        this.yValues = yValues;
+    public void setY(List<BaseEntry> y) {
+        this.y = y;
     }
 
     public List<List<BaseEntry>> getyListValues() {

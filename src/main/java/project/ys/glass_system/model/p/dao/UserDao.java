@@ -27,7 +27,11 @@ public interface UserDao extends JpaRepository<User, Integer> {
 
     User findDistinctFirstByRoleOrderByNoDesc(Role role);
 
+    Page<User> queryUsersByNoNotLike(String no, Pageable pageable);
+
     Page<User> queryUsersByNameLikeAndNoLikeAndPhoneLikeAndEmailLike(String name, String no, String phone, String email, Pageable pageable);
+
+    Page<User> queryUsersByNameLikeAndNoLikeAndNoNotLikeAndPhoneLikeAndEmailLike(String name, String no, String no2, String phone, String email, Pageable pageable);
 
     Page<User> queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike(String name, String no, Role role, String phone, String email, Pageable pageable);
 

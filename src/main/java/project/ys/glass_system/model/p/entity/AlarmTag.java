@@ -18,7 +18,6 @@ public class AlarmTag extends BaseEntity {
         this.content = content;
     }
 
-
     @Column(name = "tag_content")
     private String content;
 

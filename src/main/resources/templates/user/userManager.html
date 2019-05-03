@@ -194,7 +194,7 @@
 
         var tableIns = table.render({
             elem: '#table',
-            height: 'full-160',
+            height: 'full-200',
             toolbar: '#toolbar',
             defaultToolbar: ['print', 'exports'],
             cols: [
@@ -213,8 +213,8 @@
                 none: '暂无相关数据'
             },
             page: true,
-            limit: 10,
-            limits: [10, 20, 30],
+            limit: 5,
+            limits: [5, 10, 15],
             url: "/user/userQuery",
             where: {
                 name: $("#name").val(),
