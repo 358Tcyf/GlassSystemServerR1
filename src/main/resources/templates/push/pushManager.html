@@ -37,6 +37,11 @@
                                class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
@@ -53,8 +58,6 @@
                                class="layui-input">
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">推送类型:</label>
                     <div class="layui-input-inline">
@@ -74,11 +77,6 @@
                             <option value="2">否</option>
                         </select>
                     </div>
-                </div>
-                <div class="layui-inline">
-                    <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
                 </div>
             </div>
 
@@ -226,14 +224,15 @@
                             });
                             break;
                         case 2:
-                            layer.open({
-                                type: 1,
-                                area: ['800px', '500px'],
-                                fixed: false, //不固定
-                                maxmin: true,
-                                title: '预警详情',
-                                content: data.content
+                            $.get('/push/getAlarm', {
+                                uuid: data.id
+                            }).done(function (res) {
+                                layer.open({
+                                    title: '预警详情',
+                                    content: res.data
+                                });
                             });
+
                             break;
                     }
                     break;

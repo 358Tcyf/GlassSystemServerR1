@@ -44,11 +44,13 @@ public class HttpConstant {
     public static final String PUSH_MANAGER_SELF = "/pushManagerSelf";
     public static final String PUSH_CHART_TABS = "/pushChartTabs";
     public static final String PUSH_CHART = "/pushCharts";
+    public static final String PUSH_ALARM = "/pushAlarm";
     public static final String PUSH_QUERY = "/pushQuery";
     public static final String PUSH_QUERY_SELF = "/pushQuerySelf";
     public static final String GET_CHARTS = "/getTabs";
     public static final String GET_TABS = "/getTabs";
-    public static final String GET_TYPE = "/getChart";
+    public static final String GET_CHART = "/getChart";
+    public static final String GET_ALARM = "/getAlarm";
     public static final String PUSH_DELETE = "/deletePush";
     public static final String PUSH_LIST_DELETE = "/deletePushList";
     public static final String INSTANT = "/instantPush";

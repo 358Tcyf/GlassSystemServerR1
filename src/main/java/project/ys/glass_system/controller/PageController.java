@@ -66,6 +66,13 @@ public class PageController {
     }
 
     @Unlimited
+    @GetMapping(PUSH_ALARM + "/{uuid:.+}")
+    public String pushAlarm(@PathVariable String uuid, Model model) {
+        model.addAttribute("pushId", uuid);
+        return _PUSH + PUSH_ALARM;
+    }
+
+    @Unlimited
     @GetMapping(REDIRECT)
     public String redirect() {
         return _COMMON + REDIRECT;

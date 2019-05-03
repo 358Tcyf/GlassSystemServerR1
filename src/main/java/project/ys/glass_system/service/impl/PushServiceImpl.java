@@ -776,6 +776,17 @@ public class PushServiceImpl implements PushService {
         return null;
     }
 
+    @Override
+    public Object getAlarm(String uuid) {
+        Alarm alarm = alarmDao.findByAlarmUuid(uuid);
+        StringBuilder content = new StringBuilder();
+        List<AlarmLog> alarmLogs = JSON.parseArray(alarm.getContent(), AlarmLog.class);
+        for(AlarmLog log: alarmLogs){
+            content.append(log.getLog()).append("<br/>");
+        }
+        return content;
+    }
+
     void sortCharts(List<BaseChart> charts, String defaultSubMenu, List<String> subMenus) {
         String[] push_charts = PUSH_CHARTS;
         for (int i = 0; i < PUSH_CHARTS.length; i++) {

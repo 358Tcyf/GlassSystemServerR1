@@ -64,4 +64,6 @@ public interface PushService {
     void deletePushList(String[] uuids);
 
     Object getChart(String uuid, String subMenu);
+
+    Object getAlarm(String uuid);
 }
