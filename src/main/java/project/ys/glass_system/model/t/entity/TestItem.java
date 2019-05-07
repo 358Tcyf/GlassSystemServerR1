@@ -37,4 +37,28 @@ public class TestItem extends BaseEntity {
     public void setTestResults(List<TestResult> testResults) {
         this.testResults = testResults;
     }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public TestNote getBelong() {
+        return belong;
+    }
+
+    public void setBelong(TestNote belong) {
+        this.belong = belong;
+    }
 }

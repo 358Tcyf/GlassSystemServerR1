@@ -12,6 +12,7 @@ import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.service.impl.PushServiceImpl;
 import project.ys.glass_system.service.impl.RecordServiceImpl;
 import project.ys.glass_system.service.impl.UserServiceImpl;
+import project.ys.glass_system.service.t.impl.AutoPushServiceImpl;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
@@ -34,6 +35,9 @@ public class PushController {
     PushServiceImpl pushService;
 
     @Resource
+    AutoPushServiceImpl autoPushService;
+
+    @Resource
     UserServiceImpl userService;
 
     @Resource
@@ -44,7 +48,7 @@ public class PushController {
 
     @RequestMapping(INSTANT)
     public RetResult instantPush() {
-        pushService.pushEveryUser(LocalDate.now(), true);
+        autoPushService.pushEveryOne(LocalDate.now(), true);
         return RetResponse.makeOKRsp("发送成功");
     }
 
@@ -53,7 +57,7 @@ public class PushController {
         User user = userDao.findByNo(alias);
         if (user != null) {
             System.out.println(dateToStr(LocalDateTime.now(), format1) + "请求忽略日期和时间限制");
-            pushService.pushWithAlias(LocalDate.now(), user, true);
+            autoPushService.pushUser(LocalDate.now(), user, true);
             return RetResponse.makeOKRsp("发送成功");
         } else
             return RetResponse.makeErrRsp("找不到用户");

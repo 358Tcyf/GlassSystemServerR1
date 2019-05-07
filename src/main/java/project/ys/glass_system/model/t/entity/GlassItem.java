@@ -58,4 +58,28 @@ public class GlassItem extends BaseEntity {
     public void setRank(TestRank rank) {
         this.rank = rank;
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public GlassModel getModel() {
+        return model;
+    }
+
+    public void setModel(GlassModel model) {
+        this.model = model;
+    }
+
+    public ProduceItem getProduce() {
+        return produce;
+    }
+
+    public void setProduce(ProduceItem produce) {
+        this.produce = produce;
+    }
 }

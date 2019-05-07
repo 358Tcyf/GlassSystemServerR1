@@ -130,4 +130,5 @@ public class ProduceItem extends BaseEntity {
     public void setMaterial(float material) {
         this.material = material;
     }
+
 }

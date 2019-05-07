@@ -11,6 +11,7 @@ import project.ys.glass_system.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.hibernate.internal.util.StringHelper.isEmpty;
@@ -32,7 +33,7 @@ public class UserController {
     RecordServiceImpl recordService;
 
     @RequestMapping(WEB_LOGIN)
-    public RetResult<User> webLogin(String account, String password, boolean isWeb) {
+    public RetResult webLogin(String account, String password, boolean isWeb) {
         if (account.length() > 5 || account.length() < 3) {
             if (!checkEmail(account)) {
                 if (!checkMobile(account)) {
@@ -52,12 +53,15 @@ public class UserController {
             recordService.addRecord(user,isWeb?2:1);
             SessionUtil.getInstance().setSessionMap(user);
             SessionUtil.getInstance().setMobileSessionTimeout();
-            return RetResponse.makeOKRsp("登陆成功", user);
+            Map<String, Object> result = new HashMap<>();
+            result.put("no", user.getNo());
+            result.put("password", password);
+            return RetResponse.makeOKRsp("登陆成功",result);
         }
     }
 
     @RequestMapping(LOGIN)
-    public RetResult<User> login(String account, String password) {
+    public RetResult login(String account, String password) {
         return webLogin(account, password, false);
     }
 

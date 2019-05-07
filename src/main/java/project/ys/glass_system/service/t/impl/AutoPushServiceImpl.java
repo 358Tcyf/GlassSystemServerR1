@@ -28,6 +28,8 @@ import java.util.List;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 import static project.ys.glass_system.constant.AutoPushConstant.*;
+import static project.ys.glass_system.getui.GetuiUtil.sendSingleMessage;
+import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
 import static project.ys.glass_system.model.p.bean.BaseChart.*;
 import static project.ys.glass_system.util.LocalDateUtils.*;
 import static project.ys.glass_system.util.UuidUtil.getNum19;
@@ -75,8 +77,18 @@ public class AutoPushServiceImpl implements AutoPushService {
             if (set.isCommonSwitch()) {
                 if (set.isPushSwitch()) {
                     if (!isEmpty(set.getTags())) {
-                        Push daily = dailyPush(date, ignore, set.getTags(), user.getNo());
-                        Push weekly = weeklyPush(date, ignore, set.getTags(), user.getNo());
+                        Push daily = dailyPush(date, ignore, set, user.getNo());
+                        Push weekly = weeklyPush(date, ignore, set, user.getNo());
+                        System.out.println(daily);
+                        System.out.println(weekly);
+                        if(!isEmpty(daily)){
+                            daily.setReceiver(user.getNo());
+                            sendSingleMessage(1, user.getNo(), transmissionTemplate(JSON.toJSONString(daily)));
+                        }
+                        if(!isEmpty(weekly)){
+                            weekly.setReceiver(user.getNo());
+                            sendSingleMessage(1, user.getNo(), transmissionTemplate(JSON.toJSONString(weekly)));
+                        }
                     }
                 }
             }
@@ -84,24 +96,26 @@ public class AutoPushServiceImpl implements AutoPushService {
     }
 
     @Override
-    public Push dailyPush(LocalDate date, boolean ignore, List<Tag> tags, String alias) {
+    public Push dailyPush(LocalDate date, boolean ignore, PushSet set, String alias) {
         LocalDateTime time = LocalDateTime.now();
-        if (time.getHour() == 22 || ignore) {
+        int pushTime = (set.getTime() == 0 || ignore) ? 22 : 8;
+        LocalDate pushDate = (set.getTime() == 0 || ignore) ? date : date.minusDays(1);
+        if (time.getHour() == pushTime || ignore) {
             long milliTime = localDateTimeToMilli(time);
             Push push = new Push(milliTime);
             List<BaseChart> content = new ArrayList<>();
-            for (Tag tag : tags) {
+            for (Tag tag : set.getTags()) {
                 if (tag.getName().equals(DailyProduce))
-                    content.add(dailyProduceChart(date));
-                if (tag.getName().equals(DailyProduce))
-                    content.add(dailyProduceChart(date));
-                if (tag.getName().equals(DailyProduce))
-                    content.add(dailyProduceChart(date));
+                    content.add(dailyProduceChart(pushDate));
+                if (tag.getName().equals(DailyTestRank))
+                    content.add(dailyTestChart(pushDate));
+                if (tag.getName().equals(DailyConsume))
+                    content.add(dailyConsumeChart(pushDate));
             }
             if (content.size() == 0) return null;
             push.setContent(JSON.toJSONString(content));
             push.setDefaultSubMenu(content.get(0).getSub());
-            push.setTitle(date.getMonth()+"月 第"+getWeekIndexOfMonth(date)+ "周数据");
+            push.setTitle(dateToStr(pushDate, DATE_FORMAT_CN) + "数据");
             push.setPushUuid(getNum19());
             return push;
         }
@@ -109,25 +123,27 @@ public class AutoPushServiceImpl implements AutoPushService {
     }
 
     @Override
-    public Push weeklyPush(LocalDate date, boolean ignore, List<Tag> tags, String alias) {
+    public Push weeklyPush(LocalDate date, boolean ignore, PushSet set, String alias) {
         if (date.equals(date.with(DayOfWeek.SUNDAY)) || ignore) {
             LocalDateTime time = LocalDateTime.now();
-            if (time.getHour() == 22 || ignore) {
+            int pushTime = (set.getTime() == 0 || ignore) ? 22 : 8;
+            LocalDate pushDate = (set.getTime() == 0 || ignore) ? date : date.minusDays(1);
+            if (time.getHour() == pushTime || ignore) {
                 long milliTime = localDateTimeToMilli(time);
                 Push push = new Push(milliTime);
                 List<BaseChart> content = new ArrayList<>();
-                for (Tag tag : tags) {
+                for (Tag tag : set.getTags()) {
                     if (tag.getName().equals(WeeklyProduce))
-                        content.add(weeklyProduceChart(date));
+                        content.add(weeklyProduceChart(pushDate));
                     if (tag.getName().equals(WeeklyTestRank))
-                        content.add(weeklyProduceChart(date));
+                        content.add(weeklyTestChart(pushDate));
                     if (tag.getName().equals(WeeklyConsume))
-                        content.add(weeklyProduceChart(date));
+                        content.add(weeklyConsumeChart(pushDate));
                 }
                 if (content.size() == 0) return null;
                 push.setContent(JSON.toJSONString(content));
                 push.setDefaultSubMenu(content.get(0).getSub());
-                push.setTitle(dateToStr(date, DATE_FORMAT_CN) + "数据");
+                push.setTitle(pushDate.getMonth() + "第" + getWeekIndexOfMonth(pushDate) + "周数据");
                 push.setPushUuid(getNum19());
                 return push;
             }
@@ -177,14 +193,14 @@ public class AutoPushServiceImpl implements AutoPushService {
 
     @Override
     public BaseChart dailyConsumeChart(LocalDate date) {
-        BaseChart consumeDate = new BaseChart(DailyConsume, DailyConsume + "统计", "生产能耗");
+        BaseChart consumeDate = new BaseChart(DailyConsume, DailyConsume + "统计", "各类型能耗");
         consumeDate.setType(ring_chart, true);
         consumeDate.setLabels(Arrays.asList(ConsumeLabel));
         consumeDate.setxValues(ConsumeLabel);
         consumeDate.setyValues(new ArrayList<>());
         ProduceNote note = produceNoteDao.findByDate(date);
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[0], produceDao.sumWaterByBelong(note)));
-        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note)));
+        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note)/1000));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[2], produceDao.sumMaterialByBelong(note)));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[3], produceDao.sumCoalByBelong(note)));
         return consumeDate;
@@ -236,14 +252,14 @@ public class AutoPushServiceImpl implements AutoPushService {
 
     @Override
     public BaseChart weeklyConsumeChart(LocalDate date) {
-        BaseChart consumeDate = new BaseChart(WeeklyConsume, WeeklyConsume + "统计", "生产能耗");
+        BaseChart consumeDate = new BaseChart(WeeklyConsume, WeeklyConsume + "统计", "各类型能耗");
         consumeDate.setType(ring_chart, true);
         consumeDate.setLabels(Arrays.asList(ConsumeLabel));
         consumeDate.setxValues(ConsumeLabel);
         consumeDate.setyValues(new ArrayList<>());
         ProduceNote note = produceNoteDao.findByDate(date);
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[0], produceDao.sumWaterByBelong(note)));
-        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note)));
+        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note)/1000));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[2], produceDao.sumMaterialByBelong(note)));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[3], produceDao.sumCoalByBelong(note)));
         return consumeDate;
@@ -275,10 +291,10 @@ public class AutoPushServiceImpl implements AutoPushService {
     }
 
     public int getWeekIndexOfMonth(LocalDate date) {
-        return date.get(ChronoField.ALIGNED_WEEK_OF_MONTH);
+        return date.with(DayOfWeek.SUNDAY).get(ChronoField.ALIGNED_WEEK_OF_MONTH);
     }
 
     public int getWeekIndexOfYear(LocalDate date) {
-        return date.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+        return date.with(DayOfWeek.SUNDAY).get(ChronoField.ALIGNED_WEEK_OF_YEAR);
     }
 }

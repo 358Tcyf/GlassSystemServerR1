@@ -1,13 +1,14 @@
 package project.ys.glass_system;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import project.ys.glass_system.model.t.dao.*;
-import project.ys.glass_system.model.t.entity.*;
+import project.ys.glass_system.model.t.entity.Factory;
+import project.ys.glass_system.model.t.entity.GlassModel;
+import project.ys.glass_system.model.t.entity.TestRank;
+import project.ys.glass_system.model.t.entity.Warehouse;
 import project.ys.glass_system.service.t.impl.AutoProduceServiceImpl;
 
 import javax.annotation.Resource;
@@ -43,7 +44,7 @@ public class NewGlassTest {
     @Resource
     AutoProduceServiceImpl produceService;
 
-    @Before
+//    @Before
     public void before() {
         if (modelDao.findAll().size() <= 0)
             testCreateModel();
@@ -147,7 +148,7 @@ public class NewGlassTest {
 
     }
 
-    @After
+//    @After
     public void after() {
         System.out.println("\n=============================");
     }

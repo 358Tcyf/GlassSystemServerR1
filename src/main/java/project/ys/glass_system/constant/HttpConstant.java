@@ -64,6 +64,19 @@ public class HttpConstant {
     public static final String UPLOAD = "/upload";
 
 
+    public static final String GLASS = "/glass";
+    public static final String _GLASS = "glass";
+    public static final String FACTORY_MANAGER = "/factoryManager";
+    public static final String FACTORY_QUERY = "/factoryQuery";
+    public static final String PRODUCE_MANAGER = "/produceManager";
+    public static final String PRODUCE_QUERY = "/produceQuery";
+    public static final String GLASS_MANAGER = "/glassManager";
+    public static final String GLASS_QUERY = "/glassQuery";
+    public static final String WAREHOUSE_MANAGER = "/wareHouseManager";
+    public static final String WAREHOUSE_QUERY = "/wareHouseQuery";
+    public static final String TEST_MANAGER = "/testManager";
+    public static final String TEST_QUERY = "/testQuery";
+
     public static final String INDEX = "/index";
     public static final String HOME = "/home";
     public static final String _HOME = "home";

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>玻璃信息系统</title>
     <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="shortcut icon" href="/static/img/favicon.png">
     <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
@@ -16,12 +17,12 @@
             <!-- 头部区域 -->
             <ul class="layui-nav layui-layout-left">
                 <li class="layui-nav-item layadmin-flexible" lay-unselect="">
-                    <a  layadmin-event="flexible" title="">
+                    <a layadmin-event="flexible" title="">
                         <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
-                    <a  layadmin-event="refresh" title="刷新">
+                    <a layadmin-event="refresh" title="刷新">
                         <i class="layui-icon layui-icon-refresh-3"></i>
                     </a>
                 </li>
@@ -33,12 +34,12 @@
                     </a>
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect="" style="">
-                    <a  layadmin-event="note">
+                    <a layadmin-event="note">
                         <i class="layui-icon layui-icon-note"></i>
                     </a>
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect="" style="">
-                    <a  layadmin-event="fullscreen">
+                    <a layadmin-event="fullscreen">
                         <i class="layui-icon layui-icon-screen-full"></i>
                     </a>
                 </li>
@@ -46,14 +47,14 @@
                     <a><cite th:text="${user.no}"></cite>
                         <span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
-                        <dd style="text-align: center;"><a lay-href="/user/resetPassword.html">修改密码</a></dd>
+                        <dd style="text-align: center;"><a lay-href="/user/password">修改密码</a></dd>
                         <hr>
                         <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
                     </dl>
                 </li>
 
                 <li class="layui-nav-item layui-hide-xs" lay-unselect="" style="">
-                    <a ><i class="layui-icon layui-icon-more-vertical"></i></a>
+                    <a><i class="layui-icon layui-icon-more-vertical"></i></a>
                 </li>
             </ul>
         </div>
@@ -64,7 +65,8 @@
                     <img src="/static/img/favicon.png"/> <span>玻璃信息管理</span>
                 </div>
 
-                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
+                    lay-filter="layadmin-system-side-menu">
                     <li data-name="home" class="layui-nav-item layui-nav-itemed layui-this">
                         <a lay-tips="主页" lay-href="/home" lay-direction="2">
                             <i class="layui-icon layui-icon-home"></i>
@@ -83,6 +85,37 @@
                             <cite>推送管理</cite>
                         </a>
                     </li>
+                    <li class="layui-nav-item">
+                        <a lay-tips="玻璃信息">
+                            <i class="layui-icon layui-icon-list"></i>
+                            <cite>玻璃信息</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/glass/factoryManager">厂家信息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/glass/produceManager">生产信息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/glass/glassManager">产品信息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/glass/wareHouseManager">仓储信息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/glass/testManager">质检信息</a>
+                            </dd>
+                        </dl>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -92,7 +125,7 @@
             <div class="layui-icon layadmin-tabs-control layui-icon-down">
                 <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
                     <li class="layui-nav-item" lay-unselect="" style="">
-                        <a ><span class="layui-nav-more"></span></a>
+                        <a><span class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child layui-anim-fadein layui-anim layui-anim-upbit">
                             <dd layadmin-event="closeThisTabs"><a>关闭当前标签页</a></dd>
                             <dd layadmin-event="closeOtherTabs"><a>关闭其它标签页</a></dd>
@@ -103,7 +136,9 @@
             </div>
             <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="/home" lay-attr="/home" class="layui-this" style=""><i class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>
+                    <li lay-id="/home" lay-attr="/home" class="layui-this" style=""><i
+                            class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
+                    </li>
                 </ul>
             </div>
         </div>

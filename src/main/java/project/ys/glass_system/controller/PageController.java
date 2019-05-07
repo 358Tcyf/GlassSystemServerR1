@@ -56,6 +56,32 @@ public class PageController {
         return _PUSH + PUSH_MANAGER;
     }
 
+
+    @GetMapping(GLASS + FACTORY_MANAGER)
+    public String factoryManager() {
+        return _GLASS + FACTORY_MANAGER;
+    }
+
+    @GetMapping(GLASS + PRODUCE_MANAGER)
+    public String produceManager() {
+        return _GLASS + PRODUCE_MANAGER;
+    }
+
+    @GetMapping(GLASS + GLASS_MANAGER)
+    public String glassManager() {
+        return _GLASS + GLASS_MANAGER;
+    }
+
+    @GetMapping(GLASS + WAREHOUSE_MANAGER)
+    public String wareHouseManager() {
+        return _GLASS + WAREHOUSE_MANAGER;
+    }
+
+    @GetMapping(GLASS + TEST_MANAGER)
+    public String testManager() {
+        return _GLASS + TEST_MANAGER;
+    }
+
     @Unlimited
     @GetMapping(PUSH_CHART_TABS + "/{uuid:.+}")
     public String pushChartTabs(@PathVariable String uuid, Model model) {

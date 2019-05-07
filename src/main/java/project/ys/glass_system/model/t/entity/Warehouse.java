@@ -25,4 +25,28 @@ public class Warehouse extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Factory own;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Factory getOwn() {
+        return own;
+    }
+
+    public void setOwn(Factory own) {
+        this.own = own;
+    }
 }

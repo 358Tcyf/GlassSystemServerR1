@@ -1,5 +1,7 @@
 package project.ys.glass_system.model.t.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import project.ys.glass_system.model.t.entity.GlassModel;
@@ -16,5 +18,7 @@ public interface TestResultDao extends JpaRepository<TestResult, Integer> {
 
     @Query("SELECT COALESCE(SUM(result.num),0) FROM gls_test_result result WHERE result.belong IN ?1 AND result.rank =?2")
     int sumNumByBelongInAndRank(Collection<TestItem> belong, TestRank rank);
+
+    Page<TestResult> queryByNumNot(int num, Pageable pageable);
 
 }

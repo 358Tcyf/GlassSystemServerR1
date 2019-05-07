@@ -28,4 +28,36 @@ public class TestResult extends BaseEntity {
 
     @Column(name = "test_num", length = 11)
     private int num;
+
+    public GlassModel getModel() {
+        return model;
+    }
+
+    public void setModel(GlassModel model) {
+        this.model = model;
+    }
+
+    public TestRank getRank() {
+        return rank;
+    }
+
+    public void setRank(TestRank rank) {
+        this.rank = rank;
+    }
+
+    public TestItem getBelong() {
+        return belong;
+    }
+
+    public void setBelong(TestItem belong) {
+        this.belong = belong;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
 }

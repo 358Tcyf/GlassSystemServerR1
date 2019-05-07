@@ -9,7 +9,6 @@ import project.ys.glass_system.service.t.impl.AutoPushServiceImpl;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GlassSystemApplication.class)
@@ -24,8 +23,12 @@ public class NewPushTest {
     public void testGetLabels() {
 
     }
+//    @Test
+    public void testPush() {
+        pushService.pushEveryOne(LocalDate.now(), true);
+    }
 
-    @Test
+    //    @Test
     public void testCreateChart() {
         System.out.println(pushService.dailyProduceChart(LocalDate.now()));
         System.out.println(pushService.dailyTestChart(LocalDate.now()));
@@ -36,6 +39,5 @@ public class NewPushTest {
 
     @Test
     public void testOthers() {
-        System.out.println(LocalDate.parse("2019-05-07").get(ChronoField.ALIGNED_WEEK_OF_YEAR));
     }
 }

@@ -1,6 +1,9 @@
 package project.ys.glass_system.service.t.impl;
 
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.ys.glass_system.model.t.dao.*;
 import project.ys.glass_system.model.t.entity.*;
@@ -10,8 +13,12 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static project.ys.glass_system.util.LocalDateUtils.DATE_TIME_FORMAT;
+import static project.ys.glass_system.util.LocalDateUtils.dateToStr;
 import static project.ys.glass_system.util.RandomUtils.randomFloat;
 import static project.ys.glass_system.util.RandomUtils.randomInt;
 import static project.ys.glass_system.util.UuidUtil.getNum14;
@@ -198,4 +205,109 @@ public class AutoProduceServiceImpl implements AutoProduceService {
             testResultDao.saveAll(testResults);
         }
     }
+
+    @Override
+    public Map<String, Object> factoryQuery(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<Factory> factories = factoryDao.findAll(pageable);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", factories.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (Factory factory : factories) {
+            Map<String, Object> o = new HashMap<>();
+            o.put("uuid", factory.getUuid());
+            o.put("name", factory.getName());
+            o.put("province", factory.getProvince());
+            o.put("city", factory.getCity());
+            listMap.add(o);
+        }
+        map.put("object", listMap);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> produceQuery(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<ProduceItem> produceItems = produceDao.findAll(pageable);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", produceItems.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (ProduceItem item : produceItems) {
+            Map<String, Object> o = new HashMap<>();
+            o.put("uuid", item.getUuid());
+            o.put("model", item.getModel().getName());
+            o.put("num", item.getNum());
+            o.put("date", item.getBelong().getDate());
+            o.put("time", item.getTime().toLocalTime());
+            o.put("water", item.getWater() + "吨");
+            o.put("electricity", item.getElectricity() + "千瓦时");
+            o.put("material", item.getMaterial() + "吨");
+            o.put("coal", item.getCoal() + "吨");
+            listMap.add(o);
+        }
+        map.put("object", listMap);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> glassQuery(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<GlassItem> glassItems = glassItemDao.findAll(pageable);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", glassItems.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (GlassItem item : glassItems) {
+            Map<String, Object> o = new HashMap<>();
+            o.put("uuid", item.getUuid());
+            o.put("model", item.getModel().getName());
+            o.put("produce",  dateToStr(item.getProduce().getTime(),DATE_TIME_FORMAT));
+            o.put("store", item.getStore().getBelong().getName());
+            o.put("factory", item.getStore().getBelong().getOwn().getName());
+            o.put("test", dateToStr(item.getTest().getTime(),DATE_TIME_FORMAT));
+            o.put("rank", item.getRank().getName());
+            listMap.add(o);
+        }
+        map.put("object", listMap);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> wareHouseQuery(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<WarehouseItem> warehouses = warehouseItemDao.findAll(pageable);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", warehouses.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (WarehouseItem item : warehouses) {
+            Map<String, Object> o = new HashMap<>();
+            o.put("uuid", item.getUuid());
+            o.put("sum", glassItemDao.countByStore(item));
+            o.put("time",dateToStr(item.getTime(),DATE_TIME_FORMAT));
+            o.put("check", item.isTest());
+            o.put("store", item.getBelong().getName());
+            o.put("factory", item.getBelong().getOwn().getName());
+            listMap.add(o);
+        }
+        map.put("object", listMap);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> testQuery(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<TestResult> testResults = testResultDao.queryByNumNot(0,pageable);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", testResults.getTotalElements());
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (TestResult result : testResults) {
+            Map<String, Object> o = new HashMap<>();
+            o.put("uuid", result.getBelong().getUuid());
+            o.put("time", dateToStr(result.getBelong().getTime(),DATE_TIME_FORMAT));
+            o.put("model", result.getModel().getName());
+            o.put("rank", result.getRank().getName());
+            o.put("num", result.getNum());
+            listMap.add(o);
+        }
+        map.put("object", listMap);
+        return map;    }
 }

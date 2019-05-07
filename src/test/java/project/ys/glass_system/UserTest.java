@@ -1,6 +1,5 @@
 package project.ys.glass_system;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +33,7 @@ public class UserTest {
     @Resource
     UserServiceImpl userService;
 
-    @Before
+//    @Before
     public void before() {
         if (roleDao.findAll().size() <= 0)
             testCreateRole();
@@ -84,7 +83,6 @@ public class UserTest {
 
     @Test
     public void testGetUserInfo() {
-//        System.out.println(userService.userInfo("P0001"));
-//        userService.getLatestNo(SUPER_MANAGER);
+//        System.out.println(userService.userInfo("SA01"));
     }
 }

@@ -53,7 +53,13 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             if (pathMatcher.match("/", requestUrl)
                     || pathMatcher.match(HOME, requestUrl)
                     || pathMatcher.match(USER + USER_MANAGER, requestUrl)
+                    || pathMatcher.match(USER + PASSWORD, requestUrl)
                     || pathMatcher.match(PUSH + PUSH_MANAGER, requestUrl)
+                    || pathMatcher.match(GLASS + FACTORY_MANAGER, requestUrl)
+                    || pathMatcher.match(GLASS + PRODUCE_MANAGER, requestUrl)
+                    || pathMatcher.match(GLASS + GLASS_MANAGER, requestUrl)
+                    || pathMatcher.match(GLASS + WAREHOUSE_MANAGER, requestUrl)
+                    || pathMatcher.match(GLASS + TEST_MANAGER, requestUrl)
                     || pathMatcher.match(REDIRECT, requestUrl))
                 return true;
 

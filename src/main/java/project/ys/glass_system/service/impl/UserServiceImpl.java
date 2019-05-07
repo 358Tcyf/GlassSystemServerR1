@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> userInfo(String no) {
-        User find = userDao.findByNo(no);
+        User find = userDao.findDistinctByNoOrPhoneOrEmail(no, no, no);
         Map<String, Object> result = new HashMap<>();
         result.put("no", find.getNo());
         result.put("phone", find.getPhone());
@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> resultData = new HashMap<>();
         List<Map<String, Object>> users = new ArrayList<>();
         for (User user : allUsers) {
-            if (!user.getNo().startsWith("A"))
+            if (!user.getRole().getName().equals("超级管理员"))
                 users.add(userInfo(user.getNo()));
         }
         resultData.putIfAbsent("staffs", users);
