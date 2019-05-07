@@ -35,7 +35,7 @@ public class PageController {
     public String home(Model model) {
         User user = SessionUtil.getInstance().getUser();
         model.addAttribute("user", user);
-        if (user.getNo().startsWith("A"))
+        if (user.getRole().getName().startsWith("超级管理员"))
             return _HOME + HOME_ROOT;
         else
             return _PUSH + PUSH_MANAGER_SELF;
@@ -44,6 +44,11 @@ public class PageController {
     @GetMapping(USER + USER_MANAGER)
     public String userManager() {
         return _USER + USER_MANAGER;
+    }
+
+    @GetMapping(USER + PASSWORD)
+    public String resetPassword() {
+        return _USER + RESET_PASSWORD;
     }
 
     @GetMapping(PUSH + PUSH_MANAGER)

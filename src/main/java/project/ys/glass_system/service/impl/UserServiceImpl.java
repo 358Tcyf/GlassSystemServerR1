@@ -19,7 +19,8 @@ import java.util.Map;
 
 import static org.hibernate.internal.util.StringHelper.isEmpty;
 import static project.ys.glass_system.constant.HttpConstant.FILE;
-import static project.ys.glass_system.constant.UserConstant.*;
+import static project.ys.glass_system.constant.UserConstant.Account_Index;
+import static project.ys.glass_system.constant.UserConstant.DEFAULT_PASSWORD;
 import static project.ys.glass_system.util.EncodeUtils.encode;
 
 @Service
@@ -45,6 +46,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void addUser(User user, Role role) {
+        user.setRole(role);
+        userDao.save(user);
+    }
+
+    @Override
     public String getLatestNo(int roleId) {
         Role role = roleDao.findById(roleId);
         User user = userDao.findDistinctFirstByRoleOrderByNoDesc(role);
@@ -57,20 +64,7 @@ public class UserServiceImpl implements UserService {
         } else {
             no = 1;
         }
-        switch (roleId) {
-            case SUPER_MANAGER:
-                latestNo = "A" + String.format("%02d", no);
-                break;
-            case MANAGEMENT_SECTION:
-                latestNo = "M" + String.format("%03d", no);
-                break;
-            case PRODUCT_SECTION:
-                latestNo = "P" + String.format("%04d", no);
-                break;
-            case SALE_SECTION:
-                latestNo = "S" + String.format("%04d", no);
-                break;
-        }
+        latestNo = Account_Index[roleId] + String.format("%03d", no);
         return latestNo;
     }
 
@@ -175,12 +169,12 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = new PageRequest(page - 1, limit);
         Page<User> allList = null;
         if (isEmpty(name) && isEmpty(account) && isEmpty(phone) && isEmpty(email) && role == 0)
-            allList = userDao.queryUsersByNoNotLike("%A%",pageable);
+            allList = userDao.queryUsersByNoNotLike("%A%", pageable);
         else if (role == 0)
-            allList = userDao.queryUsersByNameLikeAndNoLikeAndNoNotLikeAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%", "%A%","%"+phone+"%", "%"+email+"%", pageable);
+            allList = userDao.queryUsersByNameLikeAndNoLikeAndNoNotLikeAndPhoneLikeAndEmailLike("%" + name + "%", "%" + account + "%", "%A%", "%" + phone + "%", "%" + email + "%", pageable);
         else {
-            Role role1 = roleDao.findById(role+1);
-            allList = userDao.queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike("%"+name+"%", "%"+account+"%",role1, "%"+phone+"%", "%"+email+"%", pageable);
+            Role role1 = roleDao.findById(role + 1);
+            allList = userDao.queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike("%" + name + "%", "%" + account + "%", role1, "%" + phone + "%", "%" + email + "%", pageable);
         }
         Map<String, Object> map = new HashMap<>();
         map.put("count", allList.getTotalElements());
@@ -203,7 +197,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logoffUserList(String[] accounts) {
-        for(String account:accounts){
+        for (String account : accounts) {
             logoffUser(account);
         }
     }

@@ -1,5 +1,6 @@
 package project.ys.glass_system.model.p.bean;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class BaseChart {
@@ -7,6 +8,12 @@ public class BaseChart {
 
     public BaseChart() {
 
+    }
+
+    public BaseChart(String sub,String title,String desc) {
+        this.sub=sub;
+        this.title=title;
+        this.desc=desc;
     }
 
     public static int line_chart = 0;
@@ -32,7 +39,7 @@ public class BaseChart {
 
     private String[] xValues;
 
-    private List<BaseEntry> y;
+    private List<BaseEntry> yValues;
 
     private List<List<BaseEntry>> yListValues;
 
@@ -75,7 +82,10 @@ public class BaseChart {
     public void setType(int type) {
         this.type = type;
     }
-
+    public void setType(int type,boolean only) {
+        this.type = type;
+        this.only = only;
+    }
     public boolean isOnly() {
         return only;
     }
@@ -108,12 +118,12 @@ public class BaseChart {
         this.xValues = xValues;
     }
 
-    public List<BaseEntry> getY() {
-        return y;
+    public List<BaseEntry> getyValues() {
+        return yValues;
     }
 
-    public void setY(List<BaseEntry> y) {
-        this.y = y;
+    public void setyValues(List<BaseEntry> yValues) {
+        this.yValues = yValues;
     }
 
     public List<List<BaseEntry>> getyListValues() {
@@ -124,5 +134,20 @@ public class BaseChart {
         this.yListValues = yListValues;
     }
 
-
+    @Override
+    public String toString() {
+        return "BaseChart{" +
+                "menu='" + menu + '\'' +
+                ",\n sub='" + sub + '\'' +
+                ",\n title='" + title + '\'' +
+                ",\n desc='" + desc + '\'' +
+                ",\n type=" + type +
+                ",\n only=" + only +
+                ",\n label='" + label + '\'' +
+                ",\n labels=" + labels +
+                ",\n xValues=" + Arrays.toString(xValues) +
+                ",\n yValues=" + yValues +
+                ",\n yListValues=" + yListValues +
+                '}';
+    }
 }

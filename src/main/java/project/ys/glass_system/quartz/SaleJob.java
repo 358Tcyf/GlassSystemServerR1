@@ -6,11 +6,10 @@ import org.quartz.JobExecutionException;
 import project.ys.glass_system.model.s.entity.Customers;
 import project.ys.glass_system.model.s.entity.OrderItems;
 import project.ys.glass_system.model.s.entity.Orders;
-import project.ys.glass_system.model.s.entity.Products;
 import project.ys.glass_system.service.impl.GlassServiceImpl;
-import project.ys.glass_system.service.impl.ProductServiceImpl;
 import project.ys.glass_system.service.impl.SaleServiceImpl;
 import project.ys.glass_system.util.ApplicationContextUtils;
+import project.ys.glass_system.util.RandomUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,13 +29,13 @@ public class SaleJob implements Job {
 
 //        JobDataMap map = jobExecutionContext.getMergedJobDataMap();
         System.out.println("某员工于" + LocalDateTime.now() + "该时完成了销售任务");
-        Customers customer = glassService.getCustomer(CUST_PHONE[randomInt(0, 5)]);
+        Customers customer = glassService.getCustomer(CUST_PHONE[RandomUtils.randomInt(0, 5)]);
         List<OrderItems> orderItems = new ArrayList<>();
-        for (int i = 0; i < randomInt(1, 3); i++) {
-            orderItems.add(glassService.virtualSale(GLASS_MODEL[randomInt(0, 4)]));
+        for (int i = 0; i < RandomUtils.randomInt(1, 3); i++) {
+            orderItems.add(glassService.virtualSale(GLASS_MODEL[RandomUtils.randomInt(0, 4)]));
         }
         Orders orders = new Orders(LocalDateTime.now(), customer);
-        orders.setRate(randomInt(4.0, 5.0));
+        orders.setRate(RandomUtils.randomInt(4.0, 5.0));
         saleService.ordersOfDay(saleService.ordersOfCustomer(orders, orderItems));
     }
 }

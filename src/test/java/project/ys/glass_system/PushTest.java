@@ -7,13 +7,10 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import project.ys.glass_system.model.p.dao.UserDao;
-import project.ys.glass_system.model.p.entity.PushSet;
-import project.ys.glass_system.model.p.entity.User;
 import project.ys.glass_system.model.s.dao.ProductDao;
 import project.ys.glass_system.service.impl.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GlassSystemApplication.class)
@@ -69,9 +66,11 @@ public class PushTest {
 //        LocalDateTime time = LocalDateTime.now();
 //        pushService.pushEveryUser(time.toLocalDate(), true);
 
-//        String[] dataArray = new String[]{"2019-03-20"};
+//        String[] dataArray = new String[]{"2019-04-22"};
 //        for (CharSequence data : dataArray) {
 //            LocalDate date = LocalDate.parse(data);
+//            pushService.pushEveryUser(date, true);
+//
 //        }
     }
 

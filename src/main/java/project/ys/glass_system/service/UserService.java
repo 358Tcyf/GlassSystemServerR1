@@ -3,7 +3,6 @@ package project.ys.glass_system.service;
 import project.ys.glass_system.model.p.entity.Role;
 import project.ys.glass_system.model.p.entity.User;
 
-import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -11,7 +10,7 @@ public interface UserService {
     void create(Role role);
 
     void addUser(User user, int roleId);
-
+    void addUser(User user, Role role);
     String getLatestNo(int roleId);
 
     int resetPassword(String no);

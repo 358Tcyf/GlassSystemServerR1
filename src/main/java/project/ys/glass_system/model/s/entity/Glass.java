@@ -46,7 +46,7 @@ public class Glass extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Glass{" +
+        return "GlassItem{" +
                 "model='" + model + '\'' +
                 ",\n price=" + price +
                 '}';

@@ -13,6 +13,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Map;
@@ -24,8 +25,7 @@ import java.util.Map;
         transactionManagerRef="transactionManagerPrimary",
         basePackages= {"project.ys.glass_system.model.p.dao"}) //设置Repository所在位置
 public class PrimaryConfig {
-
-    @Autowired
+    @Resource
     @Qualifier("primaryDataSource")
     private DataSource primaryDataSource;
 
@@ -46,7 +46,7 @@ public class PrimaryConfig {
                 .build();
     }
 
-    @Autowired
+    @Resource
     private JpaProperties jpaProperties;
 
     private Map<String, String> getVendorProperties() {

@@ -101,12 +101,12 @@ public class Push extends BaseEntity {
     public String toString() {
         return "Push{" +
                 "title='" + title + '\'' +
-                ",\n content='" + content + '\'' +
-                ",\n receiver='" + receiver + '\'' +
-                ",\n pushUuid='" + pushUuid + '\'' +
-                ",\n defaultSubMenu='" + defaultSubMenu + '\'' +
-                ",\n createTime=" + createTime +
-                ",\n haveRead=" + haveRead +
+                ", content='" + content + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", pushUuid='" + pushUuid + '\'' +
+                ", defaultSubMenu='" + defaultSubMenu + '\'' +
+                ", createTime=" + createTime +
+                ", haveRead=" + haveRead +
                 '}';
     }
 }

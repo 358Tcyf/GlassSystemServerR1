@@ -240,7 +240,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry((float) j, (float) success));
         }
-        produceData.setY(yValues);
+        produceData.setyValues(yValues);
         return produceData;
     }
 
@@ -295,7 +295,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry(labels[i], (float) success));
         }
-        produceData.setY(yValues);
+        produceData.setyValues(yValues);
         return produceData;
     }
 
@@ -351,7 +351,7 @@ public class PushServiceImpl implements PushService {
         yValues.add(new BaseEntry(labels[0], (float) productNote.getElectricity()));
         yValues.add(new BaseEntry(labels[1], (float) productNote.getCoal()));
         yValues.add(new BaseEntry(labels[2], (float) productNote.getWater()));
-        produceDate.setY(yValues);
+        produceDate.setyValues(yValues);
         return produceDate;
     }
 
@@ -442,7 +442,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry((float) j, (float) sum));
         }
-        saleData.setY(yValues);
+        saleData.setyValues(yValues);
         return saleData;
     }
 
@@ -466,7 +466,7 @@ public class PushServiceImpl implements PushService {
             }
             yValues.add(new BaseEntry((float) j, sum / (float) (count * 5.0) * 100));
         }
-        saleData.setY(yValues);
+        saleData.setyValues(yValues);
         return saleData;
     }
 
@@ -720,7 +720,7 @@ public class PushServiceImpl implements PushService {
                             chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
                             List<Object> data = new ArrayList<>();
                             List<List<Object>> series = new ArrayList<>();
-                            for (BaseEntry entry : baseChart.getY()) {
+                            for (BaseEntry entry : baseChart.getyValues()) {
                                 data.add(entry.getY());
                             }
                             series.add(data);
@@ -763,7 +763,7 @@ public class PushServiceImpl implements PushService {
                         chart.put("series", baseChart.getLabel());
                         chart.put("legend", baseChart.getxValues());
                         List<EChartPieEntry> data = new ArrayList<>();
-                        for (BaseEntry entry : baseChart.getY()) {
+                        for (BaseEntry entry : baseChart.getyValues()) {
                             data.add(new EChartPieEntry((String) entry.getX(), entry.getY()));
                         }
                         chart.put("data", data);

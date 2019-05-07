@@ -13,8 +13,14 @@ public class UuidUtil {
         String numStr = "";
         String trandStr = String.valueOf((Math.random() * 9 + 1) * 1000000);
         String dataStr = new SimpleDateFormat("yyyyMMddHHMMSS").format(new Date());
-        numStr = trandStr.toString().substring(0, 4);
+        numStr = trandStr.substring(0, 4);
         numStr = numStr + dataStr;
+        return numStr;
+    }
+    public static String getNum14(String front) {
+        String numStr = front;
+        String dataStr = new SimpleDateFormat("yyyyMMddHHMMSS").format(new Date());
+        numStr += dataStr;
         return numStr;
     }
 

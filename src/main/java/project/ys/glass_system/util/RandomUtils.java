@@ -15,6 +15,10 @@ public class RandomUtils {
     public final static int maxLimit = 500;
 
 
+    public static boolean randomBoolean() {
+        return randomInt(1, 2) % 2 == 0;
+    }
+
     public static int randomInt(int min, int max) {
         return (int) (Math.random() * (max - min) + min);
     }
@@ -22,6 +26,11 @@ public class RandomUtils {
     public static double randomInt(double min, double max) {
         return Double.valueOf(String.format("%.2f", (Math.random() * (max - min) + min)));
     }
+
+    public static float randomFloat(float min, float max) {
+        return Float.valueOf(String.format("%.2f", (Math.random() * (max - min) + min)));
+    }
+
 
     public static int[] randomProduce() {
         int[] randomProduce = new int[4];

@@ -12,13 +12,13 @@ import project.ys.glass_system.service.RecordService;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static project.ys.glass_system.util.LocalDateUtils.DATE_TIME_FORMAT;
-import static project.ys.glass_system.util.LocalDateUtils.dateToStr;
+import static project.ys.glass_system.util.LocalDateUtils.*;
 
 @Service
 @Transactional
@@ -35,6 +35,7 @@ public class RecordServiceImpl implements RecordService {
         Record record = new Record();
         record.setUser(user);
         record.setAction(action);
+        record.setTime(localDateTimeToMilli(LocalDateTime.now()));
         recordDao.save(record);
     }
 

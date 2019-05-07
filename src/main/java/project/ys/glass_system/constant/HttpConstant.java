@@ -13,6 +13,7 @@ public class HttpConstant {
     public static final String SEARCH_USER = "/searchUserList";
     public static final String ADD_USER = "/addUser";
     public static final String RESET_PASSWORD = "/resetPassword";
+    public static final String PASSWORD = "/password";
     public static final String UPDATE_USER = "/updateUser";
     public static final String UPDATE_PASSWORD = "/updatePassword";
     public static final String USER_DELETE = "/deleteUser";
