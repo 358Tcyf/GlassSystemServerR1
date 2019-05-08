@@ -30,7 +30,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
-import static project.ys.glass_system.constant.PushConstant.PUSH_CHARTS;
+import static project.ys.glass_system.constant.AutoPushConstant.PUSH_TABS;
 import static project.ys.glass_system.getui.GetuiUtil.sendSingleMessage;
 import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
 import static project.ys.glass_system.model.p.bean.AlarmLog.ALARM_TAGS;
@@ -695,7 +695,7 @@ public class PushServiceImpl implements PushService {
         String defaultSubMenu = push.getDefaultSubMenu();
         List<BaseChart> baseCharts = JSON.parseArray(content, BaseChart.class);
         sortCharts(baseCharts, defaultSubMenu, subMenus);
-        List<Map<String, Object>> tabs = new ArrayList<>();
+        System.out.println(baseCharts);
         result.put("tabs", subMenus);
         return result;
     }
@@ -717,7 +717,7 @@ public class PushServiceImpl implements PushService {
                         if (baseChart.isOnly()) {
                             String[] labels = new String[]{baseChart.getLabel()};
                             chart.put("legend", labels);
-                            chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
+                            chart.put("xAxis",baseChart.getxValues());
                             List<Object> data = new ArrayList<>();
                             List<List<Object>> series = new ArrayList<>();
                             for (BaseEntry entry : baseChart.getyValues()) {
@@ -727,7 +727,7 @@ public class PushServiceImpl implements PushService {
                             chart.put("series", series);
                         } else {
                             chart.put("legend", baseChart.getLabels());
-                            chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
+                            chart.put("xAxis", baseChart.getxValues());
                             List<List<Object>> series = new ArrayList<>();
                             for (List<BaseEntry> entryList : baseChart.getyListValues()) {
                                 List<Object> data = new ArrayList<>();
@@ -744,7 +744,7 @@ public class PushServiceImpl implements PushService {
                         chart.put("title", baseChart.getTitle());
                         chart.put("legend", baseChart.getLabels());
                         if (baseChart.isOnly()) {
-                            chart.put("xAxis", new String[]{"4时", "8时", "12时", "16时", "20时", "24时"});
+                            chart.put("xAxis", baseChart.getxValues());
                         } else chart.put("xAxis", baseChart.getxValues());
                         List<List<Object>> series = new ArrayList<>();
                         for (List<BaseEntry> entryList : baseChart.getyListValues()) {
@@ -760,7 +760,7 @@ public class PushServiceImpl implements PushService {
                     case 3:
                         chart.put("title", baseChart.getTitle());
                         chart.put("subtitle", baseChart.getDesc());
-                        chart.put("series", baseChart.getLabel());
+                        chart.put("series", "水单位:吨、电量单位:K·KW·h、原料单位：吨、煤单位:吨n");
                         chart.put("legend", baseChart.getxValues());
                         List<EChartPieEntry> data = new ArrayList<>();
                         for (BaseEntry entry : baseChart.getyValues()) {
@@ -788,16 +788,16 @@ public class PushServiceImpl implements PushService {
     }
 
     void sortCharts(List<BaseChart> charts, String defaultSubMenu, List<String> subMenus) {
-        String[] push_charts = PUSH_CHARTS;
-        for (int i = 0; i < PUSH_CHARTS.length; i++) {
-            if (PUSH_CHARTS[i].equals(defaultSubMenu)) {
+        String[] push_charts = PUSH_TABS;
+        for (int i = 0; i < PUSH_TABS.length; i++) {
+            if (PUSH_TABS[i].equals(defaultSubMenu)) {
                 push_charts[i] = push_charts[0];
                 push_charts[0] = defaultSubMenu;
             }
         }
-        for (int i = 0; i < PUSH_CHARTS.length; i++)
+        for (int i = 0; i < PUSH_TABS.length; i++)
             for (BaseChart chart : charts) {
-                if (chart.getSub().equals(PUSH_CHARTS[i])) {
+                if (chart.getSub().equals(PUSH_TABS[i])) {
                     subMenus.add(chart.getSub());
                 }
             }

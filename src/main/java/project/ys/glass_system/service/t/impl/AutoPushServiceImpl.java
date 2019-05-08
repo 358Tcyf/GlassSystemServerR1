@@ -143,7 +143,7 @@ public class AutoPushServiceImpl implements AutoPushService {
                 if (content.size() == 0) return null;
                 push.setContent(JSON.toJSONString(content));
                 push.setDefaultSubMenu(content.get(0).getSub());
-                push.setTitle(pushDate.getMonth() + "第" + getWeekIndexOfMonth(pushDate) + "周数据");
+                push.setTitle(dateToStr(pushDate,DATE_FORMAT_MONTH) + "第" + getWeekIndexOfMonth(pushDate) + "周数据");
                 push.setPushUuid(getNum19());
                 return push;
             }
@@ -195,6 +195,7 @@ public class AutoPushServiceImpl implements AutoPushService {
     public BaseChart dailyConsumeChart(LocalDate date) {
         BaseChart consumeDate = new BaseChart(DailyConsume, DailyConsume + "统计", "各类型能耗");
         consumeDate.setType(ring_chart, true);
+        consumeDate.setLabel("水单位:吨、电量单位:K·KW·h、原料单位：吨、煤单位:吨n");
         consumeDate.setLabels(Arrays.asList(ConsumeLabel));
         consumeDate.setxValues(ConsumeLabel);
         consumeDate.setyValues(new ArrayList<>());
@@ -254,6 +255,7 @@ public class AutoPushServiceImpl implements AutoPushService {
     public BaseChart weeklyConsumeChart(LocalDate date) {
         BaseChart consumeDate = new BaseChart(WeeklyConsume, WeeklyConsume + "统计", "各类型能耗");
         consumeDate.setType(ring_chart, true);
+        consumeDate.setLabel("水单位:吨、电量单位:K·KW·h、原料单位：吨、煤单位:吨n");
         consumeDate.setLabels(Arrays.asList(ConsumeLabel));
         consumeDate.setxValues(ConsumeLabel);
         consumeDate.setyValues(new ArrayList<>());

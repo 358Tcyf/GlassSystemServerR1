@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import project.ys.glass_system.util.ApplicationContextUtils;
 
+import static project.ys.glass_system.quartz.GlassQuartz.onceProductNew;
+import static project.ys.glass_system.quartz.GlassQuartz.oncePushNew;
+
 @SpringBootApplication
 public class GlassSystemApplication {
 
@@ -13,7 +16,8 @@ public class GlassSystemApplication {
         ApplicationContextUtils.setApplicationContext(ctx);
 //        SpringApplication.run(GlassSystemApplication.class, args);    //必须注释，否则上面两句无法执行
         System.out.println("\n\n\n==============================提示：服务器启动==============================\n\n\n");
-//        onceProductNew();
+        onceProductNew();
+        oncePushNew();
 
     }
 

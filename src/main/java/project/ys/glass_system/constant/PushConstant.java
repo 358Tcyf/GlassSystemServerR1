@@ -11,8 +11,4 @@ public class PushConstant {
     public static String DailyCustomRate = "顾客满意率";
 
     public static String[] PUSH_CHARTS = {DailyProduceCountList,DailyCountOfModel,DailyProduceQualityList,DailyConsume,DailySaleCount,DailyDeliveryCount,DailySale,DailyCustomRate};
-    public static final String[] PUSH_TAGS = PUSH_CHARTS;
-    public static final String[] PRODUCE_TAGS = {DailyProduceCountList,DailyCountOfModel,DailyProduceQualityList,DailyConsume,};
-    public static final String[] SALES_TAGS = {DailySaleCount,DailyDeliveryCount,DailySale,DailyCustomRate};;
-    public static final String[] PUSH_TIME = {"每4小时一次", "每8小时一次", "每12小时一次", "每天一次"};
 }
