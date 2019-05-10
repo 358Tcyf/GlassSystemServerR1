@@ -694,7 +694,6 @@ public class PushServiceImpl implements PushService {
         String defaultSubMenu = push.getDefaultSubMenu();
         List<BaseChart> baseCharts = JSON.parseArray(content, BaseChart.class);
         sortCharts(baseCharts, defaultSubMenu, subMenus);
-        System.out.println(baseCharts);
         result.put("tabs", subMenus);
         return result;
     }

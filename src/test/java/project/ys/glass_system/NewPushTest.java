@@ -8,7 +8,6 @@ import project.ys.glass_system.model.t.dao.GlassModelDao;
 import project.ys.glass_system.service.t.impl.AutoPushServiceImpl;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GlassSystemApplication.class)
@@ -25,7 +24,7 @@ public class NewPushTest {
     }
     @Test
     public void testPush() {
-        pushService.pushEveryOne(LocalDate.now(), true);
+//        pushService.pushEveryOne(LocalDate.now(), true);
     }
 
     //    @Test

@@ -44,7 +44,7 @@ public class NewGlassTest {
     @Resource
     AutoProduceServiceImpl produceService;
 
-//    @Before
+    //    @Before
     public void before() {
         if (modelDao.findAll().size() <= 0)
             testCreateModel();
@@ -91,51 +91,32 @@ public class NewGlassTest {
         rankDao.save(new TestRank("三级品"));
     }
 
-//    @Test
+    @Test
     public void testProduceSchedule() {
         System.out.print("生产准备：");
         produceService.produceStart(LocalDate.now(), true);
-        for (int i = 2; i > 0; i--) {
-            System.out.print(i + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        waitSomeSecond(2);
         System.out.print("\n生产开始：");
         produceService.produce(true);
-        for (int i = 2; i > 0; i--) {
-            try {
-                System.out.print(i + " ");
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        waitSomeSecond(2);
         System.out.print("\n进行仓储：");
         produceService.store(true);
-        for (int i = 2; i > 0; i--) {
-            try {
-                System.out.print(i + " ");
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        waitSomeSecond(2);
         System.out.print("\n质检准备：");
         produceService.testStart(LocalDate.now(), true);
-        for (int i = 2; i > 0; i--) {
+        waitSomeSecond(2);
+        System.out.print("\n质检开始：");
+        produceService.test(true);
+    }
+
+    private void waitSomeSecond(int second) {
+        for (int i = second; i > 0; i--) {
             try {
-                System.out.print(i + " ");
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.print("\n质检开始：");
-        produceService.test(true);
-
     }
 
     @Test
@@ -148,7 +129,7 @@ public class NewGlassTest {
 
     }
 
-//    @After
+    //    @After
     public void after() {
         System.out.println("\n=============================");
     }

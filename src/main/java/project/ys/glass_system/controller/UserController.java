@@ -157,7 +157,6 @@ public class UserController {
 
     @RequestMapping(LATEST_NO)
     public RetResult latestNo(int roleId) {
-        System.out.println(roleId);
         if (roleId>=2&roleId<=9) {
             String no = userService.getLatestNo(roleId);
             return RetResponse.makeOKRsp(no);
