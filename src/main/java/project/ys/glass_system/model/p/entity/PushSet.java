@@ -86,10 +86,6 @@ public class PushSet extends BaseEntity {
     @Column(name = "smart_subscription_switch")
     private boolean smartSub;
 
-
-    @ManyToMany
-    private List<AlarmTag> alarmTags;
-
     @Column(name = "alarm_switch")
     private boolean alarmSwitch;
 
@@ -173,13 +169,6 @@ public class PushSet extends BaseEntity {
         this.alarmSwitch = alarmSwitch;
     }
 
-    public List<AlarmTag> getAlarmTags() {
-        return alarmTags;
-    }
-
-    public void setAlarmTags(List<AlarmTag> alarmTags) {
-        this.alarmTags = alarmTags;
-    }
 
     public boolean isSmartSub() {
         return smartSub;
@@ -202,7 +191,6 @@ public class PushSet extends BaseEntity {
                 ", time=" + time +
                 ", tags=" + tags +
                 ", smartSub=" + smartSub +
-                ", alarmTags=" + alarmTags +
                 ", alarmSwitch=" + alarmSwitch +
                 '}';
     }

@@ -23,18 +23,18 @@ public class NewPushTest {
     public void testGetLabels() {
 
     }
-//    @Test
+    @Test
     public void testPush() {
         pushService.pushEveryOne(LocalDate.now(), true);
     }
 
     //    @Test
     public void testCreateChart() {
-        System.out.println(pushService.dailyProduceChart(LocalDate.now()));
-        System.out.println(pushService.dailyTestChart(LocalDate.now()));
-        System.out.println(pushService.dailyConsumeChart(LocalDate.now()));
-        System.out.println(pushService.weeklyProduceChart(LocalDate.now()));
-        System.out.println(pushService.weeklyTestChart(LocalDate.now()));
+//        System.out.println(pushService.dailyProduceChart(LocalDate.now()));
+//        System.out.println(pushService.dailyTestChart(LocalDate.now()));
+//        System.out.println(pushService.dailyConsumeChart(LocalDate.now()));
+//        System.out.println(pushService.weeklyProduceChart(LocalDate.now()));
+//        System.out.println(pushService.weeklyTestChart(LocalDate.now()));
     }
 
     @Test

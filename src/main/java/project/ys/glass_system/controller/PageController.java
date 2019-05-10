@@ -56,7 +56,6 @@ public class PageController {
         return _PUSH + PUSH_MANAGER;
     }
 
-
     @GetMapping(GLASS + FACTORY_MANAGER)
     public String factoryManager() {
         return _GLASS + FACTORY_MANAGER;

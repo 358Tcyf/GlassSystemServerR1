@@ -57,7 +57,8 @@ public class SetServiceImpl implements SetService {
 
     @Override
     public List<AlarmTag> getAlarmTags(String no) {
-        return userDao.findByNo(no).getPushSet().getAlarmTags();
+        PushSet set = userDao.findByNo(no).getPushSet();
+        return alarmTagDao.findBySet(set);
     }
 
     @Override
@@ -127,22 +128,15 @@ public class SetServiceImpl implements SetService {
         if (user == null)
             return false;
         PushSet set = user.getPushSet();
-        List<AlarmTag> setTags = set.getAlarmTags();
-        setTags.clear();
-        set.setAlarmTags(setTags);
-        pushSetDao.save(set);
-        AlarmTag alarmTag;
-        for (AlarmTag tag : tags) {
-            if (alarmTagDao.findByContentAndMinAndMax(tag.getContent(), tag.getMin(), tag.getMax()) == null) {
-                alarmTag = alarmTagDao.save(tag);
-                setTags.add(alarmTag);
-            } else {
-                alarmTag = alarmTagDao.findByContent(tag.getContent());
-                setTags.add(alarmTag);
-            }
+        List<AlarmTag> setTags = alarmTagDao.findBySet(set);
+        for (AlarmTag tag : setTags) {
+            alarmTagDao.delete(tag);
         }
-        set.setAlarmTags(setTags);
-        pushSetDao.saveAndFlush(set);
+        pushSetDao.save(set);
+        for (AlarmTag tag : tags) {
+            tag.setSet(set);
+            alarmTagDao.save(tag);
+        }
         return true;
     }
 

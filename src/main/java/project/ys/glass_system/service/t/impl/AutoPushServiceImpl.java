@@ -1,22 +1,20 @@
 package project.ys.glass_system.service.t.impl;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
+import project.ys.glass_system.model.p.bean.AlarmLog;
 import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
+import project.ys.glass_system.model.p.dao.AlarmTagDao;
 import project.ys.glass_system.model.p.dao.UserDao;
-import project.ys.glass_system.model.p.entity.Push;
-import project.ys.glass_system.model.p.entity.PushSet;
-import project.ys.glass_system.model.p.entity.Tag;
-import project.ys.glass_system.model.p.entity.User;
+import project.ys.glass_system.model.p.entity.*;
 import project.ys.glass_system.model.t.dao.*;
-import project.ys.glass_system.model.t.entity.GlassModel;
-import project.ys.glass_system.model.t.entity.ProduceNote;
-import project.ys.glass_system.model.t.entity.TestNote;
-import project.ys.glass_system.model.t.entity.TestRank;
+import project.ys.glass_system.model.t.entity.*;
 import project.ys.glass_system.service.t.AutoPushService;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +28,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 import static project.ys.glass_system.constant.AutoPushConstant.*;
 import static project.ys.glass_system.getui.GetuiUtil.sendSingleMessage;
 import static project.ys.glass_system.getui.GetuiUtil.transmissionTemplate;
+import static project.ys.glass_system.model.p.bean.AlarmLog.ALARM_TAGS;
 import static project.ys.glass_system.model.p.bean.BaseChart.*;
 import static project.ys.glass_system.util.LocalDateUtils.*;
 import static project.ys.glass_system.util.UuidUtil.getNum19;
@@ -62,6 +61,9 @@ public class AutoPushServiceImpl implements AutoPushService {
     @Resource
     TestResultDao testResultDao;
 
+    @Resource
+    AlarmTagDao alarmTagDao;
+
     @Override
     public void pushEveryOne(LocalDate date, boolean ignore) {
         List<User> userList = userDao.findAll();
@@ -74,23 +76,34 @@ public class AutoPushServiceImpl implements AutoPushService {
     public void pushUser(LocalDate date, User user, boolean ignore) {
         PushSet set = user.getPushSet();
         if (!isEmpty(set)) {
-            if (set.isCommonSwitch()) {
-                if (set.isPushSwitch()) {
-                    if (!isEmpty(set.getTags())) {
-                        Push daily = dailyPush(date, ignore, set, user.getNo());
-                        Push weekly = weeklyPush(date, ignore, set, user.getNo());
-                        System.out.println(daily);
-                        System.out.println(weekly);
-                        if(!isEmpty(daily)){
-                            daily.setReceiver(user.getNo());
-                            sendSingleMessage(1, user.getNo(), transmissionTemplate(JSON.toJSONString(daily)));
+            if (set.isCommonSwitch() || ignore) {
+                long localDateTimeToMilli = localDateTimeToMilli(LocalDateTime.now());
+                if ((localDateTimeToMilli > set.getStart() && localDateTimeToMilli < set.getEnd()) || ignore) {
+                    if (set.isPushSwitch() || ignore) {
+                        if (!isEmpty(set.getTags())) {
+                            Push daily = dailyPush(date, ignore, set, user.getNo());
+                            Push weekly = weeklyPush(date, ignore, set, user.getNo());
+                            if (!isEmpty(daily)) {
+                                daily.setReceiver(user.getNo());
+                                sendSingleMessage(1, daily.getReceiver(), transmissionTemplate(JSON.toJSONString(daily)));
+                            }
+                            if (!isEmpty(weekly)) {
+                                weekly.setReceiver(user.getNo());
+                                sendSingleMessage(1, weekly.getReceiver(), transmissionTemplate(JSON.toJSONString(weekly)));
+                            }
                         }
-                        if(!isEmpty(weekly)){
-                            weekly.setReceiver(user.getNo());
-                            sendSingleMessage(1, user.getNo(), transmissionTemplate(JSON.toJSONString(weekly)));
+                    }
+                    if (set.isAlarmSwitch() || ignore) {
+                        if (!isEmpty(alarmTagDao.findBySet(set))) {
+                            Alarm alarm = hourlyAlarm(LocalDateTime.now(), ignore, set, user.getNo());
+                            if (!isEmpty(alarm)) {
+                                alarm.setReceiver(user.getNo());
+                                sendSingleMessage(1, alarm.getReceiver(), transmissionTemplate(JSON.toJSONString(alarm)));
+                            }
                         }
                     }
                 }
+
             }
         }
     }
@@ -143,10 +156,47 @@ public class AutoPushServiceImpl implements AutoPushService {
                 if (content.size() == 0) return null;
                 push.setContent(JSON.toJSONString(content));
                 push.setDefaultSubMenu(content.get(0).getSub());
-                push.setTitle(dateToStr(pushDate,DATE_FORMAT_MONTH) + "第" + getWeekIndexOfMonth(pushDate) + "周数据");
+                push.setTitle(dateToStr(pushDate, DATE_FORMAT_MONTH) + "第" + getWeekIndexOfMonth(pushDate) + "周数据");
                 push.setPushUuid(getNum19());
                 return push;
             }
+        }
+        return null;
+    }
+
+    @Override
+    public Alarm hourlyAlarm(LocalDateTime time, boolean ignore, PushSet set, String alias) {
+        if (time.getMinute() < 5 || ignore) {
+            Alarm alarm = new Alarm(localDateTimeToMilli(time));
+            List<AlarmLog> alarmContent = new ArrayList<>();
+            boolean error = false;
+            for (AlarmTag tag : alarmTagDao.findBySet(set)) {
+                if (tag.getContent().equals(ALARM_TAGS[0]) || tag.getContent().equals(ALARM_TAGS[1])) {
+                    TestRank rank = rankDao.findByName(tag.getContent().substring(0, 3));
+                    String observe = observeRankResult(time, tag, rank);
+                    if (!Strings.isEmpty(observe)) {
+                        error = true;
+                        alarmContent.add(new AlarmLog(tag.getContent(), observe));
+                    }
+                }
+                if (tag.getContent().equals(ALARM_TAGS[2])
+                        || tag.getContent().equals(ALARM_TAGS[3])
+                        || tag.getContent().equals(ALARM_TAGS[4])
+                        || tag.getContent().equals(ALARM_TAGS[5])) {
+                    String observe = observeConsu(time, tag);
+                    if (!Strings.isEmpty(observe)) {
+                        error = true;
+                        alarmContent.add(new AlarmLog(tag.getContent(), observe));
+                    }
+                }
+            }
+            alarm.setContent(JSON.toJSONString(alarmContent));
+            alarm.setTitle(dateToStr(time, DATE_FORMAT_HOUR) + "预警");
+            alarm.setAlarmUuid(getNum19());
+            if (error)
+                return alarm;
+            else
+                return null;
         }
         return null;
     }
@@ -201,7 +251,7 @@ public class AutoPushServiceImpl implements AutoPushService {
         consumeDate.setyValues(new ArrayList<>());
         ProduceNote note = produceNoteDao.findByDate(date);
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[0], produceDao.sumWaterByBelong(note)));
-        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note)/1000));
+        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note) / 1000));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[2], produceDao.sumMaterialByBelong(note)));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[3], produceDao.sumCoalByBelong(note)));
         return consumeDate;
@@ -261,11 +311,56 @@ public class AutoPushServiceImpl implements AutoPushService {
         consumeDate.setyValues(new ArrayList<>());
         ProduceNote note = produceNoteDao.findByDate(date);
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[0], produceDao.sumWaterByBelong(note)));
-        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note)/1000));
+        consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[1], produceDao.sumElectricityByBelong(note) / 1000));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[2], produceDao.sumMaterialByBelong(note)));
         consumeDate.getyValues().add(new BaseEntry(ConsumeLabel[3], produceDao.sumCoalByBelong(note)));
         return consumeDate;
     }
+
+
+    @Override
+    public String observeRankResult(LocalDateTime time, AlarmTag tag, TestRank rank) {
+        List<TestItem> tests = testDao.findByTimeBetween(time.minusHours(1).minusMinutes(5), time.minusMinutes(5));
+        int count = testResultDao.sumNumByBelongInAndRank(tests, rank);
+        boolean error = false;
+        String result = "观测" + tag.getContent() + ": ";
+        String fail = rank.getName() + " " + count + "件 \n";
+        if (count < tag.getMin() || count > tag.getMax()) {
+            result += fail;
+            error = true;
+        }
+        if (error)
+            return result;
+        else
+            return null;
+    }
+
+    DecimalFormat df2 = new DecimalFormat("###.00");
+
+    @Override
+    public String observeConsu(LocalDateTime time, AlarmTag tag) {
+        float consu = 0;
+        if (tag.getContent().equals(ALARM_TAGS[2]))
+            consu = produceDao.sumWaterByTimeBetween(time.minusHours(1).minusMinutes(5), time.minusMinutes(5));
+        if (tag.getContent().equals(ALARM_TAGS[3]))
+            consu = produceDao.sumElectricityByTimeBetween(time.minusHours(1).minusMinutes(5), time.minusMinutes(5));
+        if (tag.getContent().equals(ALARM_TAGS[4]))
+            consu = produceDao.sumMaterialByTimeBetween(time.minusHours(1).minusMinutes(5), time.minusMinutes(5));
+        if (tag.getContent().equals(ALARM_TAGS[5]))
+            consu = produceDao.sumCoalByTimeBetween(time.minusHours(1).minusMinutes(5), time.minusMinutes(5));
+        boolean error = false;
+        String result = "观测" + tag.getContent() + ": ";
+        String fail = df2.format(consu) + " \n";
+        if (consu < tag.getMin() || consu > tag.getMax()) {
+            result += fail;
+            error = true;
+        }
+        if (error)
+            return result;
+        else
+            return null;
+    }
+
 
     public String[] modelLabelArray() {
         return modelDao.findNameArray();

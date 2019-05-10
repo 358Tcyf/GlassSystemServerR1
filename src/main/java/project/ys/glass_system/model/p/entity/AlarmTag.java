@@ -2,6 +2,8 @@ package project.ys.glass_system.model.p.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "alarm_tags")
 public class AlarmTag extends BaseEntity {
@@ -27,6 +29,9 @@ public class AlarmTag extends BaseEntity {
     @Column(name = "max_value")
     private float max;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PushSet set;
+
     public String getContent() {
         return content;
     }
@@ -49,5 +54,13 @@ public class AlarmTag extends BaseEntity {
 
     public void setMax(float max) {
         this.max = max;
+    }
+
+    public PushSet getSet() {
+        return set;
+    }
+
+    public void setSet(PushSet set) {
+        this.set = set;
     }
 }

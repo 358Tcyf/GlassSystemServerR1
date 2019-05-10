@@ -9,10 +9,7 @@ import project.ys.glass_system.model.p.bean.AlarmLog;
 import project.ys.glass_system.model.p.bean.BaseChart;
 import project.ys.glass_system.model.p.bean.BaseEntry;
 import project.ys.glass_system.model.p.bean.EChartPieEntry;
-import project.ys.glass_system.model.p.dao.AlarmDao;
-import project.ys.glass_system.model.p.dao.PushDao;
-import project.ys.glass_system.model.p.dao.TagDao;
-import project.ys.glass_system.model.p.dao.UserDao;
+import project.ys.glass_system.model.p.dao.*;
 import project.ys.glass_system.model.p.entity.*;
 import project.ys.glass_system.model.s.dao.GlassDao;
 import project.ys.glass_system.model.s.dao.OrderDao;
@@ -68,7 +65,8 @@ public class PushServiceImpl implements PushService {
     PushDao pushDao;
     @Resource
     AlarmDao alarmDao;
-
+    @Resource
+    AlarmTagDao alarmTagDao;
     @Override
     public void pushEveryUser(LocalDate date, boolean ignoreTime) {
         List<User> userList = userDao.findAll();
@@ -109,15 +107,16 @@ public class PushServiceImpl implements PushService {
                     }
                 }
                 if (set.isAlarmSwitch()) {
+                    List<AlarmTag> alarmTags = alarmTagDao.findBySet(set);
                     long localDateTimeToMilli = localDateTimeToMilli(dateTime);
                     if (ignoreTime) {
-                        alarm(dateTime, set.getAlarmTags(), user.getNo());
+                        alarm(dateTime,alarmTags, user.getNo());
                     } else if (set.getStart() == 0 || set.getEnd() == 0) {
                         System.out.println(dateToStr(LocalDateTime.now(), format1) + "系统判断" + user.getName() + "的推送起止时间设置不合法，不予推送");
                     } else if (!(localDateTimeToMilli > set.getStart() && localDateTimeToMilli < set.getEnd())) {
                         System.out.println(dateToStr(LocalDateTime.now(), format1) + "系统判断" + user.getName() + "的推送不在推送时间段内，不予推送");
                     } else {
-                        alarm(dateTime, set.getAlarmTags(), user.getNo());
+                        alarm(dateTime, alarmTags, user.getNo());
                     }
                 }
             }

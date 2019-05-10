@@ -14,4 +14,6 @@ public interface TestRankDao extends JpaRepository<TestRank, Integer> {
     @Query("select TestRank.name from gls_rank_table TestRank ORDER BY TestRank.name")
     List<String> findNameListOrderByName();
 
+    TestRank findByName(String name);
+
 }

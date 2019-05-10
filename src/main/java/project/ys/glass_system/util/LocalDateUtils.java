@@ -23,6 +23,7 @@ public class LocalDateUtils {
 
     public static final String DATE_FORMAT_MONTH = "MM月 ";
 
+    public static final String DATE_FORMAT_HOUR = "dd日HH时 ";
 
     public static final String TIME_FORMAT = "HH:mm:ss";
 
