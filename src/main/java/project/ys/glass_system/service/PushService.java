@@ -10,43 +10,6 @@ import java.util.Map;
 
 public interface PushService {
 
-    void pushEveryUser(LocalDate date, boolean ignoreTime);
-
-    void pushWithAlias(LocalDate date, User user, boolean ignoreTime);
-
-    Push packDailyProduceData(LocalDate date, List<Tag> tags);
-
-    Push packDailySaleData(LocalDate date, List<Tag> tags);
-
-    BaseChart packDailyProduceCount(LocalDate date);
-
-    BaseChart packDailyProduceCountList(LocalDate date);
-
-    BaseChart packDailyCountOfModel(LocalDate date);
-
-    BaseChart packDailyProduceQualityList(LocalDate date);
-
-    BaseChart packDailyConsume(LocalDate date);
-
-    BaseChart packDailySaleCount(LocalDate date);
-
-    BaseChart packDailyDeliveryCount(LocalDate date);
-
-    BaseChart packDailySale(LocalDate date);
-
-    BaseChart packDailyCustomRate(LocalDate date);
-
-
-    Alarm packDailyAlarm(LocalDateTime date, List<AlarmTag> tags);
-
-    String observeFailRate(LocalDateTime date, AlarmTag tag);
-
-    String observeElecConsu(LocalDateTime date, AlarmTag tag);
-
-    String observeWtrConsu(LocalDateTime date, AlarmTag tag);
-
-    String observeCoalConsu(LocalDateTime date, AlarmTag tag);
-
     void updatePush(String account, List<Push> pushes);
 
     List<Push> downloadPush(String account);

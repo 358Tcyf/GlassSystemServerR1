@@ -1,38 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
-  <title>网络公司-首页</title>
-  <link rel="stylesheet" href="/static/assets/layui/css/layui.css">
-  <link rel="stylesheet" href="/static/css/index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+    <title>应用</title>
+    <link rel="icon" href="/static/img/favicon.png">
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <!-- Bootstrap -->
+    <link href="/static/assets/other/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/assets/other/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/assets/other/css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/assets/other/css/animations.css">
+    <link href="/static/assets/other/css/style.css" rel="stylesheet">
 </head>
 <body>
-  <!-- nav部分 -->
-  <div class="nav index">
+<!-- nav部分 -->
+<div class="nav index">
     <div class="layui-container">
-      <!-- 公司logo -->
-      <div class="nav-logo">
-        <title>玻璃信息系统</title>
-      </div>
-      <div class="nav-list">
-        <button>
-          <span></span><span></span><span></span>
-        </button>
-        <ul class="layui-nav" lay-filter="">
-          <li class="layui-nav-item"><a href="">应用</a></li>
-          <li class="layui-nav-item"><a href="login">登录</a></li>
-        </ul>
-      </div>
+        <!-- 公司logo -->
+        <div class="nav-logo">
+            <title>玻璃信息系统</title>
+        </div>
+        <div class="nav-list">
+            <button>
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="layui-nav" lay-filter="">
+                <li class="layui-nav-item"><a href="">应用</a></li>
+                <li class="layui-nav-item"><a href="login">登录</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
+</div>
+
+
+<div class="cloud floating">
+    <img src="/static/assets/other/img/cloud.png">
+</div>
+
+<div class="cloud pos1 fliped floating">
+    <img src="/static/assets/other/img/cloud.png">
+</div>
+
+<div class="cloud pos2 floating">
+    <img src="/static/assets/other/img/cloud.png">
+</div>
+
+<div class="cloud pos3 fliped floating">
+    <img src="/static/assets/other/img/cloud.png">
+</div>
+
+<div id="wrapper">
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <br/>
+                <img style="height: 120px;width: 120px;" src="/static/img/Android.png" alt=""/>
+                <br/>
+                <br/>
+                <br/>
+                <h1>玻璃信息推送系统</h1>
+                <br/>
+                <a href="https://www.pgyer.com/gx4K" class="layui-btn layui-btn-normal" target="_blank">点击获取App</a>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <h2 style="color: #fff;">或扫码下载</h2>
+                <br/>
+                <br/>
+                <br/>
+                <img style="height: 180px;width: 180px;" src="/static/img/QRCode_336.png" alt="下载当前应用"/>
+                <br/>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/static/assets/layui/layui.js"></script>
 
 <script>
-  layui.config({
-    base: '../res/static/js/' 
-  }).use('firm'); 
+
 </script>
 </body>
 </html>
