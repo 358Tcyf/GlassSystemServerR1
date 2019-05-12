@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/static/assets/style/admin.css" media="all">
     <link rel="stylesheet" href="/static/assets/style/login.css" media="all">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/assets/login/css/style.css}">
     <style type="text/css">
         #canvas {
             cursor: pointer;
@@ -20,40 +21,46 @@
 <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
 
     <div class="layadmin-user-login-main">
-        <div class="layadmin-user-login-box layadmin-user-login-header">
-            <h2>GlassSystem</h2>
-            <p>玻璃信息推送系统</p>
+        <!--<div class="layadmin-user-login-box layadmin-user-login-header">-->
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>玻璃信息推送系统</h3>
+                <h4>管理员请输入账号密码登录</h4>
+            </div>
         </div>
-        <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
-            <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-username"
-                       for="LAY-user-login-username"></label>
-                <input type="text" name="account" id="LAY-user-login-username" lay-verify="required"
-                       placeholder="账号" class="layui-input">
-            </div>
-            <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-password"
-                       for="LAY-user-login-password"></label>
-                <input type="password" name="password" id="LAY-user-login-password" lay-verify="required"
-                       placeholder="密码" class="layui-input">
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-row">
-                    <div class="layui-col-xs7">
-                        <label class="layadmin-user-login-icon layui-icon layui-icon-vercode"
-                               for="LAY-user-login-vercode"></label>
-                        <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required"
-                               placeholder="图形验证码" class="layui-input">
-                    </div>
-                    <div class="layui-col-xs5">
-                        <div style="margin-left: 10px;">
-                            <canvas id="canvas" class="layadmin-user-login-codeimg"></canvas>
+        <!--</div>-->
+        <div class="form-bottom">
+            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                           for="LAY-user-login-username"></label>
+                    <input type="text" name="account" id="LAY-user-login-username" lay-verify="required"
+                           placeholder="账号" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                           for="LAY-user-login-password"></label>
+                    <input type="password" name="password" id="LAY-user-login-password" lay-verify="required"
+                           placeholder="密码" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-xs7">
+                            <label class="layadmin-user-login-icon layui-icon layui-icon-vercode"
+                                   for="LAY-user-login-vercode"></label>
+                            <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required"
+                                   placeholder="图形验证码" class="layui-input">
+                        </div>
+                        <div class="layui-col-xs5">
+                            <div style="margin-left: 10px;">
+                                <canvas id="canvas" class="layadmin-user-login-codeimg"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-login-submit">登 录</button>
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-login-submit">登 录</button>
+                </div>
             </div>
         </div>
     </div>
@@ -61,6 +68,8 @@
 
 <script src="/static/assets/layui/layui.js"></script>
 <script src="/static/js/randomCode.js"></script>
+<script th:src="@{/static/assets/login/js/jquery-1.11.1.min.js}"></script>
+<script th:src="@{/static/assets/login/js/jquery.backstretch.min.js}"></script>
 <script>
     layui.config({
         base: '/static/assets/' //静态资源所在路径
@@ -70,6 +79,7 @@
         var $ = layui.$;
         var form = layui.form;
         var layer = layui.layer;
+        $.backstretch("/static/assets/login/img/backgrounds/1.jpg");
         form.on('submit(LAY-user-login-submit)', function (data) {
             if (code.toUpperCase() === document.getElementById("LAY-user-login-vercode").value.toUpperCase()) {
                 $.post('/user/webLogin', {

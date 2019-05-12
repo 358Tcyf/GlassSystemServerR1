@@ -169,9 +169,9 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = new PageRequest(page - 1, limit);
         Page<User> allList = null;
         if (isEmpty(name) && isEmpty(account) && isEmpty(phone) && isEmpty(email) && role == 0)
-            allList = userDao.queryUsersByNoNotLike("%A%", pageable);
+            allList = userDao.queryUsersByNoNotLike("%SA%", pageable);
         else if (role <= 1)
-            allList = userDao.queryUsersByNameLikeAndNoLikeAndNoNotLikeAndPhoneLikeAndEmailLike("%" + name + "%", "%" + account + "%", "%A%", "%" + phone + "%", "%" + email + "%", pageable);
+            allList = userDao.queryUsersByNameLikeAndNoLikeAndNoNotLikeAndPhoneLikeAndEmailLike("%" + name + "%", "%" + account + "%", "%SA%", "%" + phone + "%", "%" + email + "%", pageable);
         else {
             Role role1 = roleDao.findById(role);
             allList = userDao.queryUsersByNameLikeAndNoLikeAndRoleAndPhoneLikeAndEmailLike("%" + name + "%", "%" + account + "%", role1, "%" + phone + "%", "%" + email + "%", pageable);
@@ -180,16 +180,14 @@ public class UserServiceImpl implements UserService {
         map.put("count", allList.getTotalElements());
         List<Map<String, Object>> listMap = new ArrayList<>();
         for (User user : allList) {
-            if (!user.getNo().startsWith("A")) {
-                Map<String, Object> u = new HashMap<>();
-                u.put("id", user.getId());
-                u.put("account", user.getNo());
-                u.put("role", user.getRole().getName());
-                u.put("name", user.getName());
-                u.put("phone", user.getPhone());
-                u.put("email", user.getEmail());
-                listMap.add(u);
-            }
+            Map<String, Object> u = new HashMap<>();
+            u.put("id", user.getId());
+            u.put("account", user.getNo());
+            u.put("role", user.getRole().getName());
+            u.put("name", user.getName());
+            u.put("phone", user.getPhone());
+            u.put("email", user.getEmail());
+            listMap.add(u);
         }
         map.put("object", listMap);
         return map;

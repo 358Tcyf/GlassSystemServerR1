@@ -1,0 +1,65 @@
+/*
+ Typography
+ -------------------- */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	font-family: 'Raleway', sans-serif;
+}
+/*
+ Style Switcher
+ -------------------- */
+#theme_panel h4 {
+	background: #3cc3c1;
+}
+#theme_panel h4 a {
+	background: #3cc3c1;
+}
+#theme_panel .page-group a:hover {
+	color: #3cc3c1;
+}
+#theme_panel .page-group a.active-page {
+	color: #3cc3c1;
+}
+#theme_panel .yellow-brder {
+	border-color: #3cc3c1;
+}
+#theme_panel .theme-setting, #theme_panel .layout-column.radio-active .column-text:before, #theme_panel .note, #theme_panel .gallery-port h3.h4:after {
+	background: #3cc3c1;
+}
+/*main section
+ ----------------------*/
+.main-section, .step-block.right, .img-blog, .about-support {
+	background-color: #3cc3c1;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#57d0e7), to(#3cc3c1));
+	background-image: -webkit-linear-gradient(top, #57d0e7, #3cc3c1);
+	background-image: -moz-linear-gradient(top, #57d0e7, #3cc3c1);
+	background-image: -o-linear-gradient(top, #57d0e7, #3cc3c1);
+	background-image: -ms-linear-gradient(top, #57d0e7, #3cc3c1);
+	background-image: linear-gradient(top, #57d0e7, #3cc3c1);
+}
+.dark-section, .main-section.dark-section {
+	background-color: #2f3b49;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#374350), to(#2f3b49));
+	background-image: -webkit-linear-gradient(top, #374350, #2f3b49);
+	background-image: -moz-linear-gradient(top, #374350, #2f3b49);
+	background-image: -o-linear-gradient(top, #374350, #2f3b49);
+	background-image: -ms-linear-gradient(top, #374350, #2f3b49);
+	background-image: linear-gradient(top, #374350, #2f3b49);
+}
+.nav > li > a:hover, .nav > li > a:hover:after, .enquiry-form .label-text .char:last-child, .arrow-list li:hover:before, .arrow-list li > a:hover, .post-links a:hover, .text-hightlight, .text-hightlight:hover, .badge.text-badge, .blog-details blockquote:before, .error-page .social-icons > li, .error-page .social-icons a, .blog-post .media-heading a:hover, .sidebar-post p > a:hover, .lightbox-gallery blockquote:before, .lightbox-gallery blockquote:after {
+	color: #3cc3c1;
+}
+.icon-box > li > a, .text-theme, .comment .media-heading .text-theme, .comment .media-heading a:hover, .blog-post footer a.text-theme {
+	color: #3cc3c1;
+}
+.comment .media-body {
+	border-color: #3cc3c1;
+}
+.comment svg, .reply-comment svg {
+	stroke: #3cc3c1;
+}
+.text-hightlight {
+	color: #3cc3c1;
+}
+.gallery-port h3.h4:after {
+	background: #3cc3c1;
+} 

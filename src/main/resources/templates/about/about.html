@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>关于</title>
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/static/assets/login/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/assets/login/css/global.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/assets/login/css/responsive.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/assets/login/css/skin.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/assets/login/css/style2.css}">
+
+</head>
+<body id="homepage">
+<div id="wrapper">
+    <main id="main" role="main">
+        <section class="main-section" id="main-section">
+            <div class="inner-main parallax">
+                <!--Intro Section-->
+                <section class="intro-section">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-md-push-6">
+                                <br/>
+                                <i class="fa fa-circle-o-notch fa-spin ipad-loader"></i>
+                                <div class="iphone-wrap">
+                                    <div class="iphone-frame with-glare large rotated">
+                                        <img src="/static/assets/login/img/iPhone6-03.png" alt=""/>
+                                        <img class="iphone-glare"
+                                             src="/static/assets/login/img/iPhone6-frame-glare-02.png" alt=""/>
+                                    </div>
+                                    <div class="iphone-frame with-glare large">
+                                        <img src="/static/assets/login/img/iPhone6-02.jpg" alt=""/>
+                                        <img class="iphone-glare" src="/static/assets/login/img/iPhone6-frame-glare.png"
+                                             alt=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-md-pull-6">
+                                <br/><br/>
+                                <div class="jumbotron">
+                                    <br/>
+                                    <h1><span>Glass</span> Important Info Push System</h1>
+                                    <br/>
+                                    <p>
+                                        We pursue precise and timely glass important info.
+                                        <br/><br/>
+                                        我们追求准确、及时的玻璃行业信息推送。
+                                    </p>
+                                    <div class="intro-links">
+                                        <a href="login" class="btn btn-theme">登陆系统</a>
+                                        <span class="pointer-circle">or</span>
+                                        <a id="download" href="https://www.pgyer.com/gx4K" class="btn btn-theme">下载应用<i
+                                                class="fa fa-chevron-right"></i></a>
+                                        <div id="qrCode">
+                                            <div>
+                                                <a style="color: #FFFFFF">请扫码下载</a></div>
+                                            <div>
+                                                <img style="height: 160px;width: 160px;"
+                                                     src="/static/img/QRCode_336.png"
+                                                     alt="下载当前应用"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="design-section">
+            <div class="l-down"></div>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/static/assets/login/js/jquery-1.11.1.min.js}"></script>
+<script th:src="@{/static/assets/login/js/modernizr.custom.js}"></script>
+<script th:src="@{/static/assets/login/js/site.js}"></script>
+<script src="/static/assets/layui/layui.js"></script>
+
+<script>
+    layui.use(['jquery'], function () {
+        var $ = layui.$;
+        $("#qrCode").hide();
+        $("#download").hover(function () {
+            $("#qrCode").show();
+        }, function () {
+            $("#qrCode").hide();
+        });
+    })
+</script>
+</body>
+</html>

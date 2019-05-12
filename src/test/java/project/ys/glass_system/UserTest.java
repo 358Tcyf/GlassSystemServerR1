@@ -81,8 +81,9 @@ public class UserTest {
 //        userService.getLatestNo(SUPER_MANAGER);
     }
 
-    @Test
+//    @Test
     public void testGetUserInfo() {
+        System.out.println(userService.userQuery("","",0,"","",1,20));
 //        System.out.println(userService.userInfo("SA01"));
     }
 }

@@ -91,7 +91,7 @@ public class NewGlassTest {
         rankDao.save(new TestRank("三级品"));
     }
 
-    @Test
+//    @Test
     public void testProduceSchedule() {
         System.out.print("生产准备：");
         produceService.produceStart(LocalDate.now(), true);

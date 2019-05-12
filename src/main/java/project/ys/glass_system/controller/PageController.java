@@ -22,7 +22,7 @@ public class PageController {
     @Unlimited
     @GetMapping(ABOUT)
     public String index() {
-        return _ABOUT + INDEX;
+        return _ABOUT + ABOUT;
     }
 
     @GetMapping("/")
