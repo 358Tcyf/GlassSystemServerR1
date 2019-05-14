@@ -58,10 +58,6 @@ public class SessionUtil {
         return getHttpRequest().getHeader("agent") != null && getHttpRequest().getHeader("agent").equals("Android");
     }
 
-    public String getIMEI() {
-        return getHttpRequest().getHeader("imei") == null ? "" : getHttpRequest().getHeader("imei");
-    }
-
     public void setMobileSessionTimeout() {
         if (isMobile())
             getHttpSession().setMaxInactiveInterval(60 * 60 * 24 * 30);
